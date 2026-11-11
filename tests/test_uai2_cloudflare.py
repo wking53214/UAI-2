@@ -3,7 +3,7 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from cns_composition.providers.protocol import (
+from uai.protocol import (
     CompletionStatus, ModelRequest, ModelResponse,
 )
 from uai2_bridge import PortableTextProvider, ProviderExecutionError

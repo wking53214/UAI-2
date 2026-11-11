@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from cns_composition.providers.protocol import (
+from uai.protocol import (
     CompletionStatus,
     ModelRequest,
     ModelResponse,

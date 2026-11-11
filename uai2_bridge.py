@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from cns_composition.providers.protocol import (
+from uai.protocol import (
     CompletionStatus,
     ModelProvider,
     ModelRequest,

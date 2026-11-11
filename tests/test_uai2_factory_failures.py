@@ -9,7 +9,7 @@ from uai2_bridge import ProviderExecutionError
 from uai2_gemini import GeminiAdapter
 from uai2_groq import GroqAdapter
 from uai2_cloudflare import CloudflareAdapter
-from cns_composition.providers.protocol import ModelRequest
+from uai.protocol import ModelRequest
 
 
 class FailureHandler(BaseHTTPRequestHandler):

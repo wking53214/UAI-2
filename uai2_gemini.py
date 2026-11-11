@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
-from cns_composition.providers.protocol import CompletionStatus, TokenUsage
+from uai.protocol import CompletionStatus, TokenUsage
 from uai2_bridge import ProviderExecutionError, ProviderResult
 
 

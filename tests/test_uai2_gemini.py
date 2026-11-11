@@ -3,7 +3,7 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from cns_composition.providers.protocol import CompletionStatus, ModelRequest, ModelResponse
+from uai.protocol import CompletionStatus, ModelRequest, ModelResponse
 from uai2_bridge import PORTABLE_MAX_OUTPUT_TOKENS, PortableTextProvider, ProviderExecutionError
 from uai2_gemini import GeminiAdapter
 
