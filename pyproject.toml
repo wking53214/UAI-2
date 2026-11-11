@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uai"
+version = "0.1.0.dev0"
+description = "Universal AI Interface: any model recommends, the decider's policy decides, and the decision leaves signed and verifiable (UAI-1)."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "William N. King" }]
+# CNS supplies the gate contract (cns.gate) and the gate chain (cns_composition.super_gate). The pin is the released
+# tag; nothing here needs a newer CNS. Everything else is the standard library.
+dependencies = ["cns @ git+https://github.com/wking53214/CNS.git@v2.3.0"]
+
+[project.optional-dependencies]
+# The optional hardened Ed25519 backend (cns_interop.crypto_backend).
+crypto = ["cryptography>=42"]
+# The PostgreSQL ledger (cns_interop.ledger_postgres). psycopg is imported only inside it.
+postgres = ["psycopg[binary]>=3.1"]
+dev = ["pytest>=7", "mypy>=1.8", "ruff==0.17.2", "cryptography>=42", "psycopg[binary]>=3.1", "jsonschema>=4"]
+
+[tool.setuptools]
+# The UAI-2 module names, kept importable.
+py-modules = ["uai2_bridge", "uai2_factory", "uai2_gemini", "uai2_groq", "uai2_cloudflare"]
+
+[tool.setuptools.packages.find]
+include = ["uai", "uai.*", "cns_interop", "cns_interop.*"]
+exclude = ["cns_interop.tests", "cns_interop.tests.*"]
+
+[tool.ruff]
+extend-exclude = ["build"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.pytest.ini_options]
+testpaths = ["cns_interop/tests", "tests"]
+
+# CNS ships a typing marker for `cns` only. `cns_composition` is installed from the pin without one, so its two
+# imports here (the gate chain) are read as untyped instead of failing the check.
+[[tool.mypy.overrides]]
+module = "cns_composition.*"
+ignore_missing_imports = true

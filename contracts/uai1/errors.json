@@ -1,0 +1,270 @@
+{
+ "codes": [
+  {
+   "code": "malformed",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "wire",
+   "meaning": "The bytes are not a well-formed UAI-1 message: not JSON, not an object, a repeated key, NaN, over 1 MiB, nested past the limit, or fields and forms the specification does not allow.",
+   "retry": "never"
+  },
+  {
+   "code": "profile",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "wire",
+   "meaning": "A value is outside the value profile: a float, an exponent, or an integer beyond +/-(2^53-1).",
+   "retry": "never"
+  },
+  {
+   "code": "version",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "The `v` field is not `uai/1`. A receiver never guesses at a dialect.",
+   "retry": "never"
+  },
+  {
+   "code": "kind",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "The envelope kind is not one this step accepts.",
+   "retry": "never"
+  },
+  {
+   "code": "signature",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "The signature does not verify as the claimed sender under the strict Ed25519 rules, or the sender key is non-canonical or of small order.",
+   "retry": "never"
+  },
+  {
+   "code": "not_yet_valid",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "`issued_at` is beyond the allowed clock skew in the future.",
+   "retry": "later"
+  },
+  {
+   "code": "expired",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "The message is past its `expires_at` (plus nothing: the skew applies only to issued_at).",
+   "retry": "never"
+  },
+  {
+   "code": "audience",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "envelope",
+   "meaning": "The message is addressed to another identity, or the terms name a requester this receiver does not act for.",
+   "retry": "never"
+  },
+  {
+   "code": "untrusted",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "trust",
+   "meaning": "The signer is not admitted by this receiver (not pinned, not endorsed, revoked, or its channel identity differs). Trust is the receiver's own decision.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "replayed",
+   "consumes_message": true,
+   "implementations": "both",
+   "layer": "ledger",
+   "meaning": "This (sender, id), or this decision and action, was already accepted or is being redeemed. The ledger is the receiver's.",
+   "retry": "never"
+  },
+  {
+   "code": "lease_lost",
+   "consumes_message": null,
+   "implementations": "both",
+   "layer": "ledger",
+   "meaning": "A reservation lapsed and another redemption took the message; the holder's late commit or release is refused.",
+   "retry": "never"
+  },
+  {
+   "code": "fenced",
+   "consumes_message": null,
+   "implementations": "both",
+   "layer": "ledger",
+   "meaning": "A protected target saw a lower fencing token than one it already acted on; a stale holder is refused.",
+   "retry": "never"
+  },
+  {
+   "code": "unavailable",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "infrastructure",
+   "meaning": "No definite answer could be had (ledger, store, audit write, network). Failure is refusal: nothing was permitted.",
+   "retry": "later"
+  },
+  {
+   "code": "clock_skew",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "infrastructure",
+   "meaning": "The receiver's clock and its ledger database's clock differ by more than the receiver allows, so it cannot judge message lifetimes and does not act. Nothing was read or spent.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "rate_limited",
+   "consumes_message": false,
+   "implementations": "python",
+   "layer": "pre-auth",
+   "meaning": "This caller exceeded the receiver's rate limit before any signature was checked.",
+   "retry": "later"
+  },
+  {
+   "code": "capability",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "session",
+   "meaning": "The request names a capability or version this decider does not offer.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "terms",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "session",
+   "meaning": "The terms are not the agreed terms: altered, incomplete, not addressed here, or not those the decision was made under.",
+   "retry": "never"
+  },
+  {
+   "code": "disclosure",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "session",
+   "meaning": "A disclosure does not open to its committed root, offers fields not agreed, or asks for fields a grant does not allow.",
+   "retry": "never"
+  },
+  {
+   "code": "subject",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "session",
+   "meaning": "The decision judged a different document than the one presented.",
+   "retry": "never"
+  },
+  {
+   "code": "declined",
+   "consumes_message": false,
+   "implementations": "python",
+   "layer": "session",
+   "meaning": "The counterparty declined the exchange (a signed `refuse`).",
+   "retry": "never"
+  },
+  {
+   "code": "refused",
+   "consumes_message": true,
+   "implementations": "both",
+   "layer": "session",
+   "meaning": "The decision is not a pass, so it permits nothing.",
+   "retry": "never"
+  },
+  {
+   "code": "adapter_output",
+   "consumes_message": false,
+   "implementations": "python",
+   "layer": "adapter",
+   "meaning": "A model adapter's output was not exactly the allowed shape (extra keys, prose, an unsupported claim). The decider signs a terminal breach.",
+   "retry": "never"
+  },
+  {
+   "code": "provider",
+   "consumes_message": false,
+   "implementations": "python",
+   "layer": "adapter",
+   "meaning": "A model provider could not be reached, timed out, rate limited, returned an error, a truncated or filtered answer, or a malformed envelope.",
+   "retry": "later"
+  },
+  {
+   "code": "no_grant",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The receiver has granted nothing for this capability, version and requester.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "withdrawn",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The grant for this purpose was withdrawn.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "grant_expired",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The grant for this purpose has expired.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "decider",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The grant does not name this decider.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "action",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The grant does not permit this action.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "approval_required",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The grant needs a person's approval and none was given. The decision is given back, not burned.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "approval",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "The approval is not valid: not a named approver, the same party as decider or requester, for a different decision, action or document, expired, or not genuinely signed.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "stale_policy",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "This host's grants are not the published policy (shared policy store).",
+   "retry": "after-fix"
+  },
+  {
+   "code": "conflict",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "receiver-policy",
+   "meaning": "A policy version was not the next one; another operator published first.",
+   "retry": "after-fix"
+  },
+  {
+   "code": "config",
+   "consumes_message": false,
+   "implementations": "both",
+   "layer": "operator",
+   "meaning": "The receiver's own configuration is invalid or incomplete; it refuses to start rather than act without policy.",
+   "retry": "after-fix"
+  }
+ ],
+ "note": "The versioned error registry. A code is stable once published: it is never renamed or reused for another meaning. `retry`: never = the same message will always be refused; after-fix = a person or operator changing something may let a NEW attempt succeed; later = the condition is transient. `consumes_message` says whether the refusal spends the message in the receiver's ledger (false: a corrected or later attempt of the same message can still land; true: it cannot); null = depends on the stage. `implementations` says which shipped implementations can emit it today.",
+ "schema": "uai1-errors/1"
+}

@@ -1,6 +1,6 @@
 import unittest
 
-from cns_composition.providers.protocol import (
+from uai.protocol import (
     CompletionStatus,
     ModelProvider,
     ModelRequest,
@@ -111,7 +111,7 @@ class BridgeTests(unittest.TestCase):
 
     def test_structured_result_preserves_completion_metadata(self):
         from uai2_bridge import ProviderResult
-        from cns_composition.providers.protocol import TokenUsage
+        from uai.protocol import TokenUsage
 
         usage = TokenUsage(3, 7)
         native = {"finish_reason": "length"}
