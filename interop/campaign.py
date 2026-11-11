@@ -106,7 +106,7 @@ def main(argv=None) -> int:
         print("NOT EXECUTED: set UAI_ANTHROPIC_API_KEY, and use only models in PRICE")
         return 3
 
-    state = {"spent": 0.0, "reserved": 0.0, "calls": 0, "auth": 0}
+    state = {"spent": 0.0, "reserved": 0.0, "calls": 0, "auth": 0, "rate": 0}
     stop = {"flag": False}
     tally: dict = {}
     started = time.time()
@@ -120,7 +120,8 @@ def main(argv=None) -> int:
             state["spent"] += cost
             state["calls"] += 1
             state["auth"] = state["auth"] + 1 if row["auth_failure"] else 0
-            if state["auth"] >= 3:
+            state["rate"] = state["rate"] + 1 if row["http_status"] == 429 else 0
+            if state["auth"] >= 3 or state["rate"] >= 20:
                 stop["flag"] = True
             row["round"] = rnd
             row["cum_usd"] = round(state["spent"], 4)
@@ -178,8 +179,11 @@ def main(argv=None) -> int:
     finally:
         pool.shutdown(wait=True)
         out.close()
-    if stop["flag"] and state["auth"] >= 3:
+    if state["auth"] >= 3:
         print("stopped: three authentication failures in a row; check the key")
+    elif state["rate"] >= 20:
+        print("stopped: twenty rate-limit responses in a row; wait for the limit to reset, then rerun "
+              "(the rows already written are kept)")
     return finish(opts.out, state["spent"], state["calls"], tally, started)
 
 
