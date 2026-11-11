@@ -469,3 +469,26 @@ def test_the_live_runner_knows_all_six_providers_and_will_not_call_cloudflare_wi
     assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and KEY not in out
     for name in ("anthropic", "google", "openai", "copilot-github-models", "groq", "cloudflare-workers-ai"):
         assert f"NOT EXECUTED: {name} " in out
+
+
+def test_the_quickstart_example_runs_end_to_end_and_says_not_executed_without_a_key(monkeypatch, capsys):
+    sys.path.insert(0, str(ROOT / "interop" / "examples"))
+    import uai_quickstart
+
+    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY"]:
+        monkeypatch.delenv(name, raising=False)
+    assert uai_quickstart.main(["groq", "model-x"]) == 3
+    assert capsys.readouterr().out.startswith("NOT EXECUTED: no key for groq: set GROQ_API_KEY")
+
+    monkeypatch.setenv("GROQ_API_KEY", KEY)
+    stub = serving("groq", lambda p: json.dumps({"verdict": "pass", "reasons": ["clears"], "escalate": False,
+                                                 "evidence": {"threshold-check": {"observed_cents": 512000}}}))
+    try:
+        assert uai_quickstart.main(["groq", "model-x", "--base-url", stub.url]) == 0
+        out = capsys.readouterr().out
+        assert "decision: pass  allowed: True" in out and "signed record of the call" in out
+        assert "presented a second time: refused (" in out and "THIS IS A BUG" not in out and KEY not in out
+        assert uai_quickstart.main(["groq", "model-x", "--base-url", stub.url, "--income", "100000"]) == 0
+        assert "decision: retry  allowed: False" in capsys.readouterr().out      # the model said pass; the policy did not keep it
+    finally:
+        stub.close()
