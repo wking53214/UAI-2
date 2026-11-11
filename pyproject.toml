@@ -36,3 +36,9 @@ select = ["E4", "E7", "E9", "F"]
 
 [tool.pytest.ini_options]
 testpaths = ["cns_interop/tests", "tests"]
+
+# CNS ships a typing marker for `cns` only. `cns_composition` is installed from the pin without one, so its two
+# imports here (the gate chain) are read as untyped instead of failing the check.
+[[tool.mypy.overrides]]
+module = "cns_composition.*"
+ignore_missing_imports = true

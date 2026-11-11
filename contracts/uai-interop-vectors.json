@@ -1,0 +1,3797 @@
+{
+ "decisions": [
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/one-action-on-the-one-document",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "other"
+     ],
+     "expect": "false",
+     "now": 1800000000001,
+     "op": "use"
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "true",
+     "now": 1800000000001,
+     "op": "use"
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "false",
+     "now": 1800000000001,
+     "op": "use"
+    }
+   ],
+   "why": "permission opens once, for the judged document only, and not again"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/replay-on-a-shared-ledger",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "expect": "ok",
+     "op": "new_guard"
+    },
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "replayed",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a second guard on the same ledger cannot redeem the decision again"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "other",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/capability-mismatch",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "terms",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a decision negotiated for one capability does not open an action guarded for another"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     2
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/version-mismatch",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "terms",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "nor for another version of the same capability"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/audience-mismatch",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "audience",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "terms for a requester this guard does not act for"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220"
+    ]
+   },
+   "id": "decision/decider-not-trusted",
+   "steps": [
+    {
+     "accept_digest": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000065",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000065",
+      "in_reply_to": "f21d6667bfdfae5bd216cba753b24954a8391f39e7715c0d80f0a8dd3766741b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "8445de35d9e4546860000fd2a649c95a56896595bf8090fca5079ff9804917669652ea660b9ec158f500f9d30e5a13cf9c620ca6ae13b0bda215c7ca2d3cf40d",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "untrusted",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a valid signature from a decider this guard does not trust is not permission"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/expiry-boundary",
+   "steps": [
+    {
+     "accept_digest": "800ec0e042dbd8c85fb7c1e644b581b5bbb42b2b407dc324d11ad23e1c46f2ff",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000067",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000067",
+      "in_reply_to": "800ec0e042dbd8c85fb7c1e644b581b5bbb42b2b407dc324d11ad23e1c46f2ff",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "5393444a04a28c6f5682091c39bf7af6b73a2e8005820f5bee3fefe307053cbb02d39b2fd791eda293af18ff064a8a6621186a4620a649a5ebdd0b445172ab0a",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "expired",
+     "lease_ms": null,
+     "now": 1800000060000,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "expect": "ok",
+     "op": "new_guard"
+    },
+    {
+     "accept_digest": "5304c775f213202e1d4c72653baf571f29c226cfc0428bff47a7904e6527fad8",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000069",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000069",
+      "in_reply_to": "5304c775f213202e1d4c72653baf571f29c226cfc0428bff47a7904e6527fad8",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "87c4c61341c37987b5294137b7e85dae29a590c1779ac5140124d9f45f7a490b0911f81e0db2b1fdda381711060c66567feaea654cd2da8425f90a5aea6a890c",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": null,
+     "now": 1800000059999,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a decision is valid until, not including, its expiry"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/terms-altered",
+   "steps": [
+    {
+     "accept_digest": "a737956efad3e642ec20585e0ac5fec6c29424f602bc64e8471340ecacabc31b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000006b",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000006b",
+      "in_reply_to": "a737956efad3e642ec20585e0ac5fec6c29424f602bc64e8471340ecacabc31b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "dd3d54573884f81c037e8cf80c268196fd2e7464d3686209a813135070241fbfd24b538cbaec532329cd7653e5b1a4b8c1f2e0cb615adcb63355807c3439b309",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "terms",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "doc_type",
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "the decision names the exact terms it was made under"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/answers-another-accept",
+   "steps": [
+    {
+     "accept_digest": "efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000006d",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000006d",
+      "in_reply_to": "75a5697f6dae12635ddc2892c78a9d8688a2716b0249929d2138c3a843bc5675",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "0273fcad59c7845bfa54ce4f0ab96ed4d797d7709dab67fef0838685ab8408cb4d6010aa683322e0a9f2f761606e9ea9975b40d21a2e1f18885b20907de4f40c",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "terms",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "bound to the exact accept it answers"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/retry-verdict-opens-nothing",
+   "steps": [
+    {
+     "accept_digest": "f0b7fb8683f5e495e4f63c8676c13a69b494cbfed7178a295e8591eba5311a84",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "retry"
+      },
+      "conversation": "0000000000000000000000000000006f",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000006f",
+      "in_reply_to": "f0b7fb8683f5e495e4f63c8676c13a69b494cbfed7178a295e8591eba5311a84",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "814581d5d61b49b28f4d7b8193349b8cd41cda900851c76ba4d69764552fc5707bf7e4906bc73f07d7012d277c972bcbad4f5fc6ba5d7744daed494bc0123609",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "refused",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "false",
+     "now": 1800000000001,
+     "op": "use"
+    }
+   ],
+   "why": "a verified retry is not a pass"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/decider-revoked-after-authorize",
+   "steps": [
+    {
+     "accept_digest": "dfbf12056cbe8f6dcd8e7b0d0f3c4b0b62918bbd0b443a55e9d22457eb6b30e2",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000071",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000071",
+      "in_reply_to": "dfbf12056cbe8f6dcd8e7b0d0f3c4b0b62918bbd0b443a55e9d22457eb6b30e2",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "3aa77c91159a616de9f7dbc95b89581f57f7e5fd6f56248599a77543c733eaa9f1d2f0e2871946bab7165f17bc9da96c258b68ef51fd3f85e4d694b94d48ff03",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000002,
+     "op": "revoke_decider"
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "false",
+     "now": 1800000000003,
+     "op": "use"
+    }
+   ],
+   "why": "trust was checked at authorize; a revocation that arrives after it closes the guard"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/evidence-digest-mismatch",
+   "steps": [
+    {
+     "accept_digest": "cac9295bdb464a4e01452bc224248e67e436530174f528e018fbb983b925587b",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000073",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000073",
+      "in_reply_to": "cac9295bdb464a4e01452bc224248e67e436530174f528e018fbb983b925587b",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "3cb2e17a2846c5e7e2a395ae45278db83e6b7263355c04b5aa01f72180af404fcef5096b0e04de93657ffff1fb5c6e6d8bacc37afab54ac44df8654ceeb28505",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "malformed",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "evidence must match its digest even from the real decider"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/extra-body-field",
+   "steps": [
+    {
+     "accept_digest": "437d1f4de7de24f83fb0b5af2c99f5270b8d205ba8626ef4ea3cc3987581d73a",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "surprise": 1,
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000075",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000075",
+      "in_reply_to": "437d1f4de7de24f83fb0b5af2c99f5270b8d205ba8626ef4ea3cc3987581d73a",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "9dfbcfcc2a48560f5a6f8d359057d0fbfb403da624cf93d3a1f7b5bcaf2fa23cc89b8cda9543319c842085184d614735335d5016258d7d8430288d870536f807",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "malformed",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a decision body has exactly its fields"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/unknown-verdict",
+   "steps": [
+    {
+     "accept_digest": "e338582aaf98b28bd14532d00c2ba799fb9814c5750d051de429e5ac6a263115",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "maybe"
+      },
+      "conversation": "00000000000000000000000000000077",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000077",
+      "in_reply_to": "e338582aaf98b28bd14532d00c2ba799fb9814c5750d051de429e5ac6a263115",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "cca26bd8b85eb9197d8b8517b0729e91da12100a0a5785ccc90cd4552477df92e0f0a2b625a696b5c84d49200d9b7c965aec235cbeea5df08fc52f7cfe893a03",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "malformed",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "the verdicts are pass, retry, terminal_breach"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/pass-without-its-evidence",
+   "steps": [
+    {
+     "accept_digest": "dad63335e1d52daff19ff4965439994764658ddfa6b4ca25646899a997da36eb",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "00000000000000000000000000000079",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "00000000000000000000000000000079",
+      "in_reply_to": "dad63335e1d52daff19ff4965439994764658ddfa6b4ca25646899a997da36eb",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "106648a1b1b6e413db6477c05c330ccfeb48b1f254510ebd3ac1929856b0db52e97c0c868f1beb197b32c53da7ea24a291437ebca0c2ac050b62c8aca88e0902",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "terms",
+     "lease_ms": null,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "a pass carries exactly the evidence the terms require"
+  },
+  {
+   "config": {
+    "acting_for": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+    "authorities": [],
+    "capability": [
+     "income-screen",
+     1
+    ],
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ]
+   },
+   "id": "decision/lease-survives-a-crash",
+   "steps": [
+    {
+     "accept_digest": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000007b",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000007b",
+      "in_reply_to": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "741c44b359696258929da46a252f362271ec5cc12750df5f2594091c3a9caf11f9b0bc8cc6e446627144f7eb9e43c670930b49fcf1308c02f44b7161ba4fee06",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": 10000,
+     "now": 1800000000001,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "true",
+     "now": 1800000000001,
+     "op": "use"
+    },
+    {
+     "expect": "ok",
+     "op": "new_guard"
+    },
+    {
+     "accept_digest": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000007b",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000007b",
+      "in_reply_to": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "741c44b359696258929da46a252f362271ec5cc12750df5f2594091c3a9caf11f9b0bc8cc6e446627144f7eb9e43c670930b49fcf1308c02f44b7161ba4fee06",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "replayed",
+     "lease_ms": 10000,
+     "now": 1800000005000,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "expect": "ok",
+     "op": "new_guard"
+    },
+    {
+     "accept_digest": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000007b",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000007b",
+      "in_reply_to": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "741c44b359696258929da46a252f362271ec5cc12750df5f2594091c3a9caf11f9b0bc8cc6e446627144f7eb9e43c670930b49fcf1308c02f44b7161ba4fee06",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "ok",
+     "lease_ms": 10000,
+     "now": 1800000010002,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    },
+    {
+     "artifact": [
+      "loan-1",
+      "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     ],
+     "expect": "true",
+     "now": 1800000010003,
+     "op": "use"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000010004,
+     "op": "complete"
+    },
+    {
+     "expect": "ok",
+     "op": "new_guard"
+    },
+    {
+     "accept_digest": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+     "decision": {
+      "body": {
+       "cns_root": "",
+       "evidence": [
+        {
+         "content": {
+          "observed": 1
+         },
+         "digest": "7df1a73eb47876d1d2ea5db8739976d669c43c2b3bfea7fe17fa75af458478c9",
+         "kind": "threshold-check"
+        }
+       ],
+       "reasons": [
+        "because"
+       ],
+       "subject": {
+        "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "identity": "loan-1"
+       },
+       "terms_digest": "51b3055359dd7c46945d9e4aba34e33b279c63a1902820653ceb49f5b957d480",
+       "verdict": "pass"
+      },
+      "conversation": "0000000000000000000000000000007b",
+      "expires_at": 1800000060000,
+      "from": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "id": "0000000000000000000000000000007b",
+      "in_reply_to": "79a24c28363204670c71469a960d3e22bb548868c45cb2acd9cecb037e591f7f",
+      "issued_at": 1800000000000,
+      "kind": "decision",
+      "sig": "741c44b359696258929da46a252f362271ec5cc12750df5f2594091c3a9caf11f9b0bc8cc6e446627144f7eb9e43c670930b49fcf1308c02f44b7161ba4fee06",
+      "to": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "v": "uai/1"
+     },
+     "expect": "replayed",
+     "lease_ms": 10000,
+     "now": 1800000010005,
+     "op": "authorize",
+     "terms": {
+      "capability": "income-screen",
+      "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+      "decision_ttl_ms": 60000,
+      "disclose": [
+       "monthly_income_cents"
+      ],
+      "evidence": [
+       "threshold-check"
+      ],
+      "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+      "subject": {
+       "digest": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+       "identity": "loan-1"
+      },
+      "version": 1
+     }
+    }
+   ],
+   "why": "while a lease is live nobody else redeems; once it lapses a retry can; once committed it is spent for good"
+  }
+ ],
+ "digest": [
+  {
+   "canonical": "d:2:s:1:ai:2:s:1:bi:1:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/key-order-is-sorted",
+   "sha256": "acd0be1d57187dae28a701535f4d6ac035f647d79281337902d0c55d60d5738a",
+   "text": "{\"b\":1,\"a\":2}",
+   "why": "keys are sorted, so order on the wire never matters"
+  },
+  {
+   "canonical": "d:2:s:1:ai:2:s:1:bi:1:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/key-order-is-sorted-other-way",
+   "sha256": "acd0be1d57187dae28a701535f4d6ac035f647d79281337902d0c55d60d5738a",
+   "text": "{\"a\":2,\"b\":1}",
+   "why": "the same mapping written the other way digests alike"
+  },
+  {
+   "canonical": "d:1:s:1:as:1:\u00e9",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/nfc-text",
+   "sha256": "b629a91d8f50eaaf4a6af68889d383c1a14fdb1455d600beb8dd6a771e8d73b9",
+   "text": "{\"a\":\"\\u00e9\"}",
+   "why": "one code point, length 1"
+  },
+  {
+   "canonical": "d:1:s:1:as:2:e\u0301",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/nfd-text",
+   "sha256": "b3b5081edab91f7e2d4cd4bfa561768b7a8b7155620fe01423a2f5499737640b",
+   "text": "{\"a\":\"e\\u0301\"}",
+   "why": "two code points, length 2: text is NEVER normalized, so NFC and NFD digest differently"
+  },
+  {
+   "canonical": "d:1:s:1:as:1:\ud83d\ude00",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/astral-length",
+   "sha256": "9fc36866928b5a8b0495ca6bae471d00a2cdb718113a75bbb61c950b448fc7e9",
+   "text": "{\"a\":\"\\ud83d\\ude00\"}",
+   "why": "a surrogate pair is one code point, length 1, in every language"
+  },
+  {
+   "canonical": "d:1:s:1:as:1:\ud83d\ude00",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/astral-raw",
+   "sha256": "9fc36866928b5a8b0495ca6bae471d00a2cdb718113a75bbb61c950b448fc7e9",
+   "text": "{\"a\":\"\ud83d\ude00\"}",
+   "why": "raw and escaped spellings of the same text digest alike"
+  },
+  {
+   "canonical": "d:2:s:1:\uffffi:2:s:1:\ud83d\ude00i:1:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/code-point-key-order",
+   "sha256": "c5868bcf023d0b7fdbde6017c037b2cdb55666f900abde4311676b9885ab7a49",
+   "text": "{\"\\ud83d\\ude00\":1,\"\\uffff\":2}",
+   "why": "keys sort by code point: U+FFFF before U+1F600 (UTF-16 order would reverse them)"
+  },
+  {
+   "canonical": "d:1:s:1:ai:0:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/negative-zero",
+   "sha256": "f6a4cffdcc9f94d6b6ac0c0aa9ae20b9b20f152a020f43dabf0f957cf00ce090",
+   "text": "{\"a\":-0}",
+   "why": "an integer has no sign of zero"
+  },
+  {
+   "canonical": "d:1:s:1:ai:9007199254740991:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/max-safe-int",
+   "sha256": "da56610b3aa17612720b34a53d1b0840752435a731b176fa8fce3f5ecd785a72",
+   "text": "{\"a\":9007199254740991}",
+   "why": "the largest integer every runtime can hold"
+  },
+  {
+   "canonical": "d:1:s:1:ai:-9007199254740991:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/min-safe-int",
+   "sha256": "64c19996928c51affff3d2e964fc0995585a1c635b950a5b316e8e914eef5014",
+   "text": "{\"a\":-9007199254740991}",
+   "why": "the smallest"
+  },
+  {
+   "canonical": "d:1:s:1:al:3:b:1b:0n:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/true-false-null",
+   "sha256": "2769b8b9630658351aff0a5ab6c87c9d6166fcc518f77ccbc67c3ca33818c9d1",
+   "text": "{\"a\":[true,false,null]}",
+   "why": "booleans are not integers"
+  },
+  {
+   "canonical": "d:2:s:1:al:0:s:1:bd:0:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/empty-containers",
+   "sha256": "356c8225720f5e417700c425561aaa82b1762ea090ebf13656ee693d0036dc36",
+   "text": "{\"a\":[],\"b\":{}}",
+   "why": "empty list and mapping"
+  },
+  {
+   "canonical": "d:1:s:0:i:1:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/empty-key",
+   "sha256": "61a127cd4d263d9cb2280e9eed0e86be4c39d7f28f3d9e2dcd522a3147c24bdf",
+   "text": "{\"\":1}",
+   "why": "the empty text is a legal key"
+  },
+  {
+   "canonical": "d:1:s:1:as:1:\u0000",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/nul-character",
+   "sha256": "7c290b3bfcf9422cdaa9965f98ccb66959c2709a833891cbad0af7d7cb612025",
+   "text": "{\"a\":\"\\u0000\"}",
+   "why": "NUL is one code point"
+  },
+  {
+   "canonical": "d:2:s:9:__proto__i:1:s:11:constructori:2:",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/proto-and-constructor-keys",
+   "sha256": "f3d126e3ae815f2a77c407cc43a7a435b6f1e0b75d532b4835c2d7fc4850f0f6",
+   "text": "{\"constructor\":2,\"__proto__\":1}",
+   "why": "keys that mean something to some runtimes are ordinary keys"
+  },
+  {
+   "canonical": "d:1:s:1:as:2:/\u00e9",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/whitespace-and-escapes",
+   "sha256": "71973a1c0cd6fca1035125270af8504d38c204ea91d7dabea06ef10578ea3259",
+   "text": " { \"a\" : \"\\/\\u00E9\" } ",
+   "why": "insignificant whitespace, \\/ and an uppercase hex escape"
+  },
+  {
+   "canonical": "d:1:s:1:ad:1:s:1:bl:2:i:1:d:1:s:1:cs:1:d",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "digest/nested",
+   "sha256": "395632b78144c7cc3686608e90f19ecabce6e992373e25d90c4a3872375ae77f",
+   "text": "{\"a\":{\"b\":[1,{\"c\":\"d\"}]}}",
+   "why": "nesting is just recursion"
+  }
+ ],
+ "envelope": [
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/valid",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a well-formed, correctly signed, unexpired envelope"
+  },
+  {
+   "audience": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/valid-audience",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "addressed to exactly this receiver"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/valid-key-order-and-spacing",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\n   \"sig\": \"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\n   \"body\": {\n      \"hello\": \"world\"\n   },\n   \"expires_at\": 1800000060000,\n   \"issued_at\": 1800000000000,\n   \"in_reply_to\": \"\",\n   \"conversation\": \"00000000000000000000000000000001\",\n   \"to\": \"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\n   \"from\": \"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\n   \"id\": \"00000000000000000000000000000001\",\n   \"kind\": \"request\",\n   \"v\": \"uai/1\"\n}",
+   "why": "JSON is only transport: the signature is over the canonical digest, so key order and spacing do not matter"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/body-edited",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"there\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "content changed after signing"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/sender-swapped",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "the signature is not the claimed sender's"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/to-swapped",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"v\":\"uai/1\"}",
+   "why": "the audience is signed"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/id-changed",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000002\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "the id is signed"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/unknown-field",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"extra\":1,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "exactly the UAI-1 fields and no others"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/missing-field",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "exactly the UAI-1 fields"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "version"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/version-two",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000003\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000003\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"07d685e97f575ece0eb86b0d7a1e61ab37292bb799350439e80031ce0f99fbb304d40b2f7a113ec1adc66d9477a3d14ccbc00c35fb58396bfd1823e66b880b05\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/2\"}",
+   "why": "an unsupported protocol version is refused, never guessed at"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "version"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/version-wrong-type",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":1}",
+   "why": "the version is the text uai/1"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/unknown-kind",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000004\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000004\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"gossip\",\"sig\":\"63dff416f80f843654d81388dc773cd7dbeca93194b69be90943f6a6e464286907fa67dd5e563b0b3419ec67cfb4c564b575fc3881787bf1ba80550318769b0f\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "the kind is one of the defined kinds"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "kind"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/kind-not-accepted-here",
+   "kinds": [
+    "offer"
+   ],
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a request is not what this step accepts"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/algorithm-substitution-ed448",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed448:ababababababababababababababababababababababababababababababababababababababababababababababababababababababababab\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "the only algorithm is ed25519; another is refused, never mapped"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/algorithm-none",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:none:abababababababababababababababababababababababababababababababab\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "no 'none' algorithm"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/identity-uppercase-hex",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:C050C5637A44FA8629FFF3CCCCE2300CB362A63D99D95FC54145266F4332445A\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "an identity is lowercase hex"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/identity-wrong-length",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f433244\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "an identity is 64 hex digits"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/signature-uppercase",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91F1EA397C8615F10641F5F3053C8767DB35120944ED514E33C7B438FDC9784C0D464A7D5A3F100B1858123E50C2107CAD0A986687BC4CE35AC0CF3B5E48D405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a signature is 128 lowercase hex digits"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/signature-short",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d4\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a signature is 128 hex digits"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/small-order-key",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000005\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:0100000000000000000000000000000000000000000000000000000000000000\",\"id\":\"00000000000000000000000000000005\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"e33ed8d4de2420aefdaf171e2ae0187cff3be30fc314a2bda23849ab1f9abd1869ea28086b231320a11964e1e8b3e298fa90a56318ab37043310583dcf874a0d\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a small-order key is 'signed for' by anyone, so it is refused"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/small-order-key-forged-signature-identity",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000011\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:0100000000000000000000000000000000000000000000000000000000000000\",\"id\":\"00000000000000000000000000000011\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a small-order public key verifies a crafted (R = the point, s = 0) signature for ANY message under the bare equation, so anyone could speak as that identity; it must be refused before the equation is tried"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/small-order-key-forged-signature-order-two",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000011\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f\",\"id\":\"00000000000000000000000000000011\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a small-order public key verifies a crafted (R = the point, s = 0) signature for ANY message under the bare equation, so anyone could speak as that identity; it must be refused before the equation is tried"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "expired"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/expired",
+   "kinds": null,
+   "now": 1800000060000,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "valid until, not including, expires_at"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/last-valid-millisecond",
+   "kinds": null,
+   "now": 1800000059999,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "one millisecond before expiry is still valid"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/clock-skew-allowed",
+   "kinds": null,
+   "now": 1800000000000,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000006\",\"expires_at\":1800000180000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000006\",\"in_reply_to\":\"\",\"issued_at\":1800000120000,\"kind\":\"request\",\"sig\":\"1931b0b1c9b785e2ba3e58ce70a9b12c8e3be193a74486e7a45bb9787f71e619561319f5e1e80baf7d2d93588e9a7e0f62d68710eb244127281e947e1b268c0a\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "up to 120 s of clock skew is tolerated"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "not_yet_valid"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/from-the-future",
+   "kinds": null,
+   "now": 1800000000000,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000007\",\"expires_at\":1800000180001,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000007\",\"in_reply_to\":\"\",\"issued_at\":1800000120001,\"kind\":\"request\",\"sig\":\"65bd19f1357331d1f483063413ff2258d51822e6504e82296ecc3378fc4fc7b97e54c41d48daf63f671c1083fc14738269cd5b56a000faebb2e2229cd3032d0c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "beyond the skew"
+  },
+  {
+   "audience": "uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242",
+   "expect": {
+    "codes": [
+     "audience"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/audience-mismatch",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "addressed to someone else"
+  },
+  {
+   "audience": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "audience"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/broadcast-to-a-named-receiver",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000008\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000008\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"4186e2648484a2aaa964ace0c2fec9bb3df872f64d182c3dc604ac14e772dd4666af6b9bf2eb8890ad1cf9fccbb39d990b4b6910a3d986733554c681fd6ceb08\",\"to\":\"\",\"v\":\"uai/1\"}",
+   "why": "a message to no one in particular is not addressed to this receiver"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/expires-before-issue",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"00000000000000000000000000000009\",\"expires_at\":1799999999999,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000009\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"2376cd1fc1f6e8489e023ebed0b7ba672e02e849f89ff3435db19e0832dc6f9a8c04b48a8e69133004a405d8815ec967a2875016e38da1b745f0bf5571a40f09\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "expires_at is after issued_at"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/expires-as-text",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"0000000000000000000000000000000a\",\"expires_at\":\"soon\",\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000a\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da988a6f10df2588ab55edff5e6d657fbdaacbc702f28541065398a3a7c3ec87d390705c7ad28d242c984e7a8f0186202a1cfad27cb254dd913504e4cd9ebf05\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a time is an integer"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/issued-negative",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"0000000000000000000000000000000b\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000b\",\"in_reply_to\":\"\",\"issued_at\":-1,\"kind\":\"request\",\"sig\":\"b863e2db8202ce3134d7d7f6c6a03ef26fb20e1e01e1d12770897390ce70017f2168fb02902383f1fc07a3406c8a8595a59c76286a979d23b264edc9bb9c0e0e\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "a time is not negative"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/issued-as-boolean",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{},\"conversation\":\"0000000000000000000000000000000c\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000c\",\"in_reply_to\":\"\",\"issued_at\":true,\"kind\":\"request\",\"sig\":\"65d1dcfb92ae45ba3e9155b0ba8efb4b521d50fb0b8a17304f90f7df8af9bdd4b030baf33205613394a1acaf0321a642f51a1dd70ba7a64d34c738983bb08e07\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "true is not an integer"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/issued-as-float-text",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"world\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000.0,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "1800000000000.0 is a float, however round"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/issued-negative-zero",
+   "kinds": null,
+   "now": 1,
+   "text": "{\"body\":{},\"conversation\":\"0000000000000000000000000000000d\",\"expires_at\":3600000000000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000d\",\"in_reply_to\":\"\",\"issued_at\":-0,\"kind\":\"request\",\"sig\":\"3df7c93141dcdfbc0896c9c05adc262a8768fd28c99b183a4299c658aa4f5de15740e6a61549b4a94e07ac9dfaa308fc0d7fa9ff24a20744ff8f1fd620f49e0a\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "-0 is the integer 0, so the digest and the signature are unchanged"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/unicode-nfd-signed-as-nfd",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"name\":\"e\u0301\"},\"conversation\":\"0000000000000000000000000000000e\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000e\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"9828899115e75ca1af7a97418d1e653cf7666ee49937052ef5c3d76c9828cf30cac1e126725f65607ba634faaafccdf2572e11625380aaa2134b8e5c61494003\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "text is taken as written: signed as NFD, verified as NFD"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/unicode-renormalized-to-nfc",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"name\":\"\u00e9\"},\"conversation\":\"0000000000000000000000000000000e\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000e\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"9828899115e75ca1af7a97418d1e653cf7666ee49937052ef5c3d76c9828cf30cac1e126725f65607ba634faaafccdf2572e11625380aaa2134b8e5c61494003\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "re-normalizing changes the signed content, so a normalizing transport breaks the signature instead of silently changing meaning"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "outcome": "ok"
+   },
+   "id": "envelope/body-depth-32",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"deep\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[\"x\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]},\"conversation\":\"0000000000000000000000000000000f\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000000f\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"1a1f62d76e3e39fa1024cfcfbea47bd7456170f3148eea5680130ba4d7baedd0f24bbb27a1084c88b3dffa62e25b92a41db78adef84f0c5c864f03e205f46404\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "nesting up to 32 levels is in the profile"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/body-depth-33",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"deep\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[\"x\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]},\"conversation\":\"00000000000000000000000000000010\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000010\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"9d476c902d23813c31613993eb3b56cb5c89046d60ffdfdd229524d688744bc1817e3bf1d4c60a1347d3beac7e5235920610203c11f02c2dafb5501561e0c40f\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "33 levels is not"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "profile",
+     "signature"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/lone-surrogate-in-body",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":\"\\ud800\"},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "text that is not valid Unicode is outside the profile (and cannot have been signed)"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/body-float",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":1.5},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "floats are outside the profile"
+  },
+  {
+   "audience": null,
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "envelope/sixty-four-bit-integer-in-body",
+   "kinds": null,
+   "now": 1800000000001,
+   "text": "{\"body\":{\"hello\":9007199254740993},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"91f1ea397c8615f10641f5f3053c8767db35120944ed514e33c7b438fdc9784c0d464a7d5a3f100b1858123e50c2107cad0a986687bc4ce35ac0cf3b5e48d405\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}",
+   "why": "not exactly representable everywhere"
+  }
+ ],
+ "keys": {
+  "authority": {
+   "agent": "uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0",
+   "seed": "5353535353535353535353535353535353535353535353535353535353535353"
+  },
+  "decider": {
+   "agent": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "seed": "5252525252525252525252525252525252525252525252525252525252525252"
+  },
+  "eve": {
+   "agent": "uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220",
+   "seed": "5454545454545454545454545454545454545454545454545454545454545454"
+  },
+  "other": {
+   "agent": "uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242",
+   "seed": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "requester": {
+   "agent": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "seed": "5151515151515151515151515151515151515151515151515151515151515151"
+  }
+ },
+ "negotiation": [
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "outcome": "ok",
+    "terms": {
+     "capability": "income-screen",
+     "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+     "decision_ttl_ms": 300000,
+     "disclose": [
+      "doc_type",
+      "monthly_income_cents"
+     ],
+     "evidence": [
+      "threshold-check"
+     ],
+     "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+     "subject": {
+      "digest": "abababababababababababababababababababababababababababababababab",
+      "identity": "loan-1"
+     },
+     "version": 1
+    }
+   },
+   "id": "negotiation/agreeable",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "terms intersect what is offered with what is accepted; the ttl is the smaller"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "outcome": "ok",
+    "terms": {
+     "capability": "income-screen",
+     "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+     "decision_ttl_ms": 1000,
+     "disclose": [
+      "doc_type",
+      "monthly_income_cents"
+     ],
+     "evidence": [
+      "threshold-check"
+     ],
+     "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+     "subject": {
+      "digest": "abababababababababababababababababababababababababababababababab",
+      "identity": "loan-1"
+     },
+     "version": 1
+    }
+   },
+   "id": "negotiation/requester-ttl-is-smaller",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 1000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "the shorter of the two limits"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "outcome": "ok",
+    "terms": {
+     "capability": "income-screen",
+     "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+     "decision_ttl_ms": 300000,
+     "disclose": [
+      "monthly_income_cents"
+     ],
+     "evidence": [
+      "threshold-check"
+     ],
+     "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+     "subject": {
+      "digest": "abababababababababababababababababababababababababababababababab",
+      "identity": "loan-1"
+     },
+     "version": 1
+    }
+   },
+   "id": "negotiation/unneeded-field-never-disclosed",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "monthly_income_cents",
+     "full_name"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a field the capability does not accept is not disclosed even though it was offered"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "terms"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/required-field-withheld",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "the capability must see a field the requester will not disclose"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "terms"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/evidence-not-produced",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "something-else"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "the requester needs evidence the capability does not produce"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "capability"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/other-capability",
+   "request": {
+    "capability": "other",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a manifest is an advertisement: the request names exactly one capability and version"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "capability"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/other-version",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 2
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "versions are not interchangeable"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/unknown-request-field",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "purpose": "marketing",
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a request has exactly its fields: nothing smuggled in beside them"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/request-missing-field",
+   "request": {
+    "capability": "income-screen",
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a request has exactly its fields"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/fields-not-distinct",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "doc_type"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a list of distinct names"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/field-name-uppercase",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "Doc_Type"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "names are lowercase"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/ttl-zero",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 0,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a positive integer"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/ttl-boolean",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": true,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "true is not an integer"
+  },
+  {
+   "capability": {
+    "accepts": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "evidence": [
+     "threshold-check"
+    ],
+    "max_ttl_ms": 300000,
+    "name": "income-screen",
+    "requires": [
+     "monthly_income_cents"
+    ],
+    "summary": "s",
+    "version": 1
+   },
+   "decider": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "negotiation/subject-extra-key",
+   "request": {
+    "capability": "income-screen",
+    "max_ttl_ms": 600000,
+    "offer_fields": [
+     "doc_type",
+     "monthly_income_cents"
+    ],
+    "require_evidence": [
+     "threshold-check"
+    ],
+    "subject": {
+     "digest": "abababababababababababababababababababababababababababababababab",
+     "identity": "loan-1",
+     "owner": "x"
+    },
+    "version": 1
+   },
+   "requester": "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+   "why": "a subject is exactly identity and digest"
+  }
+ ],
+ "note": "Independent answer key for the UAI-1 interoperability campaign. Every expected result was typed by hand with its reason; signatures come from the OpenSSL command line; no implementation produced any expectation. Regenerate with interop/vectors/make_interop_vectors.py. Public test seeds: 0x51..0x55 repeated 32 times.",
+ "now": 1800000000000,
+ "schema": "uai-interop-vectors/1",
+ "sequences": [
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/replay",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":21},\"conversation\":\"00000000000000000000000000000015\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000015\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"2b8e912a342be6707a6f98ae0a47a7a45ff0a8ea7007658a800b03f2ef229211e4f73bb53e853e7aebef94cbeaced1ed8d2426c3160285c383e1c1a96d316806\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "replayed",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":21},\"conversation\":\"00000000000000000000000000000015\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000015\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"2b8e912a342be6707a6f98ae0a47a7a45ff0a8ea7007658a800b03f2ef229211e4f73bb53e853e7aebef94cbeaced1ed8d2426c3160285c383e1c1a96d316806\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":22},\"conversation\":\"00000000000000000000000000000016\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000016\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"ab981c8b72fc9b488960e33438accfe9821e907c45f7b0b03e453010142777b5e7aca272e620bc57658dea35041e103b96c721649053037e1e5316f27bbde60c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "replayed",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":22},\"conversation\":\"00000000000000000000000000000016\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000016\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"ab981c8b72fc9b488960e33438accfe9821e907c45f7b0b03e453010142777b5e7aca272e620bc57658dea35041e103b96c721649053037e1e5316f27bbde60c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "replayed",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":21},\"conversation\":\"00000000000000000000000000000015\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000015\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"2b8e912a342be6707a6f98ae0a47a7a45ff0a8ea7007658a800b03f2ef229211e4f73bb53e853e7aebef94cbeaced1ed8d2426c3160285c383e1c1a96d316806\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "a message is accepted once; a second delivery of the same bytes is a replay, however many other messages came between"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/expiry-boundary",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000059999,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":23},\"conversation\":\"00000000000000000000000000000017\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000017\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"24f49a42279b03be65c4d2c7b63561c709d8dd0b30b9a45c0ec042a20ef1e2c8c52ef4ec3c048c6c8475dd1006422b89964606a4f38974c687775119fd95ef08\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "expired",
+     "now": 1800000060000,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":24},\"conversation\":\"00000000000000000000000000000018\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000018\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"939ee511c9d3c9dd5fc2bb7e0cded2ab3eca84039d43353b5b2d73f9717977fcdaf3b7f3f5557e30aa6b0bb9da1ddcf977a83c488abd16dfc227346510b43a09\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "expired",
+     "now": 1800000060001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":25},\"conversation\":\"00000000000000000000000000000019\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000019\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"d8c4cb8c1c0dcac97386213018328820a8e687d15287709c2adafdd578fdd0df07838f932e58d2335b04b6646a6355e6812dedd47ddbd0f8f9808150e92c6b0a\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "valid until, not including, expires_at"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/untrusted-sender",
+   "steps": [
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":26},\"conversation\":\"0000000000000000000000000000001a\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220\",\"id\":\"0000000000000000000000000000001a\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"d659970c1a0ec5abed25112cd3425727917417fd6bb700ec9e3417685df14d11acdae5dc1b5a0a28fbfcf64f49b17984288367d0ff1e4dd70cc309274511850c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":27},\"conversation\":\"0000000000000000000000000000001b\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220\",\"id\":\"0000000000000000000000000000001b\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"fea8727c988db0f688d4e34290f13d51a9e0e071cb37a57efbe295212eef7edc7dc6e6b271f8b5975d8bff3a4c96e957c22a0155d81152f112bb6fae66f90e06\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "a valid signature from an identity the receiver did not pin is not permission, every time"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/self-revocation",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":28},\"conversation\":\"0000000000000000000000000000001c\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000001c\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"1ac6c3327785b2134e38dfbb44aaebb50fee6b17d91b0a8d8a6ad478718b685076a4b002a48ff111490702d14056ad10acb251d0089780c7f96027a7ca273200\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"revoke\",\"effective_at\":1800000000000,\"reason\":\"key lost\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"\"},\"conversation\":\"0000000000000000000000000000001d\",\"expires_at\":null,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000001d\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"2e7a70efd9f23377edc4cde12d6d597570aa8c0e03782b77ccb398d55282359ab47fc28057118830be6678cd4ca11ae4a3befa005588b1bbbea8dd2c525cd60b\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":30},\"conversation\":\"0000000000000000000000000000001e\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000001e\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"3b17d902092c5aa85a2789e0cd149eb59ae716e6e545d0ce7948c4349be03ce9bb9c02cadc1393b475431cf3ed64b327466e0e6b23b1b683e1b5f28766494908\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "a key's own revocation closes it for the receiver that stored it"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a",
+     "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/revocation-by-a-stranger-is-refused",
+   "steps": [
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"revoke\",\"effective_at\":1800000000000,\"reason\":\"spite\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"\"},\"conversation\":\"0000000000000000000000000000001f\",\"expires_at\":null,\"from\":\"uai:ed25519:9f49439e9db095bc4111ed25d35795d831bc55a047f4b1d7f6aee3777bb41220\",\"id\":\"0000000000000000000000000000001f\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"661a5c66221cf86f52541381658c704a2df10ce475a4b6d47fe2de20667fd683df5e7de78e17634a6971dc0cd4e0885f7da3e19e9400de5737af0d92c006aa0f\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":32},\"conversation\":\"00000000000000000000000000000020\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000020\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"882eb66e9d76606efafbfad6d14bb6f96a9eba27e5adedbc1569ba425b2d0412c0f80600b2df263696122e1f5fd60c0ab45f0b1a139bef038e084d8197305b06\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "only the subject or a listed authority can revoke"
+  },
+  {
+   "config": {
+    "authorities": [
+     "uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0"
+    ],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/revocation-by-a-listed-authority",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"revoke\",\"effective_at\":1800000000000,\"reason\":\"breach\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"\"},\"conversation\":\"00000000000000000000000000000021\",\"expires_at\":null,\"from\":\"uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0\",\"id\":\"00000000000000000000000000000021\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"79d74803b5c1669a3cb8fdaa666a54e1baada2370988dec8e903533850d7f6245fa85622fb8d25afee0c8136fdc3390f9722aefe97f7abe1ba348930f0e08d03\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":34},\"conversation\":\"00000000000000000000000000000022\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000022\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"6edec7fbd92e298dfc5db0bdf3187f4b291ab0bef82ce964310eee34bd1324213c7f2a797a71b3782ca06d0d664602e3299d2d6e4c7d5db69662500300555009\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "a receiver-listed authority may revoke any identity"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/revocation-with-future-effect",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"revoke\",\"effective_at\":1800000010000,\"reason\":\"planned\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"\"},\"conversation\":\"00000000000000000000000000000023\",\"expires_at\":null,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000023\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"e294fcfdf336feea63488aa9238c078c0f4dfd63d68ccaac7c783e9ffb6e455773ec9f358f0b17c1d0b077539116aeaad1a3afba9e8cd65890737431dfcf0c0a\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000009999,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":36},\"conversation\":\"00000000000000000000000000000024\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000024\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"0ce85cdc16bd9316c35aaa6b66259222d2141de71e5ae5cac660ce652e6b9850ba819fc5709005a9255649f9bbe8e5dbf2e3fc052cb535a37937164474336003\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000010000,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":37},\"conversation\":\"00000000000000000000000000000025\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000025\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"97bd95c0a195e1f36801aece584c480bee16c643f8f79bbb4bfa5447f510b45a760b5c9c73a2bf44974b957285155454e5a9b19620553133682ae4940b8a1b02\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "binds once its effective time arrives"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": 60000,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/stale-revocation-list",
+   "steps": [
+    {
+     "expect": "unavailable",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":38},\"conversation\":\"00000000000000000000000000000026\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000026\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"1eeea51ecbce8b2ea2b4cd66444c7875853ac1fec889b7adb8cff22ca7427666723c8bd8e1daf8b02a61c7ad61363ab6b84a51b1e8a7b9fd332d9c80ed328705\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000000,
+     "op": "fresh"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000059000,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":39},\"conversation\":\"00000000000000000000000000000027\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000027\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"e02c7dbf29d5dc7ef734cbd269041e742db92a1f4a45fac96ed5808b74be5afcfdbf817d4901bc5cab92049f0ca449f741eeb88e642c4260ff64ad82ad0db709\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "unavailable",
+     "now": 1800000061000,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":40},\"conversation\":\"00000000000000000000000000000028\",\"expires_at\":1800000120999,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000028\",\"in_reply_to\":\"\",\"issued_at\":1800000060999,\"kind\":\"request\",\"sig\":\"0ec0137ce3c68a9c02659dd0191b6b7694ac78bb14c11c7a6eae084442e09a3181b2709916d6e2914bd44e1cde4ebc3dba1d273f53413352c712eb9f3bafca01\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "not knowing is not the same as nothing being revoked: a list never refreshed, or refreshed too long ago, refuses"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": false,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/rotation-off-by-default",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"rotate\",\"effective_at\":1800000000000,\"reason\":\"scheduled\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\"},\"conversation\":\"00000000000000000000000000000029\",\"expires_at\":null,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000029\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"db9d4d24313c55ad1b83472d9a6332063b02dc6bdd9a8571c0752c86ae89d5dabfd261c79dc031b5bfc0ec5bea61c3b09aac588fb8bf40dca7d2b4f0154e530a\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":42},\"conversation\":\"0000000000000000000000000000002a\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"id\":\"0000000000000000000000000000002a\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"9e84b3c97f6579e3e7f4b32fc48209de48ce0bb7dcb903ebedf77f7905b6f3cf826ddaf79ac2ef6104e94263ef969671015ec5549fb5ec563044a1ec9d8ab60d\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":43},\"conversation\":\"0000000000000000000000000000002b\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000002b\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"fc9dcd0860ec91978c68ffc443e1f3eec7eb53fd733e29700fc880188fc53cb5258c84f9d40bde1167599d5c5a293f58a369d96e3aeab19931b936415411f202\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "a rotation can add trust, so it is ignored unless the receiver chose to follow it; the old key is retired either way"
+  },
+  {
+   "config": {
+    "authorities": [],
+    "follow_rotation": true,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/rotation-followed",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"rotate\",\"effective_at\":1800000000000,\"reason\":\"scheduled\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\"},\"conversation\":\"00000000000000000000000000000029\",\"expires_at\":null,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000029\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"db9d4d24313c55ad1b83472d9a6332063b02dc6bdd9a8571c0752c86ae89d5dabfd261c79dc031b5bfc0ec5bea61c3b09aac588fb8bf40dca7d2b4f0154e530a\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":44},\"conversation\":\"0000000000000000000000000000002c\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"id\":\"0000000000000000000000000000002c\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"cdf1d7699a311c384b6d60eabea5f8d400d3f94ec3231dd3a923430331557ee075986aa99f79ab04b955e05f7bb1f20fee23fac7d6f3a02af421d834ca21890c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":45},\"conversation\":\"0000000000000000000000000000002d\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"0000000000000000000000000000002d\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"d28701bbdb07b13c82ac2cc44a4989fb04ba927fc051847fdc88936d4264cdce66d3ebf98d66fb2a5d8e511bbfae83e516ebb99fe3404cb7ddafb36e189d2f07\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "when followed, the pinned identity's chosen successor is admitted and the old key is not"
+  },
+  {
+   "config": {
+    "authorities": [
+     "uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0"
+    ],
+    "follow_rotation": true,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/rotation-withdrawn-by-authority",
+   "steps": [
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"rotate\",\"effective_at\":1800000000000,\"reason\":\"scheduled\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\"},\"conversation\":\"00000000000000000000000000000029\",\"expires_at\":null,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000029\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"db9d4d24313c55ad1b83472d9a6332063b02dc6bdd9a8571c0752c86ae89d5dabfd261c79dc031b5bfc0ec5bea61c3b09aac588fb8bf40dca7d2b4f0154e530a\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":46},\"conversation\":\"0000000000000000000000000000002e\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"id\":\"0000000000000000000000000000002e\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"0ce7c754fb8e927b964178c80d126dbac7cd4d44366882f238a618d68040f8826730c3af30865cbcb4142959e1e1b77ecb2500a427883d662a42ffa61aa24508\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"revoke\",\"effective_at\":1800000000000,\"reason\":\"it was compromised\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"\"},\"conversation\":\"0000000000000000000000000000002f\",\"expires_at\":null,\"from\":\"uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0\",\"id\":\"0000000000000000000000000000002f\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"cfec5b8ff18455bf578c424fed30369dde2c67110f79a2bf6b7974c338d554f2d383d39de5a87a024ff65bb33902912a5e0abcb6b7b3c07e8e2140f7b3d9470a\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":48},\"conversation\":\"00000000000000000000000000000030\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"id\":\"00000000000000000000000000000030\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"417743d04b4cdcefa24348c7348d0a6790c7278f6aabf6b3469195267954b256f0fe3527facc8fa7959a6c83a613110b575e005f4a94b75a02daf733ac7c410b\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "an authority's revoke of a key that already rotated withdraws the successor it named"
+  },
+  {
+   "config": {
+    "authorities": [
+     "uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0"
+    ],
+    "follow_rotation": true,
+    "max_staleness_ms": null,
+    "pinned": [
+     "uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a"
+    ],
+    "self": "uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7"
+   },
+   "id": "sequence/rotation-by-someone-else-is-refused",
+   "steps": [
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "revocation",
+     "text": "{\"body\":{\"action\":\"rotate\",\"effective_at\":1800000000000,\"reason\":\"x\",\"subject\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"successor\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\"},\"conversation\":\"00000000000000000000000000000031\",\"expires_at\":null,\"from\":\"uai:ed25519:f80cccdce4ae1c07ae208a2adf99a310ae4207e0306fa0236110b06827bbb8d0\",\"id\":\"00000000000000000000000000000031\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"revocation\",\"sig\":\"48e37f67d14f1a3da4189f456152e5b59611612649c776d78bfaec0a0e43f4b0ee363aa75e721ff215d5b590d2ac28cf68f733ffded1141dfaf0633f882da90b\",\"to\":\"\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "untrusted",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":50},\"conversation\":\"00000000000000000000000000000032\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c6822637c7d310ec57627be00ba259d253749f4aaf644470cffbe53a35f73242\",\"id\":\"00000000000000000000000000000032\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"69d2d5b8d5c7d0970c2eafd2ff40963be14224afe4dfc38fff8585e26317af90c0360ac3bb2fae891d9c7cc03b047d1694ca2db2c03fdeeca6ae66f8435d2a0c\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    },
+    {
+     "expect": "ok",
+     "now": 1800000000001,
+     "op": "receive",
+     "text": "{\"body\":{\"n\":51},\"conversation\":\"00000000000000000000000000000033\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:c050c5637a44fa8629fff3cccce2300cb362a63d99d95fc54145266f4332445a\",\"id\":\"00000000000000000000000000000033\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"8882948cb45f4399bd73385862c104709b35c05e96789b43c5b3f1045a6ac276177da3d02d4b5ad8cb5516e74d0ff9ee13507d89c2381afd8d16855ce096cd0d\",\"to\":\"uai:ed25519:2012cb90ca60e8e5d8daf66e2272d2233e0486d557e8c66141ed8920177d7eb7\",\"v\":\"uai/1\"}"
+    }
+   ],
+   "why": "only an identity can rotate itself"
+  }
+ ],
+ "wire": [
+  {
+   "b64": "eyJhIjoxLCJhIjoyfQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/duplicate-key",
+   "why": "two receivers would disagree on which value counts"
+  },
+  {
+   "b64": "eyJhIjoxLCJcdTAwNjEiOjJ9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/duplicate-key-by-escape",
+   "why": "the same key spelled two ways is still twice"
+  },
+  {
+   "b64": "eyJhIjoxLjB9",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/float-one-point-zero",
+   "why": "UAI-1 carries integers only"
+  },
+  {
+   "b64": "eyJhIjoxZTN9",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/float-exponent",
+   "why": "an exponent is a float"
+  },
+  {
+   "b64": "eyJhIjoxRTN9",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/float-exponent-capital",
+   "why": "an exponent is a float"
+  },
+  {
+   "b64": "eyJhIjotMC4wfQ==",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/float-negative-zero",
+   "why": "a float"
+  },
+  {
+   "b64": "eyJhIjowLjV9",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/float-half",
+   "why": "a float"
+  },
+  {
+   "b64": "eyJhIjo5MDA3MTk5MjU0NzQwOTkyfQ==",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/integer-too-big",
+   "why": "outside +/-(2**53-1)"
+  },
+  {
+   "b64": "eyJhIjotOTAwNzE5OTI1NDc0MDk5Mn0=",
+   "expect": {
+    "codes": [
+     "profile"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/integer-too-small",
+   "why": "outside +/-(2**53-1)"
+  },
+  {
+   "b64": "eyJhIjpOYU59",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/nan",
+   "why": "not a JSON value"
+  },
+  {
+   "b64": "eyJhIjpJbmZpbml0eX0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/infinity",
+   "why": "not a JSON value"
+  },
+  {
+   "b64": "eyJhIjotSW5maW5pdHl9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/negative-infinity",
+   "why": "not a JSON value"
+  },
+  {
+   "b64": "WzFd",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/top-level-array",
+   "why": "a message is one object"
+  },
+  {
+   "b64": "MQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/top-level-number",
+   "why": "a message is one object"
+  },
+  {
+   "b64": "Ingi",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/top-level-string",
+   "why": "a message is one object"
+  },
+  {
+   "b64": "",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/empty",
+   "why": "nothing to read"
+  },
+  {
+   "b64": "ICAg",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/whitespace-only",
+   "why": "nothing to read"
+  },
+  {
+   "b64": "eyJhIjoxfSB4",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/trailing-text",
+   "why": "one object and nothing after it"
+  },
+  {
+   "b64": "eyJhIjoxfXsiYiI6Mn0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/two-objects",
+   "why": "one object and nothing after it"
+  },
+  {
+   "b64": "77u/eyJhIjoxfQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/byte-order-mark",
+   "why": "a BOM is not JSON whitespace"
+  },
+  {
+   "b64": "eyJhIjoi/yJ9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/invalid-utf8-byte",
+   "why": "0xFF is never UTF-8; a lenient decoder would swap in U+FFFD and two receivers would read different text"
+  },
+  {
+   "b64": "eyJhIjoiwK8ifQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/overlong-utf8",
+   "why": "an overlong encoding of '/'"
+  },
+  {
+   "b64": "eyJhIjoi4oIifQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/truncated-utf8",
+   "why": "a multi-byte sequence cut short"
+  },
+  {
+   "b64": "eyJhIjoi7aCAIn0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/encoded-surrogate",
+   "why": "UTF-8 may not encode a surrogate"
+  },
+  {
+   "b64": "eyJhIjoiASJ9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/raw-control-character",
+   "why": "control characters must be escaped"
+  },
+  {
+   "b64": "eydhJzoxfQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/single-quotes",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjoxLH0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/trailing-comma",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjowMX0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/leading-zero",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjorMX0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/plus-sign",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjoweDEwfQ==",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/hex-number",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjox",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/unterminated",
+   "why": "not JSON"
+  },
+  {
+   "b64": "eyJhIjoiXHg0MSJ9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/bad-escape",
+   "why": "not a JSON escape"
+  },
+  {
+   "b64": "eyJhIjoiXHUxMiJ9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/short-unicode-escape",
+   "why": "not a JSON escape"
+  },
+  {
+   "b64": "eyJhIjrCoDF9",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/non-ascii-whitespace",
+   "why": "only space, tab, newline and carriage return are whitespace"
+  },
+  {
+   "b64": "eyJhIjoMMX0=",
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "id": "wire/form-feed-whitespace",
+   "why": "form feed is not JSON whitespace"
+  },
+  {
+   "expect": {
+    "outcome": "ok"
+   },
+   "generate": "exact_mib",
+   "id": "wire/exactly-one-mebibyte",
+   "why": "the limit is more than 1 MiB, so exactly 1 MiB reads"
+  },
+  {
+   "expect": {
+    "codes": [
+     "malformed"
+    ],
+    "outcome": "refuse"
+   },
+   "generate": "over_mib",
+   "id": "wire/one-byte-over-a-mebibyte",
+   "why": "more than 1 MiB is refused before anything else looks at it"
+  }
+ ]
+}

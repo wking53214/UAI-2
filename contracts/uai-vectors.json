@@ -1,0 +1,450 @@
+{
+  "schema": "cns-uai-vectors/1",
+  "note": "regenerate with python -m cns_interop.vectors --write; spec in docs/interop/UAI-1.md",
+  "seeds": {
+    "alice": {
+      "seed": "0000000000000000000000000000000000000000000000000000000000000001",
+      "agent": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29"
+    },
+    "bob": {
+      "seed": "1111111111111111111111111111111111111111111111111111111111111111",
+      "agent": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737"
+    },
+    "authority": {
+      "seed": "4242424242424242424242424242424242424242424242424242424242424242",
+      "agent": "uai:ed25519:2152f8d19b791d24453242e15f2eab6cb7cffa7b6a5ed30097960e069881db12"
+    }
+  },
+  "envelopes": [
+    {
+      "name": "request-0",
+      "signer": "alice",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "digest": "4906a891531e9573b6daf0b9e2f79b3d76ba0a4eb0d6d87be56a0fe06d993e37",
+      "signing_digest": "1d574bd98b4a35d6669206e452484cc17bea2f0cccc04f83c1e8315abc3c8f12"
+    },
+    {
+      "name": "offer-1",
+      "signer": "bob",
+      "wire": {
+        "v": "uai/1",
+        "kind": "offer",
+        "id": "00000000000000000000000000000002",
+        "from": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "to": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "conversation": "00000000000000000000000000000002",
+        "in_reply_to": "abababababababababababababababababababababababababababababababab",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "z": [
+            1,
+            -1,
+            0,
+            9007199254740991,
+            -9007199254740991
+          ],
+          "A": null,
+          "b": true,
+          "c": false,
+          "été": "café",
+          "Ａ": "fullwidth",
+          "😀": "astral key sorts after U+FF21",
+          "nested": {
+            "list": [
+              [],
+              {},
+              [
+                {
+                  "k": "v"
+                }
+              ]
+            ],
+            "empty": ""
+          },
+          "quote\"and\\slash": "line\nbreak\ttab"
+        },
+        "sig": "d15789f69ffbe68dc434cafc671d0af1c7df57eb03ab12aa4115ec71229df0554852bfd71fafeff723d01b876b3e35385928099802ddea23c0521e092b65440e"
+      },
+      "digest": "023e28dec267374ca5f01ed476621a997caa890de1e09af8737df430902cf42f",
+      "signing_digest": "b01a21321b7c8876aafd9cf62edc0c5ef72d0ca1a9d113a28a19182e0246b0f8"
+    },
+    {
+      "name": "manifest-2",
+      "signer": "authority",
+      "wire": {
+        "v": "uai/1",
+        "kind": "manifest",
+        "id": "00000000000000000000000000000003",
+        "from": "uai:ed25519:2152f8d19b791d24453242e15f2eab6cb7cffa7b6a5ed30097960e069881db12",
+        "to": "",
+        "conversation": "00000000000000000000000000000003",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": null,
+        "body": {},
+        "sig": "a1c90cac16680ce93f6dcdc5b08e9d328a0ccc1523469a9532de23716e7b265839950608d26421e6314c60d80262730a4bba1de8e598b03f68e5cb5f48d8b804"
+      },
+      "digest": "86ab87eaf7654da8f11ead44654c27413967db39d8a5c29788f5c7a744ed6d10",
+      "signing_digest": "bc69b66cfc9c3d31d693ade0eeccdd38f2673354b9f0ba3fdd9cdf8857e7ac4c"
+    }
+  ],
+  "rejections": [
+    {
+      "name": "body-edited",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 2
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "signature",
+      "now": 1800000000000
+    },
+    {
+      "name": "sender-swapped",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "signature",
+      "now": 1800000000000
+    },
+    {
+      "name": "extra-field",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05",
+        "extra": 1
+      },
+      "code": "malformed",
+      "now": 1800000000000
+    },
+    {
+      "name": "missing-field",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "malformed",
+      "now": 1800000000000
+    },
+    {
+      "name": "other-version",
+      "wire": {
+        "v": "uai/2",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "version",
+      "now": 1800000000000
+    },
+    {
+      "name": "unknown-kind",
+      "wire": {
+        "v": "uai/1",
+        "kind": "gossip",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "malformed",
+      "now": 1800000000000
+    },
+    {
+      "name": "bad-sig-hex",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+      },
+      "code": "malformed",
+      "now": 1800000000000
+    },
+    {
+      "name": "expires-before-issue",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000000000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "malformed",
+      "now": 1800000000000
+    },
+    {
+      "name": "small-order-key",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:0100000000000000000000000000000000000000000000000000000000000000",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "code": "signature",
+      "now": 1800000000000
+    },
+    {
+      "name": "non-canonical-key",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "signature",
+      "now": 1800000000000
+    },
+    {
+      "name": "expired",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "expired",
+      "now": 1800000060000
+    },
+    {
+      "name": "from-the-future",
+      "wire": {
+        "v": "uai/1",
+        "kind": "request",
+        "id": "00000000000000000000000000000001",
+        "from": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+        "to": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+        "conversation": "00000000000000000000000000000001",
+        "in_reply_to": "",
+        "issued_at": 1800000000000,
+        "expires_at": 1800000060000,
+        "body": {
+          "capability": "income-screen",
+          "version": 1
+        },
+        "sig": "da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05"
+      },
+      "code": "not_yet_valid",
+      "now": 1799999879999
+    }
+  ],
+  "wire_text": [
+    {
+      "name": "duplicate-key",
+      "text": "{\"a\":1,\"a\":2}",
+      "code": "malformed"
+    },
+    {
+      "name": "float",
+      "text": "{\"a\":1.0}",
+      "code": "profile"
+    },
+    {
+      "name": "exponent",
+      "text": "{\"a\":1e3}",
+      "code": "profile"
+    },
+    {
+      "name": "big-int",
+      "text": "{\"a\":9007199254740992}",
+      "code": "profile"
+    },
+    {
+      "name": "nan",
+      "text": "{\"a\":NaN}",
+      "code": "malformed"
+    },
+    {
+      "name": "not-object",
+      "text": "[1]",
+      "code": "malformed"
+    }
+  ],
+  "disclosure": {
+    "identity": "loan-app-17",
+    "values": {
+      "monthly_income_cents": 512000,
+      "doc_type": "paystub",
+      "ssn": "000-00-0000"
+    },
+    "salts": {
+      "monthly_income_cents": "00000000000000000000000000000001",
+      "doc_type": "00000000000000000000000000000002",
+      "ssn": "00000000000000000000000000000003"
+    },
+    "commitments": {
+      "monthly_income_cents": "b8dcb3018b62f59fe3e7517d7713e254157c0af49a0deaeda3884a9b7edb34a5",
+      "doc_type": "a5224ec098ad6b721337dd16e52adc4d310322a1793380bee4ffe6f546f2b02c",
+      "ssn": "f540242f41765213974b0f7190df9851288a620a2a3e0e92cd0efef452b457b3"
+    },
+    "digest": "ee743b8b223ea4e005efe8b5939cc6b9ff0ec126a28a082633a8c3268ee9fa4f",
+    "reveal": {
+      "commitments": {
+        "monthly_income_cents": "b8dcb3018b62f59fe3e7517d7713e254157c0af49a0deaeda3884a9b7edb34a5",
+        "doc_type": "a5224ec098ad6b721337dd16e52adc4d310322a1793380bee4ffe6f546f2b02c",
+        "ssn": "f540242f41765213974b0f7190df9851288a620a2a3e0e92cd0efef452b457b3"
+      },
+      "disclosed": {
+        "doc_type": {
+          "salt": "00000000000000000000000000000002",
+          "value": "paystub"
+        },
+        "monthly_income_cents": {
+          "salt": "00000000000000000000000000000001",
+          "value": 512000
+        }
+      }
+    }
+  },
+  "terms": {
+    "terms": {
+      "capability": "income-screen",
+      "version": 1,
+      "decider": "uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+      "requester": "uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29",
+      "subject": {
+        "identity": "loan-app-17",
+        "digest": "ee743b8b223ea4e005efe8b5939cc6b9ff0ec126a28a082633a8c3268ee9fa4f"
+      },
+      "disclose": [
+        "doc_type",
+        "monthly_income_cents"
+      ],
+      "evidence": [
+        "threshold-check"
+      ],
+      "decision_ttl_ms": 300000
+    },
+    "digest": "6e8af3c6081cefcf6b3b2acb410174d2ae410aef77b459827206c1d460dc6450"
+  }
+}
