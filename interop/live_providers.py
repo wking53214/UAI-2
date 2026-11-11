@@ -2,6 +2,7 @@
 
     UAI_ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...  GEMINI_API_KEY=... GEMINI_MODEL=...
     OPENAI_API_KEY=... OPENAI_MODEL=...  GITHUB_MODELS_TOKEN=... COPILOT_MODEL=openai/gpt-4.1  python interop/live_providers.py --out evidence.json
+    GROQ_API_KEY=... GROQ_MODEL=...  CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... CLOUDFLARE_MODEL=@cf/...
 
 The Anthropic key is read from UAI_ANTHROPIC_API_KEY first and from ANTHROPIC_API_KEY when that is empty or unset (some hosts
 reserve ANTHROPIC_API_KEY for themselves). A provider with no key is reported as NOT EXECUTED and is never counted. If NOTHING was executed the exit status is 3, so a
@@ -23,7 +24,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from cns_interop.adapter import AdapterJudge, PromptedModelAdapter, ProviderInfo, Recommendation  # noqa: E402
 from cns_interop.manifest import Capability  # noqa: E402
-from cns_interop.providers import ProvenanceLog, anthropic_complete, copilot_complete, gemini_complete, openai_complete  # noqa: E402
+from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete, copilot_complete,  # noqa: E402
+                                   gemini_complete, groq_complete, openai_complete)
 
 CAP = Capability(name="income-screen", version=1, summary="monthly income at or above 450000 cents",
                  accepts=("doc_type", "monthly_income_cents"), requires=("doc_type", "monthly_income_cents"),
@@ -61,7 +63,10 @@ def main(argv: List[str]) -> int:
                                              anthropic_complete),
                                             ("google", ("GEMINI_API_KEY",), "GEMINI_MODEL", gemini_complete),
                                             ("openai", ("OPENAI_API_KEY",), "OPENAI_MODEL", openai_complete),
-                                            ("copilot-github-models", ("GITHUB_MODELS_TOKEN",), "COPILOT_MODEL", copilot_complete)):
+                                            ("copilot-github-models", ("GITHUB_MODELS_TOKEN",), "COPILOT_MODEL", copilot_complete),
+                                            ("groq", ("GROQ_API_KEY",), "GROQ_MODEL", groq_complete),
+                                            ("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), "CLOUDFLARE_MODEL",
+                                             cloudflare_complete)):
         key_var = " or ".join(key_vars)
         # the first variable that holds a key wins; a pasted key often ends in a newline
         key = next((v for v in (os.environ.get(n, "").strip() for n in key_vars) if v), "")
@@ -70,8 +75,16 @@ def main(argv: List[str]) -> int:
             print(f"NOT EXECUTED: {name} (set {key_var} and {model_var})")
             results.append({"provider": name, "executed": False})
             continue
+        extra: Dict[str, Any] = {}
+        if make is cloudflare_complete:
+            account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+            if not account:
+                print(f"NOT EXECUTED: {name} (set CLOUDFLARE_ACCOUNT_ID as well)")
+                results.append({"provider": name, "executed": False})
+                continue
+            extra["account_id"] = account
         log = ProvenanceLog()
-        results.append(run_one(name, make(key, model, log, timeout_s=LIVE_TIMEOUT_S), log, model))
+        results.append(run_one(name, make(key, model, log, timeout_s=LIVE_TIMEOUT_S, **extra), log, model))
         print(f"EXECUTED: {name} live={results[-1]['live']} clears={results[-1].get('clears')}")
     if "--out" in argv:
         Path(argv[argv.index("--out") + 1]).write_text(json.dumps(results, indent=1, sort_keys=True) + "\n")

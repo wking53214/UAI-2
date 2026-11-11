@@ -455,3 +455,17 @@ def test_refused_is_what_a_strict_client_raises_so_callers_have_one_thing_to_cat
             connected("groq", stub.url).complete("hi")
     finally:
         stub.close()
+
+
+def test_the_live_runner_knows_all_six_providers_and_will_not_call_cloudflare_without_an_account(monkeypatch, capsys):
+    import live_providers
+
+    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID"]:
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("CLOUDFLARE_API_TOKEN", KEY)
+    monkeypatch.setenv("CLOUDFLARE_MODEL", "@cf/meta/m")
+    assert live_providers.main([]) == 3                               # nothing executed is never a pass
+    out = capsys.readouterr().out
+    assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and KEY not in out
+    for name in ("anthropic", "google", "openai", "copilot-github-models", "groq", "cloudflare-workers-ai"):
+        assert f"NOT EXECUTED: {name} " in out
