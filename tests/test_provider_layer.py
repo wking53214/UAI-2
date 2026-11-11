@@ -410,3 +410,39 @@ def test_groq_and_cloudflare_refuse_a_key_with_whitespace_or_a_hidden_character_
         with pytest.raises(ValueError) as e:
             build("sk-SECRET" + ch + "tail")
         assert "SECRET" not in str(e.value)
+
+
+def test_a_server_that_drips_its_answer_one_byte_at_a_time_is_cut_off_at_the_time_limit():
+    import socket
+
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(5)
+    stop = threading.Event()
+
+    def serve():
+        while not stop.is_set():
+            try:
+                conn, _ = listener.accept()
+            except OSError:
+                return
+            try:
+                conn.recv(65_536)
+                conn.sendall(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 100000\r\n\r\n")
+                while not stop.is_set():          # each byte arrives well inside the per-read timeout, for ever
+                    conn.sendall(b" ")
+                    time.sleep(0.1)
+            except OSError:
+                pass
+
+    threading.Thread(target=serve, daemon=True).start()
+    try:
+        for provider in ALL:
+            log, started = ProvenanceLog(), time.monotonic()
+            with pytest.raises(Refused) as e:
+                make(provider, f"http://127.0.0.1:{listener.getsockname()[1]}", log, timeout_s=0.5)("hi")
+            assert e.value.category == "timeout" and time.monotonic() - started < 3.0
+            assert log.records[0].outcome == "rejected"
+    finally:
+        stop.set()
+        listener.close()

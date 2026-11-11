@@ -138,8 +138,22 @@ def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: fl
     req = urllib.request.Request(url, data=data, headers={**headers, "content-type": "application/json"}, method="POST")
     opener = urllib.request.build_opener(_NoRedirect())
     try:
+        deadline = time.monotonic() + timeout_s
         with opener.open(req, timeout=timeout_s) as resp:
-            raw = resp.read(max_bytes + 1)
+            # `timeout_s` on the socket bounds each read, not the whole answer: a server that sends one byte just inside
+            # it, again and again, would hold this call open without end. So the answer is read in pieces against one
+            # deadline for the whole exchange.
+            pieces: List[bytes] = []
+            size = 0
+            while size <= max_bytes:
+                piece = resp.read1(min(65_536, max_bytes + 1 - size))
+                if not piece:
+                    break
+                pieces.append(piece)
+                size += len(piece)
+                if time.monotonic() > deadline:
+                    raise _refused(f"the provider's answer did not arrive within {timeout_s:g} seconds", "timeout")
+            raw = b"".join(pieces)
             if rec is not None:
                 rec.http_status = int(resp.status)
                 ray = resp.headers.get("cf-ray")
