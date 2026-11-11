@@ -358,6 +358,11 @@ def _chat_call(model: str, prompt: str, rec: Provenance, url: str, headers: Dict
     rec.model_reported = str(out.get("model", ""))
     _usage(rec, out.get("usage"), "prompt_tokens", "completion_tokens")
     _request_id(rec, out.get("id"))
+    return _read_choice(rec, out, truncated_ok)
+
+
+def _read_choice(rec: Provenance, out: Dict[str, Any], truncated_ok: bool) -> str:
+    """The text of a Chat Completions `choices` answer, read exactly: one choice, finished with `stop`, one plain text message."""
     choices = out.get("choices")
     if not isinstance(choices, list) or len(choices) != 1 or not isinstance(choices[0], dict):
         raise Refused("provider", "the answer is not exactly one choice")
@@ -414,8 +419,10 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
     """`complete(prompt)` over Cloudflare Workers AI (`/accounts/<account>/ai/run/<model>`), with an API token.
 
     `account_id` is yours and is letters and digits only. `model` is a catalog name such as "@cf/meta/llama-3.1-8b-instruct".
-    Workers AI does not say why an answer ended, so a cut-off answer cannot be told from a complete one here: the record's
-    `finish_reason` stays empty, and a decider that must not act on a truncated answer should use a provider that reports it."""
+    Older catalog models answer `{"response": text}` and do not say why the answer ended, so a cut-off answer cannot be told
+    from a complete one: the record's `finish_reason` stays empty, and a decider that must not act on a truncated answer
+    should use a provider that reports it. Newer models answer in the Chat Completions shape (`choices`), which is read with
+    the same exact rules as the OpenAI-compatible routes: one choice, finished with `stop`, one plain text message."""
     if not api_key or not model or "?" in model or "#" in model or ".." in model:
         raise ValueError("an API token and a plain model name are needed")
     if not isinstance(account_id, str) or not account_id.isalnum():
@@ -434,6 +441,15 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
         if out.get("success") is not True:
             raise _refused("the provider reported an unsuccessful inference", "provider_error")
         result = out.get("result")
+        if isinstance(result, dict) and "choices" in result:
+            # newer catalog models answer in the Chat Completions shape, which does say why the answer ended
+            rec.model_reported = str(result.get("model", ""))
+            _usage(rec, result.get("usage"), "prompt_tokens", "completion_tokens")
+            _request_id(rec, result.get("id"))
+            text = _read_choice(rec, result, truncated_ok=False)
+            if not text.strip():
+                raise Refused("provider", "the answer carries no text")
+            return text
         text = result.get("response") if isinstance(result, dict) else None
         if not isinstance(text, str) or not text.strip():
             raise Refused("provider", "the answer carries no text")
