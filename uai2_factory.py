@@ -16,7 +16,7 @@ def create_provider(environ=None):
     model = env.get("UAI2_MODEL", "").strip()
 
     if selected not in ("gemini", "groq", "cloudflare"):
-        raise ValueError("UAI2_PROVIDER must be gemini or groq")
+        raise ValueError("UAI2_PROVIDER must be gemini, groq, or cloudflare")
 
     if not model:
         raise ValueError("UAI2_MODEL is required")
