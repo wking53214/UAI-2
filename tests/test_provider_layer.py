@@ -446,3 +446,89 @@ def test_a_server_that_drips_its_answer_one_byte_at_a_time_is_cut_off_at_the_tim
     finally:
         stop.set()
         listener.close()
+
+
+def stalling_server(schedule):
+    """Answers with headers that promise a long body, then sends one byte after each wait in `schedule`, then nothing."""
+    import socket
+
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(16)
+
+    def serve():
+        while True:
+            try:
+                conn, _ = listener.accept()
+            except OSError:
+                return
+
+            def talk(conn=conn):
+                try:
+                    conn.recv(65_536)
+                    conn.sendall(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 100000\r\n\r\n")
+                    for wait in schedule:
+                        time.sleep(wait)
+                        conn.sendall(b" ")
+                    time.sleep(60)
+                except OSError:
+                    pass
+            threading.Thread(target=talk, daemon=True).start()
+
+    threading.Thread(target=serve, daemon=True).start()
+    return listener, f"http://127.0.0.1:{listener.getsockname()[1]}"
+
+
+STALLS = {
+    "one byte just inside the limit, then silence": [0.9],
+    "a byte every 0.8 of the limit, for ever": [0.8] * 40,
+    "headers, then nothing at all": [],
+    "a byte every 0.45 of the limit, for ever": [0.45] * 80,
+}
+
+
+@pytest.mark.parametrize("name", sorted(STALLS))
+def test_no_pattern_of_small_sends_keeps_a_call_open_past_its_one_time_limit(name):
+    # Before this test, the first pattern held a call with timeout_s=1.0 for 1.94 seconds and the second for 1.61: the
+    # deadline was checked only after a read returned, and each read could wait a full socket timeout of its own.
+    limit = 1.0
+    listener, url = stalling_server([w * limit for w in STALLS[name]])
+    try:
+        for provider in ALL:
+            log, started = ProvenanceLog(), time.monotonic()
+            with pytest.raises(Refused) as e:
+                make(provider, url, log, timeout_s=limit)("hi")
+            took = time.monotonic() - started
+            assert took < limit + 0.35, f"{provider}: gave up after {took:.2f}s against a limit of {limit}s"
+            assert e.value.category == "timeout" and log.records[0].outcome == "rejected"
+            assert log.records[0].http_status is None      # nothing the late answer carried is recorded
+    finally:
+        listener.close()
+
+
+def test_a_host_that_accepts_the_connection_and_never_answers_is_given_up_on_at_the_limit():
+    import socket
+
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(16)
+    try:
+        started = time.monotonic()
+        with pytest.raises(Refused) as e:
+            make("groq", f"http://127.0.0.1:{listener.getsockname()[1]}", ProvenanceLog(), timeout_s=0.5)("hi")
+        assert e.value.category == "timeout" and time.monotonic() - started < 0.85
+    finally:
+        listener.close()
+
+
+def test_the_worker_left_behind_by_a_timed_out_call_ends_by_itself():
+    listener, url = stalling_server([0.9])
+    try:
+        with pytest.raises(Refused):
+            make("groq", url, ProvenanceLog(), timeout_s=0.5)("hi")
+        waited = time.monotonic()
+        while any(t.name == "uai-provider-call" and t.is_alive() for t in threading.enumerate()):
+            assert time.monotonic() - waited < 3.0, "a provider-call worker outlived its own socket timeout"
+            time.sleep(0.05)
+    finally:
+        listener.close()

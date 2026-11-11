@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
 import time
 import unicodedata
 import urllib.error
@@ -132,17 +133,13 @@ def _encode(body: Dict[str, Any]) -> bytes:
     return json.dumps(body, sort_keys=True).encode("utf-8")
 
 
-def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: float, max_bytes: int,
-          rec: Optional["Provenance"] = None) -> Tuple[int, bytes]:
-    data = _encode(body)
+def _exchange(url: str, headers: Dict[str, str], data: bytes, timeout_s: float, max_bytes: int,
+              deadline: float) -> Tuple[int, bytes, str]:
+    """One POST, read to the end or to `max_bytes`. Returns (status, body, the cf-ray header or "")."""
     req = urllib.request.Request(url, data=data, headers={**headers, "content-type": "application/json"}, method="POST")
     opener = urllib.request.build_opener(_NoRedirect())
     try:
-        deadline = time.monotonic() + timeout_s
         with opener.open(req, timeout=timeout_s) as resp:
-            # `timeout_s` on the socket bounds each read, not the whole answer: a server that sends one byte just inside
-            # it, again and again, would hold this call open without end. So the answer is read in pieces against one
-            # deadline for the whole exchange.
             pieces: List[bytes] = []
             size = 0
             while size <= max_bytes:
@@ -151,24 +148,58 @@ def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: fl
                     break
                 pieces.append(piece)
                 size += len(piece)
-                if time.monotonic() > deadline:
-                    raise _refused(f"the provider's answer did not arrive within {timeout_s:g} seconds", "timeout")
-            raw = b"".join(pieces)
-            if rec is not None:
-                rec.http_status = int(resp.status)
-                ray = resp.headers.get("cf-ray")
-                if isinstance(ray, str) and ray and not rec.request_id:
-                    rec.request_id = ray[:120]
-            return int(resp.status), raw
+                if time.monotonic() > deadline:  # the caller has already given up; stop reading
+                    raise TimeoutError()
+            ray = resp.headers.get("cf-ray")
+            return int(resp.status), b"".join(pieces), ray if isinstance(ray, str) else ""
     except urllib.error.HTTPError as exc:
-        if rec is not None:
-            rec.http_status = int(exc.code)
-        return int(exc.code), exc.read(2048)
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        reason = getattr(exc, "reason", exc)
-        timed_out = isinstance(reason, TimeoutError) or isinstance(exc, TimeoutError)
-        raise _refused(f"the provider could not be reached or timed out ({type(reason).__name__})",
-                       "timeout" if timed_out else "connection_error") from None
+        return int(exc.code), exc.read(2048), ""
+
+
+def _timed_out() -> Refused:
+    return _refused("the provider could not be reached or timed out (TimeoutError)", "timeout")
+
+
+def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: float, max_bytes: int,
+          rec: Optional["Provenance"] = None) -> Tuple[int, bytes]:
+    """POST `body` and return (status, bytes), within `timeout_s` for the WHOLE exchange: connecting, sending, waiting
+    and reading together.
+
+    A socket timeout bounds each blocking step, not their sum. A server that sends one byte just inside it and then
+    goes quiet makes the next read wait a full timeout again, and one that keeps doing so never lets go. So the
+    exchange runs on a worker thread and this call waits for it no longer than the deadline. Past the deadline the
+    caller gets a refusal at once; the worker is left to hit its own socket timeout (at most `timeout_s` later), sees
+    that the deadline has passed, and ends. Nothing it read is used."""
+    data = _encode(body)
+    deadline = time.monotonic() + timeout_s
+    box: Dict[str, Any] = {}
+
+    def run() -> None:
+        try:
+            box["ok"] = _exchange(url, headers, data, timeout_s, max_bytes, deadline)
+        except BaseException as exc:  # carried to the caller below; a worker thread must not die with it unreported
+            box["error"] = exc
+
+    worker = threading.Thread(target=run, name="uai-provider-call", daemon=True)
+    worker.start()
+    worker.join(max(0.0, deadline - time.monotonic()))
+    if worker.is_alive() or (not box):
+        raise _timed_out()
+    error = box.get("error")
+    if error is not None:
+        if isinstance(error, (urllib.error.URLError, TimeoutError, OSError)):
+            reason = getattr(error, "reason", error)
+            if isinstance(reason, TimeoutError) or isinstance(error, TimeoutError):
+                raise _timed_out()
+            raise _refused(f"the provider could not be reached or timed out ({type(reason).__name__})",
+                           "connection_error") from None
+        raise error
+    status, raw, ray = box["ok"]
+    if rec is not None:
+        rec.http_status = status
+        if ray and not rec.request_id:
+            rec.request_id = ray[:120]
+    return status, raw
 
 
 def _read_json(status: int, raw: bytes, max_bytes: int) -> Dict[str, Any]:
