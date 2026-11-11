@@ -457,18 +457,42 @@ def test_refused_is_what_a_strict_client_raises_so_callers_have_one_thing_to_cat
         stub.close()
 
 
-def test_the_live_runner_knows_all_six_providers_and_will_not_call_cloudflare_without_an_account(monkeypatch, capsys):
+def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks_its_account_or_address(monkeypatch, capsys):
     import live_providers
 
-    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID"]:
+    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID", "AZURE_OPENAI_ENDPOINT"]:
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("CLOUDFLARE_API_TOKEN", KEY)
     monkeypatch.setenv("CLOUDFLARE_MODEL", "@cf/meta/m")
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", KEY)
+    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "my-deployment")
     assert live_providers.main([]) == 3                               # nothing executed is never a pass
     out = capsys.readouterr().out
-    assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and KEY not in out
-    for name in ("anthropic", "google", "openai", "copilot-github-models", "groq", "cloudflare-workers-ai"):
+    assert out.count("NOT EXECUTED") == 7 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
+    assert KEY not in out
+    for name in ("anthropic", "google", "openai", "copilot-github-models", "groq", "cloudflare-workers-ai",
+                 "copilot-azure-openai"):
         assert f"NOT EXECUTED: {name} " in out
+
+
+def test_the_live_runner_sends_azure_to_the_callers_own_resource_by_the_azure_route(monkeypatch, capsys):
+    import live_providers
+
+    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY"]:
+        monkeypatch.delenv(name, raising=False)
+    stub = serving("copilot-azure", honest_model)
+    try:
+        monkeypatch.setenv("AZURE_OPENAI_API_KEY", KEY)
+        monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "my-deployment")
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", stub.url)
+        assert live_providers.main([]) == 0
+        out = capsys.readouterr().out
+        assert "EXECUTED: copilot-azure-openai live=True" in out and KEY not in out
+        sent = stub.requests[0]
+        assert sent["path"].startswith("/openai/deployments/my-deployment/chat/completions?api-version=")
+        assert sent["headers"]["api-key"] == KEY and "authorization" not in sent["headers"]
+    finally:
+        stub.close()
 
 
 def test_the_quickstart_example_runs_end_to_end_and_says_not_executed_without_a_key(monkeypatch, capsys):

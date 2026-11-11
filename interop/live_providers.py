@@ -3,6 +3,10 @@
     UAI_ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...  GEMINI_API_KEY=... GEMINI_MODEL=...
     OPENAI_API_KEY=... OPENAI_MODEL=...  GITHUB_MODELS_TOKEN=... COPILOT_MODEL=openai/gpt-4.1  python interop/live_providers.py --out evidence.json
     GROQ_API_KEY=... GROQ_MODEL=...  CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... CLOUDFLARE_MODEL=@cf/...
+    AZURE_OPENAI_API_KEY=... AZURE_OPENAI_ENDPOINT=https://<resource>.openai.azure.com AZURE_OPENAI_DEPLOYMENT=...
+
+Azure OpenAI shares the Copilot client's code with GitHub Models but is its own route, with its own address, header and
+URL shape, so it is run and reported on its own: one route answering says nothing about the other.
 
 The Anthropic key is read from UAI_ANTHROPIC_API_KEY first and from ANTHROPIC_API_KEY when that is empty or unset (some hosts
 reserve ANTHROPIC_API_KEY for themselves). A provider with no key is reported as NOT EXECUTED and is never counted. If NOTHING was executed the exit status is 3, so a
@@ -66,7 +70,9 @@ def main(argv: List[str]) -> int:
                                             ("copilot-github-models", ("GITHUB_MODELS_TOKEN",), "COPILOT_MODEL", copilot_complete),
                                             ("groq", ("GROQ_API_KEY",), "GROQ_MODEL", groq_complete),
                                             ("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), "CLOUDFLARE_MODEL",
-                                             cloudflare_complete)):
+                                             cloudflare_complete),
+                                            ("copilot-azure-openai", ("AZURE_OPENAI_API_KEY",), "AZURE_OPENAI_DEPLOYMENT",
+                                             copilot_complete)):
         key_var = " or ".join(key_vars)
         # the first variable that holds a key wins; a pasted key often ends in a newline
         key = next((v for v in (os.environ.get(n, "").strip() for n in key_vars) if v), "")
@@ -83,6 +89,13 @@ def main(argv: List[str]) -> int:
                 results.append({"provider": name, "executed": False})
                 continue
             extra["account_id"] = account
+        if name == "copilot-azure-openai":
+            endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "").strip()
+            if not endpoint:
+                print(f"NOT EXECUTED: {name} (set AZURE_OPENAI_ENDPOINT as well)")
+                results.append({"provider": name, "executed": False})
+                continue
+            extra.update(route="azure-openai", base_url=endpoint)
         log = ProvenanceLog()
         results.append(run_one(name, make(key, model, log, timeout_s=LIVE_TIMEOUT_S, **extra), log, model))
         print(f"EXECUTED: {name} live={results[-1]['live']} clears={results[-1].get('clears')}")
