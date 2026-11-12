@@ -179,12 +179,13 @@ def run_juror(juror, opts, docs, shared, write: Callable[[Dict[str, Any]], None]
             write(row)
             status = row["http_status"]
             auth = auth + 1 if status in (401, 403) else 0
-            limited = limited + 1 if status == 429 or (status and status >= 500) else 0
+            no_answer = status is None and row["verdict"].startswith("refused")  # timed out or never reached
+            limited = limited + 1 if status == 429 or (status and status >= 500) or no_answer else 0
             if auth >= 3:
                 juror["ended"] = "three authentication failures in a row; check the key"
                 return
             if limited >= 6:
-                juror["ended"] = "six rate-limit or overload answers in a row; the free tier or the provider is spent"
+                juror["ended"] = "six rate-limit, overload or timed-out calls in a row; the free tier or the provider is spent"
                 return
             pause = spacing - (time.time() - began)
             if limited:
