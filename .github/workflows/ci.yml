@@ -1,5 +1,5 @@
 # Everything a change must pass before it is merged: the full test suite (Python and, from inside it, the Node
-# implementation), the 33-case conformance suite against both implementations, lint and types. CNS is installed
+# implementation), the 63-case conformance suite against both implementations, lint and types. CNS is installed
 # from the pin in pyproject.toml, not from its main branch.
 name: ci
 

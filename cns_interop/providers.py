@@ -447,10 +447,10 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
             rec.model_reported = str(result.get("model", ""))
             _usage(rec, result.get("usage"), "prompt_tokens", "completion_tokens")
             _request_id(rec, result.get("id"))
-            text = _read_choice(rec, result, truncated_ok=False)
-            if not text.strip():
+            answer = _read_choice(rec, result, truncated_ok=False)
+            if not answer.strip():
                 raise Refused("provider", "the answer carries no text")
-            return text
+            return answer
         text = result.get("response") if isinstance(result, dict) else None
         if not isinstance(text, str) or not text.strip():
             raise Refused("provider", "the answer carries no text")
