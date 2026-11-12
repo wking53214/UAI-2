@@ -223,7 +223,8 @@ checked; a replay does.
 An action that needs a person needs an `Approval` signed by a listed approver, bound to one decision, one action and one
 document, with an expiry; an approver is never the decider or the requester. Every outcome is appended to a hash-chained
 audit record. Delegation is not implemented: a grant is for the requester it names. A manifest remains an advertisement;
-nothing a sender signs adds to a grant. The Node implementation does not yet have grants (planned, Tier 3).
+nothing a sender signs adds to a grant. The Node implementation applies the same grant, approval and withdrawal rules
+(`interop/node/grants.mjs`; parity in `cns_interop/tests/test_node_receiver_parity.py`).
 
 ## 7b. What a receiver spends before it knows the sender (receiver-side)
 
@@ -262,14 +263,16 @@ UAI-1 is a foundation, not the whole interface. Not specified or implemented her
   signed and stored by each receiver; how they reach it is its own business). The Node implementation pins only.
 - **A shared ledger across hosts.** Single use holds per audience on one host (`FileLedger`, `SqliteLedger`);
   several hosts acting for one identity need `CoordinatedLedger` over a linearizable store the receiver owns, and
-  refuse (`unavailable`) when that store gives no definite answer. No real store adapter ships: the in-memory
-  coordinator is a test stand-in, and a real backend must pass `cns_interop/ledger_conformance.py` and its own
-  partition tests. Guarantee by ledger: `MemoryLedger` one process; `FileLedger` and `SqliteLedger` one host;
+  refuse (`unavailable`) when that store gives no definite answer. A PostgreSQL ledger ships for Python
+  (`cns_interop/ledger_postgres.py`) and Node (`interop/node/pg.mjs`); it passes `cns_interop/ledger_conformance.py` and
+  partition, hard-stop and standby-failover tests against real clusters, all on one machine. Running it across separate
+  machines is not yet shown. The in-memory coordinator remains a test stand-in. Guarantee by ledger: `MemoryLedger` one process; `FileLedger` and `SqliteLedger` one host;
   `CoordinatedLedger` many hosts only as far as its coordinator is linearizable. Two local ledgers on two hosts accept
   one decision twice. `reserve`, `commit` and `release` (leases) make an action recoverable after a crash and
   at-least-once, so the action must be idempotent on the idempotency key (`RemoteDecisionGuard.idempotency_key`).
-- **Model and vendor adapters.** The protocol is model-agnostic; no adapter wraps a specific model API yet, and the
-  reference agents decide by rule.
+- **Model and vendor adapters.** Implemented outside the wire format: `cns_interop/providers.py` holds clients for seven
+  provider routes and `uai.connect(provider, model)` is the way in. A model only recommends; the decider's policy decides
+  and signs. The reference agents still decide by rule. Live status per route: `docs/EVIDENCE.md`.
 - **Policy negotiation beyond fields, evidence and lifetime**, such as purpose limitation, retention or jurisdiction.
 - **Registries and search.** Manifests are exchanged directly; there is no directory.
 - **Signing hardening.** The default Ed25519 is the pure-Python RFC implementation, which is not constant time.
@@ -292,3 +295,8 @@ action runner; a JSON Schema, a versioned error registry and a conformance suite
 `UAI1_R4_ASSESSMENT.md`. Open: no live call to Gemini, OpenAI or Copilot (Anthropic was called live on 2026-11-04 and
 every real answer was refused by the strict reader, see the assessment), no independent implementation, no multi-machine run, delegation
 deliberately not specified.
+
+Status since revision 4 (2026-11-12): Anthropic, Gemini, Groq and Cloudflare Workers AI have answered live through the
+provider layer, and a jury of models from four companies was run against honest, edge and hostile documents (790 live
+calls, no final pass that should not have happened). OpenAI, GitHub Models and Azure OpenAI have not been called live.
+The current claim-by-claim status is `docs/EVIDENCE.md`; where this section and that file differ, that file is current.
