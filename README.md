@@ -39,6 +39,26 @@ shown yet.
 - A live call needs a key: `python interop/live_providers.py`. It prints `NOT EXECUTED` for each provider without one.
 - No team outside this project has yet implemented UAI-1 against the conformance suite.
 
+## Try to break it
+
+No team outside this project has implemented UAI-1 yet, and that is the largest gap in what this repository can claim. If
+you write a receiver in your language **from the documents alone** (`docs/interop/UAI-1.md`, `contracts/uai1/schema.json`,
+`errors.json` and the suite), run it through the 70-case suite, and tell us where you disagreed, you will find either a bug in
+yours, a bug in ours, or a sentence in the spec that needs fixing. All three are useful.
+
+```
+python3 contracts/uai1/run_conformance.py --cmd "<your adapter command>"
+```
+
+Your adapter reads one JSON request per line on stdin and writes one JSON answer per line on stdout; the protocol is in
+`docs/interop/implementers/README.md`. Report a disagreement as an issue: the case name, what you returned, what the suite
+expected.
+
+We ran this ourselves with two fresh Go and Rust implementations written from the kit alone. It found real problems (a spec
+sentence that contradicted the test vectors, and signature checks that the suite could not detect when skipped), now fixed.
+That test was internal, so it shows little about how an outside reader would fare. Not covered: grants, approvals, the full
+request and reply exchange, and ledgers shared across machines. This is a reference design, not a production system.
+
 ## Older names
 
 `uai2_bridge` and `uai2_factory` still import and forward to `uai`. `uai2_gemini`, `uai2_groq` and `uai2_cloudflare`
