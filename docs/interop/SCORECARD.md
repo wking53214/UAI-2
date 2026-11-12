@@ -1,5 +1,8 @@
 # Universal AI interface scorecard: before and after UAI-1
 
+> **Status: historical.** Written on the branch that built UAI-1, against the 2026-10-30 assessment. It is kept as
+> a record and is not updated. Current evidence, claim by claim: [`docs/EVIDENCE.md`](../EVIDENCE.md).
+
 The 2026-10-30 external assessment (at `41592fb`) scored CNS **2.5/10** as a universal AI interface and named the
 milestone that would move it most: two genuinely independent systems, using different implementations, exchanging a
 request, negotiating boundaries, exchanging evidence and independently verifying the decision, without either
