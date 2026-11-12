@@ -30,7 +30,10 @@ canonical encoding, already published for other languages in `contracts/digest-v
 
 The UAI-1 **value profile** is narrower than CNS: text, booleans, null, integers within plus or minus (2^53 - 1),
 lists, and mappings with text keys, nested at most 32 levels. **No floats**: send a decimal as text or as an
-integer in the smallest unit. Text must be valid Unicode (no unpaired surrogates).
+integer in the smallest unit. Text must be valid Unicode: a text with an unpaired surrogate (a lone `\ud800` escape) is
+refused with `profile`. Nesting is counted from the body, which is level 1, and the envelope itself is not counted: 32 levels
+reach the signature check and 33 are refused with `profile`. Past that depth a reader may stop earlier and answer `malformed`
+(the Python reader refuses at 64 levels, the Node reader at 34), so the code is only fixed at 33 levels.
 
 ## 2. The envelope
 
@@ -46,7 +49,7 @@ Every message is one JSON object with exactly these fields:
 | `conversation` | the `id` of the message that opened the exchange |
 | `in_reply_to` | the digest of the whole envelope this answers (all fields including `sig`), or `""` |
 | `issued_at` | integer milliseconds since the Unix epoch, zero or more (a negative value is `malformed`) |
-| `expires_at` | integer milliseconds after `issued_at`, or null |
+| `expires_at` | an absolute time in integer milliseconds since the Unix epoch (not an offset from `issued_at`), strictly later than `issued_at` (equal or earlier is `malformed`), or null |
 | `body` | a mapping, in the value profile |
 | `sig` | 128 lowercase hex digits |
 
@@ -54,7 +57,11 @@ Every message is one JSON object with exactly these fields:
 `"uai/1 sig\n"` followed by the ASCII hex subject digest of the envelope **without** `sig` (with `v`).
 Verification is strict, identically in every implementation: the public key and R must be canonical point encodings
 (y below p, and no sign bit where x is 0), s must be below the group order, and a public key of small order (the
-eight 8-torsion points, listed in `interop/node/uai.mjs`) never verifies, since anyone can sign for one.
+eight 8-torsion points) never verifies, since anyone can sign for one.
+The eight small-order encodings, in hex: `0000000000000000000000000000000000000000000000000000000000000000`, `0000000000000000000000000000000000000000000000000000000000000080`, `0100000000000000000000000000000000000000000000000000000000000000`,
+`26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05`, `26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85`,
+`c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a`, `c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa`
+and `ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f`.
 
 **Wire.** JSON text, UTF-8, at most 1 MiB, one envelope per line on stream transports. A reader refuses duplicate
 keys, any number with a fraction or exponent, NaN and Infinity, and anything that is not a JSON object. A byte order
@@ -63,13 +70,18 @@ spacing do not matter; the signature is over the canonical digest.
 
 **Checking a received envelope**, in this order, each failure a refusal with the stable code shown:
 
-1. exactly the fields above, each in its form (`malformed`); `v` is `uai/1` (`version`); `kind` is one this step
-   accepts (`kind`); `body` is in the profile (`profile`)
+1. exactly the fields above, each in its form (`malformed`), which includes `kind` being one of the eight kinds above (any
+   other text, such as `gossip`, is `malformed`); then `v` is `uai/1` (`version`); then `kind` is one this step accepts
+   (`kind`, for a known kind this step does not take); then `body` is in the profile (`profile`)
 2. the signature verifies as `from` (`signature`)
 3. `issued_at` is not more than the allowed skew (default 120 s) in the future (`not_yet_valid`)
 4. now is before `expires_at` (`expired`)
 5. `to` is this receiver, where an audience is expected (`audience`)
 6. this `(from, id)` has not been accepted before, from the receiver's ledger (`replayed`)
+
+A receiver that restricts senders to a trusted set (`untrusted`) does so after step 5 and before step 6. A signature is
+verified for every sender, trusted or not, before trust is consulted, so a forged message from an untrusted sender is
+`signature`, not `untrusted`.
 
 A conforming receiver keeps a replay ledger and performs check 6 on every message it accepts. A receiver run with no
 ledger skips check 6, accepts a replay, and is not conforming; it is useful only in tests.
