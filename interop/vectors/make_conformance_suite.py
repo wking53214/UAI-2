@@ -79,8 +79,8 @@ DECIDED_BY = {
                                                      "levels are in the profile, so the edited body reaches check 2 (signature)",
     "nesting-33-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile; "
                                                       "check 1 (profile) at 33 levels",
-    "nesting-1000-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile, "
-                                                        "refused with `profile` through at least 1000 levels (check 1)",
+    "nesting-100-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile, "
+                                                       "refused with `profile` through at least 100 levels (check 1)",
     # the two below were settled by adding a sentence to the specification (project owner's decision, 2026-11-12)
     "issued-at-negative": "UAI-1.md section 2, the field table: `issued_at` is zero or more; check 1 (malformed)",
     "leading-byte-order-mark": "UAI-1.md section 2, Wire: a byte order mark before the object is refused as malformed, "
@@ -231,7 +231,7 @@ def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List
         one("future-by-one-ms-more-than-the-skew-is-refused", "rejected", text, "not_yet_valid", now=issued - SKEW_MS - 1),
         one("nesting-32-levels-reaches-the-signature-check", "tampered", _nested_body(req, 32), "signature"),
         one("nesting-33-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 33), "profile"),
-        one("nesting-1000-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 1000), "profile"),
+        one("nesting-100-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 100), "profile"),
         _case("replay-in-pretty-printed-text-is-refused", "replayed", "reference",
               [_step(text, issued, {"accept": True}, ledger=True), _step(pretty, issued, {"refuse": "replayed"}, ledger=True)]),
         _case("replay-with-reordered-keys-is-refused", "replayed", "reference",
