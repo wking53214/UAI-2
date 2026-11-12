@@ -31,7 +31,8 @@ from cns_interop.manifest import Capability  # noqa: E402
 from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete, copilot_complete,  # noqa: E402
                                    gemini_complete, groq_complete, openai_complete)
 
-CAP = Capability(name="income-screen", version=1, summary="monthly income at or above 450000 cents",
+CAP = Capability(name="income-screen", version=1, summary=("a document whose doc_type is exactly \"paystub\" or \"tax-return\", showing a monthly_income_cents "
+                          "that is a whole number at or above 450000"),
                  accepts=("doc_type", "monthly_income_cents"), requires=("doc_type", "monthly_income_cents"),
                  evidence=("threshold-check",), max_ttl_ms=120_000)
 
@@ -40,7 +41,10 @@ LIVE_TIMEOUT_S = 120.0
 
 
 def policy(cap: Any, disclosed: Dict[str, Any], subject: Any, rec: Recommendation) -> Recommendation:
-    clears = disclosed.get("doc_type") in ("paystub", "tax-return") and disclosed.get("monthly_income_cents", 0) >= 450_000
+    income = disclosed.get("monthly_income_cents")
+    # the type is checked, not assumed: a text or fractional income does not clear (and does not crash the policy)
+    clears = (disclosed.get("doc_type") in ("paystub", "tax-return") and isinstance(income, int)
+              and not isinstance(income, bool) and income >= 450_000)
     if rec.verdict == "pass" and not clears:
         return Recommendation("retry", rec.reasons + ("the decider's policy re-checked and it does not clear",), {})
     return rec
