@@ -31,6 +31,9 @@ tag CNS v3.0.0 and nothing newer. UAI-1 was developed inside CNS and moved here 
 
 ## What has and has not been shown
 
+**[docs/EVIDENCE.md](docs/EVIDENCE.md)** maps every claim here to the test or live run behind it, and lists what is not
+shown yet.
+
 - The test suite runs every provider client against local servers that speak each provider's wire format. That
   checks this code, not any provider.
 - A live call needs a key: `python interop/live_providers.py`. It prints `NOT EXECUTED` for each provider without one.
