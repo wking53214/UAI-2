@@ -24,7 +24,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 | Claim | Evidence | Status |
 |---|---|---|
-| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (63 cases; 33 are `reference`, see section 7) |
+| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (63 cases; 3 are `reference`, see section 7) |
 | Edited bodies, swapped senders, forged, truncated or bit-flipped signatures are refused | suite cases `reject-body-edited`, `reject-sender-swapped`, `sig-all-zeros`, `sig-last-bit-flipped`, `sig-one-hex-char-short`; `cns_interop/tests/test_envelope.py` | Tested |
 | Weak and non-canonical Ed25519 keys are refused | suite cases `reject-small-order-key`, `reject-non-canonical-key`; `cns_interop/tests/test_ed25519.py`, `test_crypto_backend.py` | Tested |
 | Ambiguous text is refused the same way in both languages (duplicate keys, `\u` escapes, floats, huge integers, NaN, nesting, size, trailing data, byte order mark, lone surrogates, `__proto__`) | suite classes `ambiguous-or-malformed` and `malformed` | Tested |
@@ -89,7 +89,16 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 ## 7. A note on `reference` cases
 
-33 of the 63 conformance cases are marked `basis: "reference"`: both shipped implementations agree on the answer, but the
-specification text has not been checked to fix that answer on its own. A third implementation that disagrees with one
-has found either a bug or an ambiguity in the specification; either is worth reporting. Promoting a case to
-`specification` means pointing at the sentence in `docs/interop/UAI-1.md` that decides it.
+60 of the 63 conformance cases are `basis: "specification"`. Each of the 30 promoted on 2026-11-12 carries a `spec`
+field quoting the words in `docs/interop/UAI-1.md` that decide its answer. Three remain `basis: "reference"`: both
+shipped implementations agree, but the specification text does not decide the answer on its own:
+
+| Case | Both implementations answer | What the text leaves open |
+|---|---|---|
+| `issued-at-negative` | `malformed` | section 2 says "integer milliseconds since the Unix epoch" and does not say the integer is non-negative |
+| `leading-byte-order-mark` | `malformed` | section 2 says "JSON text, UTF-8" and does not say whether a byte order mark is refused or skipped (RFC 8259 allows a reader to ignore one) |
+| `replay-needs-the-ledger-so-without-it-both-are-accepted` | accept twice | check 6 reads "from the receiver's ledger" and does not say whether a receiver may run with no ledger at all |
+
+Settling each needs one sentence added to the specification. That is a decision about the protocol, not a code
+change, and is left to the project owner. A third implementation that disagrees on one of these has found the same
+open question, not a bug.
