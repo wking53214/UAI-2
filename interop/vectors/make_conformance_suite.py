@@ -66,6 +66,19 @@ DECIDED_BY = {
                                                 "before (replayed); the text's layout is not part of it",
     "replay-with-reordered-keys-is-refused": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted "
                                              "before (replayed); the text's layout is not part of it",
+    # found by blind Go and Rust implementations (2026-11-12): each was passing a wrong implementation before these existed
+    "sig-s-plus-group-order": "UAI-1.md section 2, Signature: `s` must be below the group order; a signature with s + L "
+                             "verifies by the equation alone, so check 2 refuses it (signature)",
+    "expires-before-issued-is-malformed": "UAI-1.md section 2, the field table: `expires_at` is strictly later than "
+                                          "`issued_at`, equal or earlier is malformed; check 1 (malformed)",
+    "future-by-exactly-the-skew-is-accepted": "UAI-1.md section 2, check 3: `issued_at` is not MORE than the allowed skew "
+                                              "(default 120 s) in the future, so exactly 120 s is accepted",
+    "future-by-one-ms-more-than-the-skew-is-refused": "UAI-1.md section 2, check 3: more than the allowed skew (default "
+                                                      "120 s) in the future is refused (not_yet_valid)",
+    "nesting-32-levels-reaches-the-signature-check": "UAI-1.md section 1: nesting is counted from the body (level 1); 32 "
+                                                     "levels are in the profile, so the edited body reaches check 2 (signature)",
+    "nesting-33-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile; "
+                                                      "check 1 (profile) at 33 levels",
     # the two below were settled by adding a sentence to the specification (project owner's decision, 2026-11-12)
     "issued-at-negative": "UAI-1.md section 2, the field table: `issued_at` is zero or more; check 1 (malformed)",
     "leading-byte-order-mark": "UAI-1.md section 2, Wire: a byte order mark before the object is refused as malformed, "
@@ -146,6 +159,28 @@ def build() -> Dict[str, Any]:
             "protocol in contracts/uai1/README.md", "identities": ids, "cases": cases}
 
 
+SKEW_MS = 120_000          # how far ahead of the receiver's clock an envelope may be issued (UAI-1.md, check 3)
+_GROUP_ORDER = 2 ** 252 + 27742317777372353535851937790883648493  # the order of the Ed25519 base point
+
+
+def _malleated_sig(sig_hex: str) -> str:
+    """The same signature with `s` replaced by `s + L`. The equation still holds, because the base point has order L, so a
+    verifier that does not refuse `s >= L` (RFC 8032 section 5.1.7) accepts a second signature for the same message.
+    `s + L` fits in 32 bytes because s < L < 2^253."""
+    raw = bytes.fromhex(sig_hex)
+    s = int.from_bytes(raw[32:], "little") + _GROUP_ORDER
+    return (raw[:32] + s.to_bytes(32, "little")).hex()
+
+
+def _nested_body(req: Dict[str, Any], levels: int) -> str:
+    """The request with its body replaced by mappings nested `levels` deep (the body counts as level 1). The signature no
+    longer matches, so an implementation that accepts the nesting reaches the signature check and says `signature`."""
+    inner: Any = 1
+    for _ in range(levels):
+        inner = {"a": inner}
+    return json.dumps({**req, "body": inner}, sort_keys=True, separators=(",", ":"))
+
+
 def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List[Dict[str, Any]]:
     """Attack inputs added after an outside review asked for wider adversarial coverage. Both shipped implementations were
     probed with each one first and gave the same answer (2026-11-12). Built as `reference`; those whose answer the
@@ -188,6 +223,12 @@ def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List
         one("reordered-keys-are-accepted", "valid", reordered, "accept"),
         one("expired-exactly-at-expires-at", "expired", text, "expired", now=exp),
         one("accepted-one-ms-before-expires-at", "valid", text, "accept", now=exp - 1),
+        one("sig-s-plus-group-order", "tampered", w(sig=_malleated_sig(sig)), "signature"),
+        one("expires-before-issued-is-malformed", "malformed", w(expires_at=issued - 1), "malformed"),
+        one("future-by-exactly-the-skew-is-accepted", "valid", text, "accept", now=issued - SKEW_MS),
+        one("future-by-one-ms-more-than-the-skew-is-refused", "rejected", text, "not_yet_valid", now=issued - SKEW_MS - 1),
+        one("nesting-32-levels-reaches-the-signature-check", "tampered", _nested_body(req, 32), "signature"),
+        one("nesting-33-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 33), "profile"),
         _case("replay-in-pretty-printed-text-is-refused", "replayed", "reference",
               [_step(text, issued, {"accept": True}, ledger=True), _step(pretty, issued, {"refuse": "replayed"}, ledger=True)]),
         _case("replay-with-reordered-keys-is-refused", "replayed", "reference",

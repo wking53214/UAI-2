@@ -17,7 +17,7 @@ disagreement is the most useful thing you can do: each is either a bug in yours,
 | `docs/interop/UAI-1.md` | the specification (envelope, identity, trust, manifest, exchange, disclosure, decision, receiver rules) |
 | `contracts/uai1/schema.json` | JSON Schema for the envelope, every body, terms, approval, grants file and job. Shape only |
 | `contracts/uai1/errors.json` | the versioned error registry: every refusal code, its layer, whether a retry can help, whether it spends the message |
-| `contracts/uai1/conformance-suite.json` | 63 cases as plain data: valid, malformed, ambiguous, tampered, expired, replayed, unauthorized (62 decided by the specification text; 1 marked `reference` is an illustration of a non-conforming receiver, see `docs/EVIDENCE.md` section 7) |
+| `contracts/uai1/conformance-suite.json` | 69 cases as plain data: valid, malformed, ambiguous, tampered, expired, replayed, unauthorized (68 decided by the specification text; 1 marked `reference` is an illustration of a non-conforming receiver, see `docs/EVIDENCE.md` section 7) |
 | `contracts/uai1/run_conformance.py` | stand-alone runner (standard library only) that drives your adapter program through the suite |
 | `contracts/uai-vectors.json`, `contracts/digest-vectors.json` | signed envelopes and the canonical digest answer key |
 | `docs/interop/SECURITY_PROFILES.md` | crypto and transport profiles, and what each does not give |

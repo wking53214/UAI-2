@@ -1285,6 +1285,132 @@
   },
   {
    "basis": "specification",
+   "class": "tampered",
+   "name": "sig-s-plus-group-order",
+   "spec": "UAI-1.md section 2, Signature: `s` must be below the group order; a signature with s + L verifies by the equation alone, so check 2 refuses it (signature)",
+   "steps": [
+    {
+     "expect": {
+      "refuse": "signature"
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1800000000000,
+      "trust": null,
+      "wire_text": "{\"body\":{\"capability\":\"income-screen\",\"version\":1},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bc1c3de3665d56bf4442e36468a2ce8f485d80b675335a091c376610950d10b15\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
+   "class": "malformed",
+   "name": "expires-before-issued-is-malformed",
+   "spec": "UAI-1.md section 2, the field table: `expires_at` is strictly later than `issued_at`, equal or earlier is malformed; check 1 (malformed)",
+   "steps": [
+    {
+     "expect": {
+      "refuse": "malformed"
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1800000000000,
+      "trust": null,
+      "wire_text": "{\"body\":{\"capability\":\"income-screen\",\"version\":1},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1799999999999,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
+   "class": "valid",
+   "name": "future-by-exactly-the-skew-is-accepted",
+   "spec": "UAI-1.md section 2, check 3: `issued_at` is not MORE than the allowed skew (default 120 s) in the future, so exactly 120 s is accepted",
+   "steps": [
+    {
+     "expect": {
+      "accept": true
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1799999880000,
+      "trust": null,
+      "wire_text": "{\"body\":{\"capability\":\"income-screen\",\"version\":1},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
+   "class": "rejected",
+   "name": "future-by-one-ms-more-than-the-skew-is-refused",
+   "spec": "UAI-1.md section 2, check 3: more than the allowed skew (default 120 s) in the future is refused (not_yet_valid)",
+   "steps": [
+    {
+     "expect": {
+      "refuse": "not_yet_valid"
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1799999879999,
+      "trust": null,
+      "wire_text": "{\"body\":{\"capability\":\"income-screen\",\"version\":1},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
+   "class": "tampered",
+   "name": "nesting-32-levels-reaches-the-signature-check",
+   "spec": "UAI-1.md section 1: nesting is counted from the body (level 1); 32 levels are in the profile, so the edited body reaches check 2 (signature)",
+   "steps": [
+    {
+     "expect": {
+      "refuse": "signature"
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1800000000000,
+      "trust": null,
+      "wire_text": "{\"body\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":1}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
+   "class": "rejected",
+   "name": "nesting-33-levels-is-outside-the-value-profile",
+   "spec": "UAI-1.md section 1: more than 32 levels is outside the profile; check 1 (profile) at 33 levels",
+   "steps": [
+    {
+     "expect": {
+      "refuse": "profile"
+     },
+     "receive": {
+      "audience": null,
+      "kinds": null,
+      "ledger": false,
+      "now": 1800000000000,
+      "trust": null,
+      "wire_text": "{\"body\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":{\"a\":1}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a091c376610950d10b05\",\"to\":\"uai:ed25519:d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737\",\"v\":\"uai/1\"}"
+     }
+    }
+   ]
+  },
+  {
+   "basis": "specification",
    "class": "replayed",
    "name": "replay-in-pretty-printed-text-is-refused",
    "spec": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted before (replayed); the text's layout is not part of it",
