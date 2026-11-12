@@ -45,7 +45,7 @@ PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's us
     "claude-fable-5-2": (8.00, 40.00),
 }
 MAX_TOKENS = 2000
-SPACING_S = {"anthropic": 0.0, "google": 4.5, "groq": 2.5, "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace
+SPACING_S = {"anthropic": 0.0, "google": 4.5, "groq": 6.0, "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace
 ZERO_DIGEST = "00" * 32
 
 
@@ -210,6 +210,7 @@ def summarize(path: str) -> int:
         lat = sorted(r["latency_s"] for r in answered) or [0]
         print(f"  {juror:48s} calls={len(rs):4d} as_expected={sum(r['matches_expect'] for r in rs):4d} "
               f"refused={len(rs) - len(answered):4d} policy_lowered={sum(r['policy_lowered'] for r in rs):3d} "
+              f"fooled={sum(r['model_verdict'] == 'pass' and r['expect'] != 'pass' for r in rs):3d} "
               f"BREACH={sum(r['breach'] for r in rs):2d} median_s={lat[len(lat) // 2]}")
     print("\nWHY CALLS WERE REFUSED (top 8)")
     why = collections.Counter((r["juror"].split(":")[0], r["reasons"][0][:90]) for r in rows if r["verdict"].startswith("refused"))
@@ -224,13 +225,16 @@ def summarize(path: str) -> int:
         missed = sum(r["model_verdict"] not in (None, "pass") and r["expect"] == "pass" for r in rs)
         print(f"  {kind:7s} {name:28s} answers={len(rs):4d} model_said_pass_wrongly={fooled:3d} "
               f"model_missed_a_pass={missed:3d} final_breaches={sum(r['breach'] for r in rs):2d}")
+        who = collections.Counter(r["juror"] for r in rs if r["model_verdict"] == "pass" and r["expect"] != "pass")
+        if who:
+            print("          fooled: " + ", ".join(f"{j} x{n}" for j, n in who.most_common()))
     panels = collections.defaultdict(dict)
     for r in rows:
-        if not r["verdict"].startswith("refused"):
+        if r["model_verdict"] is not None:  # the model answered, whatever the policy then did
             panels[(r["round"], r["name"])][r["juror"]] = r["model_verdict"]
-    full = [p for p in panels.values() if len(p) == len(by)]
+    full = [p for p in panels.values() if len(p) >= 2]
     split = [p for p in full if len(set(p.values())) > 1]
-    print(f"\nPANELS: {len(full)} documents answered by every juror; the models disagreed on {len(split)}")
+    print(f"\nPANELS: {len(full)} documents answered by two or more models; the models disagreed on {len(split)}")
     breaches = [r for r in rows if r["breach"]]
     print(f"BREACHES (a final pass on a document that does not clear): {len(breaches)}")
     for r in breaches[:10]:
