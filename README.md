@@ -26,7 +26,7 @@ No model is ever handed a signing key, a ledger, a grant or an approval.
 ## How it relates to CNS
 
 CNS (github.com/wking53214/CNS) defines the gate contract this builds on. This repository depends on the released
-tag CNS v2.3.0 and nothing newer. UAI-1 was developed inside CNS and moved here unchanged;
+tag CNS v3.0.0 and nothing newer. UAI-1 was developed inside CNS and moved here unchanged;
 [IMPORTED_FROM_CNS.md](IMPORTED_FROM_CNS.md) records the source commit and how to check the copy.
 
 ## What has and has not been shown

@@ -40,7 +40,7 @@ Retired
 
 ## Pins that would need to move
 
-- **This repository pins CNS at `v2.3.0`.** Nothing here needs a newer CNS. No pin moves for a 0.1.0 release.
+- **This repository pins CNS at `v3.0.0`.** Nothing here needs a newer CNS. No pin moves for a 0.1.0 release.
 - **No repository pins this one today.** The 37 repositories found pinning CNS `v2.3.0` are unaffected: that tag
   contains no UAI-1 and no provider code, so none of them could be importing what moved.
 - **CNS main still carries its own copy** of `cns_interop/`, `interop/`, the UAI-1 contract files and

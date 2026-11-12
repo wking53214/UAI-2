@@ -11,4 +11,4 @@ unchanged. Its history before the move stays in CNS.
   at the commit that added this note. Every file is identical.
 
 This repository depends on CNS for the gate contract (`cns.gate`) and the gate chain
-(`cns_composition.super_gate`). It pins the released tag `v2.3.0`; nothing here needs a newer CNS.
+(`cns_composition.super_gate`). It pins the released tag `v3.0.0`; nothing here needs a newer CNS.
