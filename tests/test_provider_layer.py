@@ -88,8 +88,6 @@ def envelope(provider, text):
 def prompt_of(provider, body):
     if provider == "gemini":
         return body["contents"][0]["parts"][0]["text"]
-    if provider == "cloudflare":
-        return body["prompt"]
     return body["messages"][0]["content"]
 
 
@@ -155,7 +153,7 @@ def test_groq_and_cloudflare_send_what_each_api_expects_and_nothing_else():
                 assert body == {"model": "model-x", "messages": [{"role": "user", "content": "the prompt"}], "max_tokens": 512}
             else:
                 assert sent["path"] == "/accounts/acct123/ai/run/@cf/meta/model-x"
-                assert body == {"prompt": "the prompt", "max_tokens": 512}
+                assert body == {"messages": [{"role": "user", "content": "the prompt"}], "max_tokens": 512}
         finally:
             stub.close()
 
@@ -532,3 +530,52 @@ def test_the_worker_left_behind_by_a_timed_out_call_ends_by_itself():
             time.sleep(0.05)
     finally:
         listener.close()
+
+
+# Workers AI's newer catalog models (for example @cf/meta/llama-3.3-70b-instruct-fp8-fast, seen live 2026-11-11) answer in
+# the Chat Completions shape inside `result`. These hold that shape to the same exact rules as the OpenAI-compatible routes.
+
+def cloudflare_chat(choices, **extra):
+    return {"success": True, "errors": [], "result": {"id": "chatcmpl-1", "object": "chat.completion", "model": "@cf/x",
+                                                      "choices": choices, "usage": {"prompt_tokens": 7, "completion_tokens": 3},
+                                                      **extra}}
+
+
+def chat_choice(content, finish_reason="stop", **msg):
+    return {"index": 0, "message": {"role": "assistant", "content": content, "refusal": None, "function_call": None, **msg},
+            "finish_reason": finish_reason}
+
+
+def cloudflare_with(body):
+    stub = Raw(lambda path, headers, raw: (200, {"content-type": "application/json"}, json.dumps(body).encode()))
+    log = ProvenanceLog()
+    return stub, log, cloudflare_complete(KEY, "@cf/meta/model-x", log, account_id="acct123", base_url=stub.url)
+
+
+def test_a_cloudflare_chat_completions_answer_is_read_and_says_it_finished():
+    stub, log, complete = cloudflare_with(cloudflare_chat([chat_choice('{"verdict":"pass"}')]))
+    try:
+        assert complete("p") == '{"verdict":"pass"}'
+        rec = log.records[-1]
+        assert (rec.finish_reason, rec.input_tokens, rec.output_tokens) == ("stop", 7, 3)
+        assert (rec.request_id, rec.model_reported) == ("chatcmpl-1", "@cf/x")
+    finally:
+        stub.close()
+
+
+@pytest.mark.parametrize("choices,why", [
+    ([chat_choice("ok", finish_reason="length")], "did not finish normally"),
+    ([chat_choice("ok"), chat_choice("ok")], "not exactly one choice"),
+    ([], "not exactly one choice"),
+    ([chat_choice(None)], "not one assistant text message"),
+    ([chat_choice("ok", refusal="no")], "tool call or a refusal"),
+    ([chat_choice("ok", function_call={"name": "f"})], "tool call or a refusal"),
+    ([chat_choice("   ")], "carries no text"),
+])
+def test_a_cloudflare_chat_completions_answer_that_is_not_exactly_one_finished_text_is_refused(choices, why):
+    stub, log, complete = cloudflare_with(cloudflare_chat(choices))
+    try:
+        with pytest.raises(Refused, match=why):
+            complete("p")
+    finally:
+        stub.close()
