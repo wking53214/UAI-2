@@ -13,7 +13,7 @@ Python or in Node.
 | The provider layer | `cns_interop/providers.py` | The only module that talks to a model provider |
 | UAI-1, the signed format | `cns_interop/`, spec in `docs/interop/UAI-1.md` | Signed envelopes, receiver-decided trust, revocation, replay protection, negotiated terms, selective disclosure |
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
-| For other implementers | `contracts/uai1/` | Schema, error registry, a 33-case conformance suite and its runner |
+| For other implementers | `contracts/uai1/` | Schema, error registry, a 63-case conformance suite and its runner |
 
 Supported providers: Anthropic, Google Gemini, OpenAI, GitHub Models and Azure OpenAI (Copilot), Groq, Cloudflare
 Workers AI.
@@ -30,6 +30,9 @@ tag CNS v3.0.0 and nothing newer. UAI-1 was developed inside CNS and moved here 
 [IMPORTED_FROM_CNS.md](IMPORTED_FROM_CNS.md) records the source commit and how to check the copy.
 
 ## What has and has not been shown
+
+**[docs/EVIDENCE.md](docs/EVIDENCE.md)** maps every claim here to the test or live run behind it, and lists what is not
+shown yet.
 
 - The test suite runs every provider client against local servers that speak each provider's wire format. That
   checks this code, not any provider.
