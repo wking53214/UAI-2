@@ -81,8 +81,59 @@ def build() -> Dict[str, Any]:
         _case("unicode-escape-duplicate-key", "ambiguous-or-malformed", "reference",
               [_step('{"a":1,"\\u0061":2}', issued, {"refuse": "malformed"})]),
     ]
+    cases += adversarial(req, text, issued, dumps)
     return {"schema": "uai1-conformance/1", "note": "regenerate with python interop/vectors/make_conformance_suite.py --write; "
             "protocol in contracts/uai1/README.md", "identities": ids, "cases": cases}
+
+
+def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List[Dict[str, Any]]:
+    """Attack inputs added after an outside review asked for wider adversarial coverage. Both shipped implementations were
+    probed with each one first and gave the same answer (2026-11-12); they are `reference` cases until the specification
+    text is checked to fix each answer on its own."""
+    w = lambda **kw: dumps({**req, **kw})  # noqa: E731
+    sig, exp, frm = req["sig"], req["expires_at"], req["from"]
+    pretty = json.dumps(req, sort_keys=True, indent=2)
+    reordered = json.dumps(dict(reversed(list(req.items()))))
+    one = lambda name, klass, t, code, now=issued: _case(  # noqa: E731
+        name, klass, "reference", [_step(t, now, {"accept": True} if code == "accept" else {"refuse": code})])
+    return [
+        one("sig-all-zeros", "tampered", w(sig="0" * 128), "signature"),
+        one("sig-last-bit-flipped", "tampered", w(sig=sig[:-1] + format(int(sig[-1], 16) ^ 1, "x")), "signature"),
+        one("sig-one-hex-char-short", "malformed", w(sig=sig[:-1]), "malformed"),
+        one("sig-uppercase-hex", "malformed", w(sig=sig.upper()), "malformed"),
+        one("version-uppercase", "rejected", w(v="UAI/1"), "version"),
+        one("from-uppercase-hex", "malformed", w(**{"from": "uai:ed25519:" + frm.split(":")[-1].upper()}), "malformed"),
+        one("from-other-key-scheme", "malformed", w(**{"from": frm.replace("ed25519", "rsa")}), "malformed"),
+        one("id-too-short", "malformed", w(id=req["id"][:-2]), "malformed"),
+        one("id-uppercase-hex", "malformed", w(id=req["id"].upper().replace("0", "A")), "malformed"),
+        one("issued-at-as-text", "malformed", w(issued_at=str(issued)), "malformed"),
+        one("issued-at-negative", "malformed", w(issued_at=-1), "malformed"),
+        one("to-null", "malformed", w(to=None), "malformed"),
+        one("kind-as-number", "malformed", w(kind=1), "malformed"),
+        one("trailing-garbage", "ambiguous-or-malformed", text + "x", "malformed"),
+        one("second-object-appended", "ambiguous-or-malformed", text + text, "malformed"),
+        one("leading-byte-order-mark", "ambiguous-or-malformed", "\ufeff" + text, "malformed"),
+        one("leading-zero-number", "ambiguous-or-malformed",
+            text.replace(f'"issued_at":{issued}', f'"issued_at":0{issued}'), "malformed"),
+        one("lone-surrogate-in-body", "ambiguous-or-malformed",
+            text.replace('"income-screen"', '"income-screen\\ud800"'), "profile"),
+        one("nul-character-in-body", "tampered", text.replace('"income-screen"', '"income-screen\\u0000"'), "signature"),
+        one("proto-key-duplicate", "ambiguous-or-malformed", '{"__proto__":1,"__proto__":2}', "malformed"),
+        one("proto-key-added-to-body", "tampered", dumps({**req, "body": {**req["body"], "__proto__": {"x": 1}}}),
+            "signature"),
+        one("empty-text", "malformed", "", "malformed"),
+        one("json-null", "malformed", "null", "malformed"),
+        one("surrounding-whitespace-is-accepted", "valid", " \n" + text + "\n ", "accept"),
+        one("pretty-printed-is-accepted", "valid", pretty, "accept"),
+        one("reordered-keys-are-accepted", "valid", reordered, "accept"),
+        one("expired-exactly-at-expires-at", "expired", text, "expired", now=exp),
+        one("accepted-one-ms-before-expires-at", "valid", text, "accept", now=exp - 1),
+        _case("replay-in-pretty-printed-text-is-refused", "replayed", "reference",
+              [_step(text, issued, {"accept": True}, ledger=True), _step(pretty, issued, {"refuse": "replayed"}, ledger=True)]),
+        _case("replay-with-reordered-keys-is-refused", "replayed", "reference",
+              [_step(text, issued, {"accept": True}, ledger=True),
+               _step(reordered, issued, {"refuse": "replayed"}, ledger=True)]),
+    ]
 
 
 def render() -> str:
