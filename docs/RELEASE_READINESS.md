@@ -42,9 +42,11 @@ Retired
       the evidence file committed. Today: Anthropic, Gemini, Groq and Cloudflare Workers AI answered live on 2026-11-12
       (recorded in `docs/EVIDENCE.md` and `evidence/live-runs/`, from the printed output; the JSON evidence files
       themselves were not committed). OpenAI, GitHub Models and Azure OpenAI: not run.
-- [ ] Decide the repository name. It is `UAI-2`; the package is `uai`. Renaming the repository to `UAI` would match.
-- [ ] Decide whether the import name `cns_interop` stays. It is kept so that the move from CNS changed no file.
-      Renaming it is mechanical but touches every import and should be its own change.
+- [x] Repository name: decided 2026-11-12 by the project owner to keep `UAI-2` for now. The package is `uai`; renaming the
+      repository to `UAI` would match and can be done later, since it needs only a GitHub rename and link updates.
+- [x] Import name: decided 2026-11-12 by the project owner to keep `cns_interop` for now. It is kept so that the move from
+      CNS changed no file. Renaming it is mechanical but touches every import and test and should be its own change, after
+      it is known who imports it.
 - [ ] `version` in `pyproject.toml` set to the release version, and this changelog moved to `CHANGELOG.md`.
 
 ## Pins that would need to move
