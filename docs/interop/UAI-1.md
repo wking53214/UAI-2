@@ -32,8 +32,8 @@ The UAI-1 **value profile** is narrower than CNS: text, booleans, null, integers
 lists, and mappings with text keys, nested at most 32 levels. **No floats**: send a decimal as text or as an
 integer in the smallest unit. Text must be valid Unicode: a text with an unpaired surrogate (a lone `\ud800` escape) is
 refused with `profile`. Nesting is counted from the body, which is level 1, and the envelope itself is not counted: 32 levels
-reach the signature check and 33 are refused with `profile`. Past that depth a reader may stop earlier and answer `malformed`
-(the Python reader refuses at 64 levels, the Node reader at 34), so the code is only fixed at 33 levels.
+reach the signature check and 33 are refused with `profile`. Deeper bodies are refused with `profile` through at least 1000 levels. Beyond
+that a reader may run out of stack and answer `malformed` (Python does so somewhere above 8000 levels), so the code is only fixed up to 1000 levels.
 
 ## 2. The envelope
 

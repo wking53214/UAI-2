@@ -1,5 +1,5 @@
 # Everything a change must pass before it is merged: the full test suite (Python and, from inside it, the Node
-# implementation), the 69-case conformance suite against both implementations, lint and types. CNS is installed
+# implementation), the 70-case conformance suite against both implementations, lint and types. CNS is installed
 # from the pin in pyproject.toml, not from its main branch.
 name: ci
 
@@ -35,9 +35,9 @@ jobs:
         run: node --version
       - name: Tests
         run: python -m pytest -q
-      - name: Conformance, Python reference (69 cases)
+      - name: Conformance, Python reference (70 cases)
         run: python contracts/uai1/run_conformance.py --cmd "python interop/conformance/reference_adapter.py"
-      - name: Conformance, Node (69 cases)
+      - name: Conformance, Node (70 cases)
         run: python contracts/uai1/run_conformance.py --cmd "node interop/node/conformance_adapter.mjs"
       - name: Lint (ruff, rules named in pyproject.toml, version pinned in the dev extra)
         run: python -m ruff check .

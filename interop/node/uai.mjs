@@ -17,6 +17,9 @@ export const KINDS = new Set(["manifest", "endorsement", "request", "offer", "ac
 export const FIELDS = ["body", "conversation", "expires_at", "from", "id", "in_reply_to", "issued_at", "kind", "sig", "to", "v"];
 export const MAX_INT = Number.MAX_SAFE_INTEGER;
 export const MAX_DEPTH = 32;
+// The strict reader's own bound is far above the profile's, so a body nested past MAX_DEPTH is refused by the profile
+// (`profile`), as in Python, and not by the reader (`malformed`). It only guards the JavaScript stack.
+export const READER_MAX_DEPTH = 1100;
 export const VERDICTS = ["pass", "retry", "terminal_breach"];
 const SIG_TAG = Buffer.from("uai/1 sig\n", "utf8");
 
@@ -35,7 +38,7 @@ export function strictParse(text) {
   const ws = () => { while (i < text.length && " \t\n\r".includes(text[i])) i++; };
   const fail = (why) => { throw new Refused("malformed", `the message is not JSON (${why} at ${i})`); };
   const value = (depth) => {
-    if (depth > MAX_DEPTH + 2) fail("too deep");
+    if (depth > READER_MAX_DEPTH) fail("too deep");
     ws();
     const c = text[i];
     if (c === "{") {

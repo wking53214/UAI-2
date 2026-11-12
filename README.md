@@ -13,7 +13,7 @@ Python or in Node.
 | The provider layer | `cns_interop/providers.py` | The only module that talks to a model provider |
 | UAI-1, the signed format | `cns_interop/`, spec in `docs/interop/UAI-1.md` | Signed envelopes, receiver-decided trust, revocation, replay protection, negotiated terms, selective disclosure |
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
-| For other implementers | `contracts/uai1/` | Schema, error registry, a 69-case conformance suite and its runner |
+| For other implementers | `contracts/uai1/` | Schema, error registry, a 70-case conformance suite and its runner |
 
 Supported providers: Anthropic, Google Gemini, OpenAI, GitHub Models and Azure OpenAI (Copilot), Groq, Cloudflare
 Workers AI.
