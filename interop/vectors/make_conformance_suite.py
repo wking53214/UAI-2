@@ -66,6 +66,17 @@ DECIDED_BY = {
                                                 "before (replayed); the text's layout is not part of it",
     "replay-with-reordered-keys-is-refused": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted "
                                              "before (replayed); the text's layout is not part of it",
+    # the two below were settled by adding a sentence to the specification (project owner's decision, 2026-11-12)
+    "issued-at-negative": "UAI-1.md section 2, the field table: `issued_at` is zero or more; check 1 (malformed)",
+    "leading-byte-order-mark": "UAI-1.md section 2, Wire: a byte order mark before the object is refused as malformed, "
+                               "not skipped",
+}
+# Kept as `reference` on purpose: it shows what a NON-conforming receiver (no ledger) does, so the suite records that
+# the ledger, not the parser, is what refuses a replay. UAI-1.md section 2 says such a receiver is not conforming.
+ILLUSTRATIVE = {
+    "replay-needs-the-ledger-so-without-it-both-are-accepted":
+        "illustration, not a requirement: UAI-1.md section 2 says a receiver with no ledger is not conforming; this case "
+        "shows that without one a replay is accepted, so the ledger is what refuses it",
 }
 
 
@@ -129,6 +140,8 @@ def build() -> Dict[str, Any]:
     for c in cases:
         if c["name"] in DECIDED_BY:
             c["basis"], c["spec"] = "specification", DECIDED_BY[c["name"]]
+        elif c["name"] in ILLUSTRATIVE:
+            c["spec"] = ILLUSTRATIVE[c["name"]]
     return {"schema": "uai1-conformance/1", "note": "regenerate with python interop/vectors/make_conformance_suite.py --write; "
             "protocol in contracts/uai1/README.md", "identities": ids, "cases": cases}
 

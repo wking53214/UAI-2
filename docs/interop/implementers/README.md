@@ -17,7 +17,7 @@ disagreement is the most useful thing you can do: each is either a bug in yours,
 | `docs/interop/UAI-1.md` | the specification (envelope, identity, trust, manifest, exchange, disclosure, decision, receiver rules) |
 | `contracts/uai1/schema.json` | JSON Schema for the envelope, every body, terms, approval, grants file and job. Shape only |
 | `contracts/uai1/errors.json` | the versioned error registry: every refusal code, its layer, whether a retry can help, whether it spends the message |
-| `contracts/uai1/conformance-suite.json` | 63 cases as plain data: valid, malformed, ambiguous, tampered, expired, replayed, unauthorized (3 marked `reference`: both implementations agree, the specification text does not decide the answer alone; listed in `docs/EVIDENCE.md` section 7) |
+| `contracts/uai1/conformance-suite.json` | 63 cases as plain data: valid, malformed, ambiguous, tampered, expired, replayed, unauthorized (62 decided by the specification text; 1 marked `reference` is an illustration of a non-conforming receiver, see `docs/EVIDENCE.md` section 7) |
 | `contracts/uai1/run_conformance.py` | stand-alone runner (standard library only) that drives your adapter program through the suite |
 | `contracts/uai-vectors.json`, `contracts/digest-vectors.json` | signed envelopes and the canonical digest answer key |
 | `docs/interop/SECURITY_PROFILES.md` | crypto and transport profiles, and what each does not give |
@@ -62,8 +62,8 @@ python contracts/uai1/run_conformance.py --cmd "your-adapter-command"
 
 Exit status 0 means every case passed. A case marked `basis: "specification"` that you fail is a defect in your
 implementation or in the text it quotes: cases promoted from `reference` carry a `spec` field with the words that decide
-them. A case marked `basis: "reference"` is one the two shipped implementations agree on but the specification text does
-not fix (three remain, listed in `docs/EVIDENCE.md` section 7). Report a disagreement there as a question. The runner has been shown to fail an
+them. The one case marked `basis: "reference"` shows what a receiver with no replay ledger does; such a receiver is not
+conforming (UAI-1.md section 2), so that case illustrates rather than requires. The runner has been shown to fail an
 implementation that accepts everything and one that refuses everything.
 
 ## Security requirements (MUST)
