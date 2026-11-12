@@ -451,11 +451,11 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
             if not text.strip():
                 raise Refused("provider", "the answer carries no text")
             return text
-        text = result.get("response") if isinstance(result, dict) else None
-        if not isinstance(text, str) or not text.strip():
+        answer = result.get("response") if isinstance(result, dict) else None
+        if not isinstance(answer, str) or not answer.strip():
             raise Refused("provider", "the answer carries no text")
         _usage(rec, result.get("usage") if isinstance(result, dict) else None, "prompt_tokens", "completion_tokens")
-        return text
+        return answer
     return _client("cloudflare-workers-ai", model, log, call)
 
 
