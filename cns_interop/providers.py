@@ -431,7 +431,8 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
     _check_url(base_url)
 
     def call(prompt: str, rec: Provenance) -> str:
-        body = {"prompt": prompt, "max_tokens": max_tokens}
+        # sent as `messages`: newer models answer a bare `prompt` with an empty message (seen live 2026-11-12)
+        body = {"messages": [{"role": "user", "content": prompt}], "max_tokens": max_tokens}
         rec.request_sha256 = _digest(_encode(body))
         url = f"{base_url.rstrip('/')}/accounts/{account_id}/ai/run/{urllib.parse.quote(model, safe='/@')}"
         status, raw = _post(url, {"authorization": "Bearer " + api_key, "user-agent": _USER_AGENT}, body, timeout_s,

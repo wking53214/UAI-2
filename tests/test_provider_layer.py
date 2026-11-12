@@ -88,8 +88,6 @@ def envelope(provider, text):
 def prompt_of(provider, body):
     if provider == "gemini":
         return body["contents"][0]["parts"][0]["text"]
-    if provider == "cloudflare":
-        return body["prompt"]
     return body["messages"][0]["content"]
 
 
@@ -155,7 +153,7 @@ def test_groq_and_cloudflare_send_what_each_api_expects_and_nothing_else():
                 assert body == {"model": "model-x", "messages": [{"role": "user", "content": "the prompt"}], "max_tokens": 512}
             else:
                 assert sent["path"] == "/accounts/acct123/ai/run/@cf/meta/model-x"
-                assert body == {"prompt": "the prompt", "max_tokens": 512}
+                assert body == {"messages": [{"role": "user", "content": "the prompt"}], "max_tokens": 512}
         finally:
             stub.close()
 
