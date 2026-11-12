@@ -45,7 +45,7 @@ Every message is one JSON object with exactly these fields:
 | `to` | the one identity it is addressed to, or `""` for a broadcast |
 | `conversation` | the `id` of the message that opened the exchange |
 | `in_reply_to` | the digest of the whole envelope this answers (all fields including `sig`), or `""` |
-| `issued_at` | integer milliseconds since the Unix epoch |
+| `issued_at` | integer milliseconds since the Unix epoch, zero or more (a negative value is `malformed`) |
 | `expires_at` | integer milliseconds after `issued_at`, or null |
 | `body` | a mapping, in the value profile |
 | `sig` | 128 lowercase hex digits |
@@ -57,7 +57,8 @@ Verification is strict, identically in every implementation: the public key and 
 eight 8-torsion points, listed in `interop/node/uai.mjs`) never verifies, since anyone can sign for one.
 
 **Wire.** JSON text, UTF-8, at most 1 MiB, one envelope per line on stream transports. A reader refuses duplicate
-keys, any number with a fraction or exponent, NaN and Infinity, and anything that is not a JSON object. Key order and
+keys, any number with a fraction or exponent, NaN and Infinity, and anything that is not a JSON object. A byte order
+mark (U+FEFF) before the object is refused as `malformed`, not skipped: a receiver never guesses at an encoding. Key order and
 spacing do not matter; the signature is over the canonical digest.
 
 **Checking a received envelope**, in this order, each failure a refusal with the stable code shown:
@@ -69,6 +70,9 @@ spacing do not matter; the signature is over the canonical digest.
 4. now is before `expires_at` (`expired`)
 5. `to` is this receiver, where an audience is expected (`audience`)
 6. this `(from, id)` has not been accepted before, from the receiver's ledger (`replayed`)
+
+A conforming receiver keeps a replay ledger and performs check 6 on every message it accepts. A receiver run with no
+ledger skips check 6, accepts a replay, and is not conforming; it is useful only in tests.
 
 Messages in a session (request, offer, accept, refuse, decision) must expire, and may claim at most 24 hours of
 life. A receiver keeps each ledger entry only until its message would be refused as expired (on a shared PostgreSQL ledger,

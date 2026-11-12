@@ -25,6 +25,61 @@ SUITE = ROOT / "contracts" / "uai1" / "conformance-suite.json"
 VECTORS = ROOT / "contracts" / "uai-vectors.json"
 
 
+# Cases first added as `reference` whose answer the text of docs/interop/UAI-1.md decides on its own, with the words that
+# decide it. A case not listed here stays `reference`: see docs/interop/implementers/README.md for why each one does.
+S2_FIELDS = "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed)"
+S2_WIRE = ("UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; "
+           "check 1 (malformed)")
+DECIDED_BY = {
+    "deeply-nested-value": S2_FIELDS + "; it is not an envelope",
+    "unicode-escape-duplicate-key": S2_WIRE + "; keys are compared as the text they decode to",
+    "sig-all-zeros": "UAI-1.md section 2, Signature and check 2: it is well formed and does not verify (signature)",
+    "sig-last-bit-flipped": "UAI-1.md section 2, Signature and check 2: it is well formed and does not verify (signature)",
+    "sig-one-hex-char-short": S2_FIELDS + "; `sig` is 128 lowercase hex digits",
+    "sig-uppercase-hex": S2_FIELDS + "; `sig` is 128 lowercase hex digits",
+    "version-uppercase": "UAI-1.md section 2, check 1: `v` is `uai/1` (version); a receiver never guesses at a dialect",
+    "from-uppercase-hex": S2_FIELDS + "; section 3: an identity is `uai:ed25519:` and 64 lowercase hex digits",
+    "from-other-key-scheme": S2_FIELDS + "; section 3: an identity is `uai:ed25519:` and 64 lowercase hex digits",
+    "id-too-short": S2_FIELDS + "; `id` is 32 lowercase hex digits",
+    "id-uppercase-hex": S2_FIELDS + "; `id` is 32 lowercase hex digits",
+    "issued-at-as-text": S2_FIELDS + "; `issued_at` is an integer",
+    "to-null": S2_FIELDS + "; `to` is an identity or the empty text",
+    "kind-as-number": S2_FIELDS + "; `kind` is one of the listed names",
+    "trailing-garbage": S2_WIRE,
+    "second-object-appended": S2_WIRE + "; one envelope per message",
+    "leading-zero-number": S2_WIRE + "; it is not JSON (RFC 8259 forbids leading zeros)",
+    "lone-surrogate-in-body": "UAI-1.md section 1: text must be valid Unicode, no unpaired surrogates; check 1 (profile)",
+    "nul-character-in-body": "UAI-1.md section 1: U+0000 is valid Unicode text, so the body is in the profile; "
+                             "it was edited, so check 2 (signature)",
+    "proto-key-duplicate": S2_WIRE,
+    "proto-key-added-to-body": "UAI-1.md section 1: `__proto__` is an ordinary text key; the body was edited, so check 2 "
+                               "(signature)",
+    "empty-text": S2_WIRE,
+    "json-null": S2_WIRE,
+    "surrounding-whitespace-is-accepted": "UAI-1.md section 2, Wire: spacing does not matter (JSON allows whitespace "
+                                          "around a value)",
+    "pretty-printed-is-accepted": "UAI-1.md section 2, Wire: key order and spacing do not matter",
+    "reordered-keys-are-accepted": "UAI-1.md section 2, Wire: key order and spacing do not matter",
+    "expired-exactly-at-expires-at": "UAI-1.md section 2, check 4: now is BEFORE `expires_at` (expired)",
+    "accepted-one-ms-before-expires-at": "UAI-1.md section 2, check 4: now is before `expires_at`",
+    "replay-in-pretty-printed-text-is-refused": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted "
+                                                "before (replayed); the text's layout is not part of it",
+    "replay-with-reordered-keys-is-refused": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted "
+                                             "before (replayed); the text's layout is not part of it",
+    # the two below were settled by adding a sentence to the specification (project owner's decision, 2026-11-12)
+    "issued-at-negative": "UAI-1.md section 2, the field table: `issued_at` is zero or more; check 1 (malformed)",
+    "leading-byte-order-mark": "UAI-1.md section 2, Wire: a byte order mark before the object is refused as malformed, "
+                               "not skipped",
+}
+# Kept as `reference` on purpose: it shows what a NON-conforming receiver (no ledger) does, so the suite records that
+# the ledger, not the parser, is what refuses a replay. UAI-1.md section 2 says such a receiver is not conforming.
+ILLUSTRATIVE = {
+    "replay-needs-the-ledger-so-without-it-both-are-accepted":
+        "illustration, not a requirement: UAI-1.md section 2 says a receiver with no ledger is not conforming; this case "
+        "shows that without one a replay is accepted, so the ledger is what refuses it",
+}
+
+
 def _step(text: str, now: int, expect: Dict[str, Any], *, trust: Any = None, audience: Any = None, kinds: Any = None,
           ledger: bool = False) -> Dict[str, Any]:
     return {"receive": {"wire_text": text, "now": now, "trust": trust, "audience": audience, "kinds": kinds, "ledger": ledger},
@@ -82,14 +137,19 @@ def build() -> Dict[str, Any]:
               [_step('{"a":1,"\\u0061":2}', issued, {"refuse": "malformed"})]),
     ]
     cases += adversarial(req, text, issued, dumps)
+    for c in cases:
+        if c["name"] in DECIDED_BY:
+            c["basis"], c["spec"] = "specification", DECIDED_BY[c["name"]]
+        elif c["name"] in ILLUSTRATIVE:
+            c["spec"] = ILLUSTRATIVE[c["name"]]
     return {"schema": "uai1-conformance/1", "note": "regenerate with python interop/vectors/make_conformance_suite.py --write; "
             "protocol in contracts/uai1/README.md", "identities": ids, "cases": cases}
 
 
 def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List[Dict[str, Any]]:
     """Attack inputs added after an outside review asked for wider adversarial coverage. Both shipped implementations were
-    probed with each one first and gave the same answer (2026-11-12); they are `reference` cases until the specification
-    text is checked to fix each answer on its own."""
+    probed with each one first and gave the same answer (2026-11-12). Built as `reference`; those whose answer the
+    specification text decides are promoted in build() through DECIDED_BY, with the words that decide them."""
     w = lambda **kw: dumps({**req, **kw})  # noqa: E731
     sig, exp, frm = req["sig"], req["expires_at"], req["from"]
     pretty = json.dumps(req, sort_keys=True, indent=2)

@@ -24,7 +24,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 | Claim | Evidence | Status |
 |---|---|---|
-| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (63 cases; 33 are `reference`, see section 7) |
+| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (63 cases; 62 decided by the specification, 1 illustration, see section 7) |
 | Edited bodies, swapped senders, forged, truncated or bit-flipped signatures are refused | suite cases `reject-body-edited`, `reject-sender-swapped`, `sig-all-zeros`, `sig-last-bit-flipped`, `sig-one-hex-char-short`; `cns_interop/tests/test_envelope.py` | Tested |
 | Weak and non-canonical Ed25519 keys are refused | suite cases `reject-small-order-key`, `reject-non-canonical-key`; `cns_interop/tests/test_ed25519.py`, `test_crypto_backend.py` | Tested |
 | Ambiguous text is refused the same way in both languages (duplicate keys, `\u` escapes, floats, huge integers, NaN, nesting, size, trailing data, byte order mark, lone surrogates, `__proto__`) | suite classes `ambiguous-or-malformed` and `malformed` | Tested |
@@ -89,7 +89,11 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 ## 7. A note on `reference` cases
 
-33 of the 63 conformance cases are marked `basis: "reference"`: both shipped implementations agree on the answer, but the
-specification text has not been checked to fix that answer on its own. A third implementation that disagrees with one
-has found either a bug or an ambiguity in the specification; either is worth reporting. Promoting a case to
-`specification` means pointing at the sentence in `docs/interop/UAI-1.md` that decides it.
+62 of the 63 conformance cases are `basis: "specification"`. Each of the 32 promoted on 2026-11-12 carries a `spec`
+field quoting the words in `docs/interop/UAI-1.md` that decide its answer. Two of them were settled by adding a sentence
+to the specification that matches what both implementations already did: `issued_at` is zero or more, and a byte order
+mark is refused, not skipped.
+
+One case stays `basis: "reference"` on purpose: `replay-needs-the-ledger-so-without-it-both-are-accepted`. It shows
+what a receiver with no replay ledger does (it accepts a replay). The specification now says such a receiver is not
+conforming, so the case is an illustration that the ledger is what refuses a replay, not a requirement to copy.

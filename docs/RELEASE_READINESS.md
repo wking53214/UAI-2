@@ -34,9 +34,10 @@ Retired
 
 ## Before tagging
 
-- [ ] CI is green on this repository's default branch for Python 3.10 to 3.13. It runs on every push. From the
-      PR #4 merge to the PR #7 merge it failed at the type-check step only (tests, conformance and lint passed on all
-      four versions); the fix is the change that carries this line.
+- [x] CI is green on this repository's default branch for Python 3.10 to 3.13: run #36 on `60e103a` (the PR #8
+      merge), 2026-11-12. It runs on every push. From the PR #4 merge to the PR #7 merge it failed at the type-check
+      step only (tests, conformance and lint passed on all four versions); PR #8 fixed it. Keep it green: a red main
+      reopens this item.
 - [ ] One live run per provider you intend to name as supported (`python interop/live_providers.py --out ...`), with
       the evidence file committed. Today: Anthropic, Gemini, Groq and Cloudflare Workers AI answered live on 2026-11-12
       (recorded in `docs/EVIDENCE.md` and `evidence/live-runs/`, from the printed output; the JSON evidence files

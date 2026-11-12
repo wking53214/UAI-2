@@ -457,6 +457,7 @@
    "basis": "reference",
    "class": "replayed",
    "name": "replay-needs-the-ledger-so-without-it-both-are-accepted",
+   "spec": "illustration, not a requirement: UAI-1.md section 2 says a receiver with no ledger is not conforming; this case shows that without one a replay is accepted, so the ledger is what refuses it",
    "steps": [
     {
      "expect": {
@@ -633,9 +634,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "deeply-nested-value",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); it is not an envelope",
    "steps": [
     {
      "expect": {
@@ -673,9 +675,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "unicode-escape-duplicate-key",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed); keys are compared as the text they decode to",
    "steps": [
     {
      "expect": {
@@ -693,9 +696,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "tampered",
    "name": "sig-all-zeros",
+   "spec": "UAI-1.md section 2, Signature and check 2: it is well formed and does not verify (signature)",
    "steps": [
     {
      "expect": {
@@ -713,9 +717,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "tampered",
    "name": "sig-last-bit-flipped",
+   "spec": "UAI-1.md section 2, Signature and check 2: it is well formed and does not verify (signature)",
    "steps": [
     {
      "expect": {
@@ -733,9 +738,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "sig-one-hex-char-short",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `sig` is 128 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -753,9 +759,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "sig-uppercase-hex",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `sig` is 128 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -773,9 +780,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "rejected",
    "name": "version-uppercase",
+   "spec": "UAI-1.md section 2, check 1: `v` is `uai/1` (version); a receiver never guesses at a dialect",
    "steps": [
     {
      "expect": {
@@ -793,9 +801,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "from-uppercase-hex",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); section 3: an identity is `uai:ed25519:` and 64 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -813,9 +822,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "from-other-key-scheme",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); section 3: an identity is `uai:ed25519:` and 64 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -833,9 +843,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "id-too-short",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `id` is 32 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -853,9 +864,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "id-uppercase-hex",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `id` is 32 lowercase hex digits",
    "steps": [
     {
      "expect": {
@@ -873,9 +885,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "issued-at-as-text",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `issued_at` is an integer",
    "steps": [
     {
      "expect": {
@@ -893,9 +906,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "issued-at-negative",
+   "spec": "UAI-1.md section 2, the field table: `issued_at` is zero or more; check 1 (malformed)",
    "steps": [
     {
      "expect": {
@@ -913,9 +927,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "to-null",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `to` is an identity or the empty text",
    "steps": [
     {
      "expect": {
@@ -933,9 +948,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "kind-as-number",
+   "spec": "UAI-1.md section 2, the field table and check 1: exactly the fields above, each in its form (malformed); `kind` is one of the listed names",
    "steps": [
     {
      "expect": {
@@ -953,9 +969,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "trailing-garbage",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed)",
    "steps": [
     {
      "expect": {
@@ -973,9 +990,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "second-object-appended",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed); one envelope per message",
    "steps": [
     {
      "expect": {
@@ -993,9 +1011,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "leading-byte-order-mark",
+   "spec": "UAI-1.md section 2, Wire: a byte order mark before the object is refused as malformed, not skipped",
    "steps": [
     {
      "expect": {
@@ -1013,9 +1032,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "leading-zero-number",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed); it is not JSON (RFC 8259 forbids leading zeros)",
    "steps": [
     {
      "expect": {
@@ -1033,9 +1053,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "lone-surrogate-in-body",
+   "spec": "UAI-1.md section 1: text must be valid Unicode, no unpaired surrogates; check 1 (profile)",
    "steps": [
     {
      "expect": {
@@ -1053,9 +1074,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "tampered",
    "name": "nul-character-in-body",
+   "spec": "UAI-1.md section 1: U+0000 is valid Unicode text, so the body is in the profile; it was edited, so check 2 (signature)",
    "steps": [
     {
      "expect": {
@@ -1073,9 +1095,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "ambiguous-or-malformed",
    "name": "proto-key-duplicate",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed)",
    "steps": [
     {
      "expect": {
@@ -1093,9 +1116,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "tampered",
    "name": "proto-key-added-to-body",
+   "spec": "UAI-1.md section 1: `__proto__` is an ordinary text key; the body was edited, so check 2 (signature)",
    "steps": [
     {
      "expect": {
@@ -1113,9 +1137,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "empty-text",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed)",
    "steps": [
     {
      "expect": {
@@ -1133,9 +1158,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "malformed",
    "name": "json-null",
+   "spec": "UAI-1.md section 2, Wire: a reader refuses duplicate keys and anything that is not a JSON object; check 1 (malformed)",
    "steps": [
     {
      "expect": {
@@ -1153,9 +1179,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "valid",
    "name": "surrounding-whitespace-is-accepted",
+   "spec": "UAI-1.md section 2, Wire: spacing does not matter (JSON allows whitespace around a value)",
    "steps": [
     {
      "expect": {
@@ -1173,9 +1200,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "valid",
    "name": "pretty-printed-is-accepted",
+   "spec": "UAI-1.md section 2, Wire: key order and spacing do not matter",
    "steps": [
     {
      "expect": {
@@ -1193,9 +1221,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "valid",
    "name": "reordered-keys-are-accepted",
+   "spec": "UAI-1.md section 2, Wire: key order and spacing do not matter",
    "steps": [
     {
      "expect": {
@@ -1213,9 +1242,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "expired",
    "name": "expired-exactly-at-expires-at",
+   "spec": "UAI-1.md section 2, check 4: now is BEFORE `expires_at` (expired)",
    "steps": [
     {
      "expect": {
@@ -1233,9 +1263,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "valid",
    "name": "accepted-one-ms-before-expires-at",
+   "spec": "UAI-1.md section 2, check 4: now is before `expires_at`",
    "steps": [
     {
      "expect": {
@@ -1253,9 +1284,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "replayed",
    "name": "replay-in-pretty-printed-text-is-refused",
+   "spec": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted before (replayed); the text's layout is not part of it",
    "steps": [
     {
      "expect": {
@@ -1286,9 +1318,10 @@
    ]
   },
   {
-   "basis": "reference",
+   "basis": "specification",
    "class": "replayed",
    "name": "replay-with-reordered-keys-is-refused",
+   "spec": "UAI-1.md section 2, check 6: the pair (from, id) has not been accepted before (replayed); the text's layout is not part of it",
    "steps": [
     {
      "expect": {
