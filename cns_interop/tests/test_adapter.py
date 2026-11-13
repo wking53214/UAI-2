@@ -124,6 +124,16 @@ def test_a_model_that_asks_for_a_person_produces_a_retry_that_says_so_never_a_pa
     assert got.verdict == "retry" and not got.allowed and any("person" in r for r in got.reasons)
 
 
+def test_the_escalate_flag_never_softens_a_terminal_breach_and_still_turns_a_pass_or_a_retry_into_a_retry_that_says_so():
+    # found by interop/fuzz_policy.py: a model's escalate=true used to turn the model's own terminal_breach into a retry
+    def says(verdict):
+        return lambda prompt: json.dumps({"verdict": verdict, "reasons": ["why"], "evidence": {}, "escalate": True})
+    breach = run_with(scripted(says("terminal_breach")), income=100_000)
+    assert breach.verdict == "terminal_breach" and not breach.allowed and not any("person" in r for r in breach.reasons)
+    retry = run_with(scripted(says("retry")), income=100_000)
+    assert retry.verdict == "retry" and any("person" in r for r in retry.reasons)
+
+
 def test_an_adapter_that_raises_is_a_signed_failure_not_a_crash_or_a_pass():
     def boom(prompt):
         raise TimeoutError("provider unreachable")
