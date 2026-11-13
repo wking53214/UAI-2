@@ -89,7 +89,8 @@ def now_ms() -> int:
 
 def check_profile(value: Any, *, where: str = "body", depth: int = 0) -> None:
     """Raise Refused('profile') unless `value` is in the UAI-1 value profile (see the module docstring)."""
-    if depth > MAX_DEPTH:
+    if depth > MAX_DEPTH or (depth == MAX_DEPTH and isinstance(value, (Mapping, list, tuple))):
+        # the body is level 1, so a container at depth MAX_DEPTH would be level 33, even when it is empty
         raise Refused("profile", f"{where} nests deeper than {MAX_DEPTH} levels")
     if value is None or isinstance(value, bool):
         return

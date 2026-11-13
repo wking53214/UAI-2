@@ -152,7 +152,8 @@ export function canonical(v) {
 export const digest = (v) => createHash("sha256").update(canonical(v), "utf8").digest("hex");
 
 export function checkProfile(v, where = "body", depth = 0) {
-  if (depth > MAX_DEPTH) throw new Refused("profile", `${where} nests deeper than ${MAX_DEPTH} levels`);
+  // the body is level 1, so a container at depth MAX_DEPTH would be level 33, even when it is empty
+  if (depth > MAX_DEPTH || (depth === MAX_DEPTH && typeof v === "object" && v !== null)) throw new Refused("profile", `${where} nests deeper than ${MAX_DEPTH} levels`);
   if (v === null || typeof v === "boolean") return;
   if (typeof v === "number") { if (!Number.isSafeInteger(v)) throw new Refused("profile", `${where} holds a non-integer or an integer out of range`); return; }
   if (typeof v === "string") { if (!v.isWellFormed()) throw new Refused("profile", `${where} holds text that is not valid Unicode`); return; }

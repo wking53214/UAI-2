@@ -154,3 +154,24 @@ def test_a_signer_never_shows_its_key():
 def test_hostile_json_is_refused_not_a_crash(text):
     with pytest.raises(Refused):
         wire.loads(text)
+
+
+def _nested(containers: int, leaf):
+    """`containers` levels of one-key objects, the body being level 1, then `leaf` inside the innermost."""
+    v = leaf
+    for _ in range(containers):
+        v = {"k": v}
+    return v
+
+
+def test_an_empty_container_at_level_33_is_refused_like_any_other_value_there():
+    from cns_interop.envelope import Refused, check_profile
+    check_profile(_nested(32, "x"))                  # 32 levels with a number or text inside: fine
+    check_profile(_nested(31, {}))                   # an empty object as the 32nd level: fine
+    check_profile(_nested(31, []))
+    for leaf in ({}, [], [[]], {"a": {}}):
+        with pytest.raises(Refused) as e:            # a 33rd level is refused even when empty
+            check_profile(_nested(32, leaf))
+        assert e.value.code == "profile"
+    with pytest.raises(Refused):
+        check_profile(_nested(33, "x"))

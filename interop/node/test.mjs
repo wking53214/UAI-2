@@ -109,3 +109,12 @@ test("crypto diagnostics name the one backend, the profile read once, and claim 
   assert.equal(d.constant_time_claimed, false);
   assert.throws(() => { d.backend = "other"; });   // frozen object: a caller cannot rewrite what was reported
 });
+
+test("an empty container at level 33 is refused like any other value there", () => {
+  const nested = (n, leaf) => { let v = leaf; for (let i = 0; i < n; i++) v = { k: v }; return v; };
+  assert.ok(inProfile(nested(32, "x")));
+  assert.ok(inProfile(nested(31, {})));
+  assert.ok(inProfile(nested(31, [])));
+  for (const leaf of [{}, [], [[]], { a: {} }]) assert.ok(!inProfile(nested(32, leaf)));
+  assert.ok(!inProfile(nested(33, "x")));
+});

@@ -59,7 +59,7 @@ def test_the_node_implementation_passes_the_same_answer_key():
     tests = [str(ROOT / "interop" / "node" / name) for name in ("test.mjs", "agent.test.mjs", "revocation.test.mjs", "grants.test.mjs")]
     done = subprocess.run([node(), "--test", "--test-reporter=tap", *tests], capture_output=True, text=True, timeout=180)
     assert done.returncode == 0, done.stdout[-4000:] + done.stderr[-2000:]
-    assert "# fail 0" in done.stdout and "# pass 37" in done.stdout
+    assert "# fail 0" in done.stdout and "# pass 38" in done.stdout
 
 
 def test_the_node_small_order_list_is_exactly_the_curves_eight_torsion_points():
