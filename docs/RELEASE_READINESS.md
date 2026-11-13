@@ -21,7 +21,7 @@ Added
 - UAI-1 (specification, Python and Node implementations, conformance suite), moved from CNS unchanged.
 - `interop/jury.py`: the same documents through models from several companies, keeping each model's recommendation
   apart from the decider's final verdict.
-- 30 adversarial conformance cases and 7 boundary cases (70 in all), agreed by both implementations.
+- 30 adversarial conformance cases and 8 boundary cases (71 in all), agreed by both implementations.
 
 Changed
 - The request digest in a provenance record is the digest of the bytes sent.

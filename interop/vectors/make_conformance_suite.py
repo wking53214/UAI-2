@@ -79,6 +79,9 @@ DECIDED_BY = {
                                                      "levels are in the profile, so the edited body reaches check 2 (signature)",
     "nesting-33-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile; "
                                                       "check 1 (profile) at 33 levels",
+    "nesting-33-levels-ending-in-an-empty-object-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is "
+        "outside the profile, and an empty object is a level like any other (32 mappings with an empty one inside is 33 levels); "
+        "check 1 (profile)",
     "nesting-100-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile, "
                                                        "refused with `profile` through at least 100 levels (check 1)",
     # the two below were settled by adding a sentence to the specification (project owner's decision, 2026-11-12)
@@ -174,10 +177,11 @@ def _malleated_sig(sig_hex: str) -> str:
     return (raw[:32] + s.to_bytes(32, "little")).hex()
 
 
-def _nested_body(req: Dict[str, Any], levels: int) -> str:
-    """The request with its body replaced by mappings nested `levels` deep (the body counts as level 1). The signature no
-    longer matches, so an implementation that accepts the nesting reaches the signature check and says `signature`."""
-    inner: Any = 1
+def _nested_body(req: Dict[str, Any], levels: int, leaf: Any = 1) -> str:
+    """The request with its body replaced by mappings nested `levels` deep (the body counts as level 1), `leaf` inside the
+    innermost. The signature no longer matches, so an implementation that accepts the nesting reaches the signature check
+    and says `signature`."""
+    inner: Any = leaf
     for _ in range(levels):
         inner = {"a": inner}
     return json.dumps({**req, "body": inner}, sort_keys=True, separators=(",", ":"))
@@ -231,6 +235,8 @@ def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List
         one("future-by-one-ms-more-than-the-skew-is-refused", "rejected", text, "not_yet_valid", now=issued - SKEW_MS - 1),
         one("nesting-32-levels-reaches-the-signature-check", "tampered", _nested_body(req, 32), "signature"),
         one("nesting-33-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 33), "profile"),
+        one("nesting-33-levels-ending-in-an-empty-object-is-outside-the-value-profile", "rejected",
+            _nested_body(req, 32, {}), "profile"),
         one("nesting-100-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 100), "profile"),
         _case("replay-in-pretty-printed-text-is-refused", "replayed", "reference",
               [_step(text, issued, {"accept": True}, ledger=True), _step(pretty, issued, {"refuse": "replayed"}, ledger=True)]),
