@@ -15,8 +15,8 @@ Python or in Node.
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
 | For other implementers | `contracts/uai1/` | Schema, error registry, a 71-case conformance suite and its runner |
 
-Supported providers: Anthropic, Google Gemini, OpenAI, Azure OpenAI (Copilot), Groq, Cloudflare Workers AI. A GitHub Models
-route is still in the code, but GitHub retired that service on 2026-07-30 and it no longer works.
+Supported providers: Anthropic, Google Gemini, OpenAI, Azure OpenAI (Copilot), Groq, Cloudflare Workers AI. GitHub retired
+GitHub Models on 2026-07-30, so the old name `copilot` now reaches the Azure OpenAI route (your own resource and key).
 
 ## The rule everything here follows
 
