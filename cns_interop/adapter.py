@@ -165,7 +165,9 @@ class AdapterJudge:
         rec = self._policy(capability, dict(disclosed), dict(subject), rec)
         if not isinstance(rec, Recommendation) or rec.verdict not in VERDICTS:
             raise _bad("the policy returned something that is not a recommendation")
-        if rec.escalate:  # a pass that asks for a person is not a pass: it is a retry that says why
+        if rec.escalate and rec.verdict != GateOutcome.TERMINAL_BREACH.value:
+            # a pass that asks for a person is not a pass: it is a retry that says why. A terminal breach stays one: the
+            # escalate flag is the model's, and it must never soften the model's own worst verdict (found by interop/fuzz_policy.py)
             return Judgment(GateOutcome.RETRY.value, rec.reasons + ("escalated: a person must look",), {})
         return Judgment(rec.verdict, rec.reasons, rec.evidence if rec.verdict == GateOutcome.PASS.value else {})
 
