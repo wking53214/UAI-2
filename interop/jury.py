@@ -51,7 +51,8 @@ PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's us
 }
 MAX_TOKENS = 2000
 SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0, "cloudflare-workers-ai": 1.0,
-             "github-models": 6.0}  # a guess at free-tier pace; the 2026-11-11 runs saw Gemini rate-limit at 4.5 s
+             "github-models": 20.0}  # a guess at free-tier pace (per model: its free limits are low and shared); the
+# 2026-11-11 runs saw Gemini rate-limit at 4.5 s
 INVALID = (400, 402, 404, 422)  # the provider refused the request itself: a bad model name, no credit, a bad limit
 PREFLIGHT_DOC = ("honest", "paystub-900000", {"doc_type": "paystub", "monthly_income_cents": 900_000}, "pass")
 ZERO_DIGEST = "00" * 32
