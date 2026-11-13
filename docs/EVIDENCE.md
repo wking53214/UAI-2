@@ -75,7 +75,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 |---|---|---|
 | A model's pass stands only if the decider's policy keeps it; a pass carries the provider-call record, signed by the decider, not the model | `cns_interop/tests/test_adapter.py`; `tests/test_front_door.py::test_a_pass_carries_the_record_of_the_provider_call_signed_by_the_decider_not_the_model` | Tested |
 | A model recommendation becomes a decision Python signs and Node verifies | `tests/test_front_door.py::test_a_models_recommendation_becomes_a_decision_python_signs_and_node_verifies` | Tested |
-| Against live models from four companies, hostile and edge documents produced no final pass that should not have happened | `interop/jury.py`; raw rows in [evidence/live-runs/2026-11-11-raw/](../evidence/live-runs/2026-11-11-raw/README.md): 3,698 rows over three runs, the provider answered on 1,679, 0 breaches; models were fooled, the policy lowered every one. Claude coverage in run 2 stops at round 8 of 30 (Anthropic calls began failing), and run 3 failed entirely; see the folder's README | Live |
+| Against live models from four companies, hostile and edge documents produced no final pass that should not have happened | `interop/jury.py`; raw rows in [evidence/live-runs/2026-11-11-raw/](../evidence/live-runs/2026-11-11-raw/README.md): 3,698 rows over three runs, the provider answered on 1,679, 0 breaches; models were fooled, the policy lowered every one. Claude coverage in run 2 stops at round 8 of 30 (Anthropic calls began failing; the operator reports the credit ran out or expired), and run 3 failed entirely; see the folder's README | Live |
 
 ## 6. Not shown yet
 
