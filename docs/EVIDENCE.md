@@ -24,7 +24,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 | Claim | Evidence | Status |
 |---|---|---|
-| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (70 cases; 69 decided by the specification, 1 illustration, see section 7) |
+| Python and Node give the same answer on every published case | `contracts/uai1/conformance-suite.json` through `run_conformance.py`, both adapters; `cns_interop/tests/test_uai1_package.py::test_both_shipped_implementations_pass_the_conformance_suite_through_the_standalone_runner` | Tested (71 cases; 70 decided by the specification, 1 illustration, see section 7) |
 | Edited bodies, swapped senders, forged, truncated or bit-flipped signatures are refused | suite cases `reject-body-edited`, `reject-sender-swapped`, `sig-all-zeros`, `sig-last-bit-flipped`, `sig-one-hex-char-short`; `cns_interop/tests/test_envelope.py` | Tested |
 | Weak and non-canonical Ed25519 keys are refused, and so is a signature whose `s` is not below the group order | suite cases `reject-small-order-key`, `reject-non-canonical-key`, `sig-s-plus-group-order`; `cns_interop/tests/test_ed25519.py`, `test_crypto_backend.py` | Tested. The suite cannot require refusing a non-canonical R, or a non-canonical key that is not of small order: no valid signature can be built with one, so a lenient verifier fails it anyway. Only the in-repo tests check that rule |
 | Ambiguous text is refused the same way in both languages (duplicate keys, `\u` escapes, floats, huge integers, NaN, nesting, size, trailing data, byte order mark, lone surrogates, `__proto__`) | suite classes `ambiguous-or-malformed` and `malformed` | Tested |
@@ -91,10 +91,13 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 
 ## 7. A note on `reference` cases
 
-69 of the 70 conformance cases are `basis: "specification"`. Each of the 32 promoted on 2026-11-12, and each of the 7 boundary cases added after the blind Go and Rust implementations, carries a `spec`
+70 of the 71 conformance cases are `basis: "specification"`. Each of the 32 promoted on 2026-11-12, and each of the 7 boundary cases added after the blind Go and Rust implementations, carries a `spec`
 field quoting the words in `docs/interop/UAI-1.md` that decide its answer. Two of them were settled by adding a sentence
 to the specification that matches what both implementations already did: `issued_at` is zero or more, and a byte order
 mark is refused, not skipped.
+The 71st case (`nesting-33-levels-ending-in-an-empty-object-is-outside-the-value-profile`, 2026-11-13) records a defect that a
+third reader, the policy-chain implementation in Go, exposed: Python and Node both accepted an empty object or list as the
+33rd level although UAI-1 section 1 says 33 levels are refused. Both were fixed; the case fails against the earlier code.
 
 One case stays `basis: "reference"` on purpose: `replay-needs-the-ledger-so-without-it-both-are-accepted`. It shows
 what a receiver with no replay ledger does (it accepts a replay). The specification now says such a receiver is not
