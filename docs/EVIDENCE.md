@@ -85,6 +85,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 |---|---|
 | An implementation by anyone outside this project | someone builds UAI-1 from `docs/interop/UAI-1.md` and `contracts/uai1/` alone and runs the suite |
 | Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level GitHub Models client and `live_providers.py` row are unchanged |
+| A decision signed from a live model's answer, verified by a second implementation | `python interop/live_signing.py --out live-signing.jsonl` with one provider key (the script and its stand-in tests exist; it has not been run live) |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
 | Signing-key custody and compromise recovery as an operating procedure | written procedure: where keys live, who can use them, how a compromise is detected, revoked and rotated (the code for revocation and rotation is tested; the procedure is not written) |
 | Long-running load and soak | a sustained run with mixed traffic, failures injected, and the ledger and audit checked afterwards |
