@@ -32,9 +32,9 @@ earlier summary was taken early ("157 calls so far, $0.30") and is superseded by
 - **Anthropic answered 466 of 1,980 rows and returned HTTP 400 on 1,513.** The first HTTP 400 is at file row 919, in round 8, at a
   cumulative spend of $1.8162, immediately after a Sonnet call that answered. From there on nearly every Claude call failed, at
   a cost of $0.00 each, with two isolated successes. So **Claude coverage in this run ends at round 8 of 30.**
-- **The cause of the HTTP 400s is not recorded.** The client keeps no error body. A credit balance reaching zero or a spend limit
-  would produce a sudden, permanent switch like this one, and the isolated successes were small calls. That is a guess; nothing
-  in the rows confirms it. The operator's Anthropic account (billing, limits, usage for that evening) would settle it.
+- **Cause: the operator reports the Anthropic credit ran out or expired** (reported 2026-11-13 from the operator's account;
+  it is not visible in the rows, because the client keeps no error body, and the exact moment was not checked against the
+  Console). That fits what the rows show: a sudden, permanent switch with isolated successes on small calls.
 - The still-high wrong-pass counts on the edge documents (an unaccepted document type, a capitalised type) show this run
   predates the PR #6 fix, after which the model is shown the full rule text.
 
@@ -55,7 +55,7 @@ returned HTTP 404 on 399 rows (the model name did not exist) and a timeout on on
 - Anything about Claude after round 8 of run 2, or about Gemini beyond 26 answers in run 2.
 - OpenAI, GitHub Models and Azure OpenAI (never called). No decision was signed from a live answer: the jury stops at the
   decider's judgment.
-- Why the Anthropic calls began to fail (see above), or how the system behaves with the PR #6 fix, which a new run would measure.
+- Anything the failed Claude calls would have answered, or how the system behaves with the PR #6 fix, which a new run would measure.
 
 ## Reproduce a summary (reads files only, no network, no keys)
 
