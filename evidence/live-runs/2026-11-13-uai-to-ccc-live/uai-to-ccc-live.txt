@@ -1,0 +1,26 @@
+model google:gemini-3.1-flash-lite
+  ok   invoice: model said 'pass'; verdict='pass' guard='opened' ingested=True ingested_again=False ccc_artifacts=1
+  FAIL bank statement: model said 'terminal_breach'; verdict='terminal_breach' guard='refused' ingested=False ccc_artifacts=0
+  FAIL inflated invoice: model said 'terminal_breach'; verdict='terminal_breach' guard='refused' ingested=False ccc_artifacts=0
+model groq:openai/gpt-oss-120b
+  ok   invoice: model said 'pass'; verdict='pass' guard='opened' ingested=True ingested_again=False ccc_artifacts=1
+  ok   bank statement: model said 'pass'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+  ok   inflated invoice: model said 'retry'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+model cloudflare-workers-ai:@cf/meta/llama-3.3-70b-instruct-fp8-fast
+  ok   invoice: model said 'pass'; verdict='pass' guard='opened' ingested=True ingested_again=False ccc_artifacts=1
+  ok   bank statement: model said 'retry'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+  ok   inflated invoice: model said 'retry'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+model cloudflare-workers-ai:@cf/mistralai/mistral-small-3.1-24b-instruct
+  ok   invoice: model said 'pass'; verdict='pass' guard='opened' ingested=True ingested_again=False ccc_artifacts=1
+  ok   bank statement: model said 'retry'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+  ok   inflated invoice: model said 'retry'; verdict='retry' guard='refused' ingested=False ccc_artifacts=0
+model cloudflare-workers-ai:@cf/nvidia/nemotron-3-120b-a12b
+  ok   invoice: model said 'pass'; verdict='pass' guard='opened' ingested=True ingested_again=False ccc_artifacts=1
+  FAIL bank statement: model said 'terminal_breach'; verdict='terminal_breach' guard='refused' ingested=False ccc_artifacts=0
+  FAIL inflated invoice: model said 'terminal_breach'; verdict='terminal_breach' guard='refused' ingested=False ccc_artifacts=0
+
+15 paths, 11 as wanted; a model said pass and the signed decision did not: 1; documents CCC took in that should not have been: 0
+chain: gemini-3.1-flash-lite bank statement: verdict was 'terminal_breach', wanted 'retry'
+chain: gemini-3.1-flash-lite inflated invoice: verdict was 'terminal_breach', wanted 'retry'
+chain: @cf/nvidia/nemotron-3-120b-a12b bank statement: verdict was 'terminal_breach', wanted 'retry'
+chain: @cf/nvidia/nemotron-3-120b-a12b inflated invoice: verdict was 'terminal_breach', wanted 'retry'
