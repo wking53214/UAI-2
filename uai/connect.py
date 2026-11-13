@@ -50,13 +50,16 @@ PROVIDERS: Mapping[str, _Spec] = {
     "anthropic": _Spec("anthropic", ("UAI_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"), _p.anthropic_complete),
     "gemini": _Spec("google", ("GEMINI_API_KEY",), _p.gemini_complete),
     "openai": _Spec("openai", ("OPENAI_API_KEY",), _p.openai_complete),
-    "copilot": _Spec("copilot-github-models", ("GITHUB_MODELS_TOKEN",), _p.copilot_complete),
     "copilot-azure": _Spec("copilot-azure-openai", ("AZURE_OPENAI_API_KEY",), _p.copilot_complete,
                            extra=(("base_url", "AZURE_OPENAI_ENDPOINT"),), fixed=(("route", "azure-openai"),)),
     "groq": _Spec("groq", ("GROQ_API_KEY",), _p.groq_complete),
     "cloudflare": _Spec("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), _p.cloudflare_complete,
                         extra=(("account_id", "CLOUDFLARE_ACCOUNT_ID"),), reports_finish=False),
 }
+# GitHub retired GitHub Models on 2026-07-30 (every call answers HTTP 200 and the text "OK"), so the old `copilot` name now means
+# the Azure OpenAI route: your own resource, your own key. Code that said `connect("copilot", ...)` keeps its call and needs
+# AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT instead of GITHUB_MODELS_TOKEN.
+PROVIDERS = {**PROVIDERS, "copilot": PROVIDERS["copilot-azure"]}
 
 _COMPLETE = {"end_turn", "STOP", "stop"}
 _CUT_OFF = {"max_tokens", "MAX_TOKENS", "length"}

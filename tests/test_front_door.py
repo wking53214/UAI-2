@@ -41,9 +41,12 @@ from uai.protocol import CompletionStatus, ModelProvider, ModelRequest, ModelRes
 NAME = {"anthropic": "anthropic", "gemini": "gemini", "openai": "openai", "copilot": "copilot", "copilot-azure": "copilot-azure",
         "groq": "groq", "cloudflare": "cloudflare"}
 KEY_VAR = {"anthropic": "ANTHROPIC_API_KEY", "gemini": "GEMINI_API_KEY", "openai": "OPENAI_API_KEY",
-           "copilot": "GITHUB_MODELS_TOKEN", "copilot-azure": "AZURE_OPENAI_API_KEY", "groq": "GROQ_API_KEY",
+           "copilot": "AZURE_OPENAI_API_KEY", "copilot-azure": "AZURE_OPENAI_API_KEY", "groq": "GROQ_API_KEY",
            "cloudflare": "CLOUDFLARE_API_TOKEN"}
 MODEL = {p: "model-x" for p in ALL} | {"cloudflare": "@cf/meta/model-x"}
+# GitHub Models is retired (2026-07-30): the front door's `copilot` now means the Azure OpenAI route, so through `uai.connect`
+# it is recorded under the Azure label. The lower-level client's own default route is untouched and still tested elsewhere.
+LABEL = {**LABEL, "copilot": "copilot-azure-openai"}
 
 
 def env_for(provider, **more):
@@ -76,7 +79,7 @@ def test_the_provider_is_always_named_and_a_stray_key_selects_nothing():
 
 @pytest.mark.parametrize("provider", ALL)
 def test_each_provider_is_reached_by_its_name_and_reads_its_own_key_variable(provider):
-    more = {"AZURE_OPENAI_ENDPOINT": "https://res.example"} if provider == "copilot-azure" else {}
+    more = {"AZURE_OPENAI_ENDPOINT": "https://res.example"} if provider in ("copilot", "copilot-azure") else {}
     got = uai.connect(NAME[provider].upper() + "  ", " " + MODEL[provider] + " ", environ=env_for(provider, **more))
     assert got.provider == LABEL[provider] and got.model == MODEL[provider] and callable(got.complete)
     with pytest.raises(ValueError) as e:
@@ -516,3 +519,19 @@ def test_the_quickstart_example_runs_end_to_end_and_says_not_executed_without_a_
         assert "decision: retry  allowed: False" in capsys.readouterr().out      # the model said pass; the policy did not keep it
     finally:
         stub.close()
+
+
+def test_the_old_copilot_name_reaches_the_azure_route_and_never_reads_the_retired_github_models_token():
+    stub = serving("copilot-azure", plain)
+    try:
+        got = uai.connect("copilot", "m", environ={"AZURE_OPENAI_API_KEY": KEY, "AZURE_OPENAI_ENDPOINT": stub.url,
+                                                   "GITHUB_MODELS_TOKEN": "ghp_" + "x" * 30})
+        assert got.provider == "copilot-azure-openai"
+        got.complete("hello")
+        sent = stub.requests[-1]
+        assert sent["headers"].get("api-key") == KEY and "authorization" not in sent["headers"]
+        assert "/openai/deployments/m/" in sent["path"]
+    finally:
+        stub.close()
+    with pytest.raises(ValueError, match="AZURE_OPENAI_API_KEY"):      # the retired service's token alone is not a key
+        uai.connect("copilot", "m", environ={"GITHUB_MODELS_TOKEN": KEY})
