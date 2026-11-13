@@ -96,3 +96,27 @@ def test_the_summary_exit_code_is_one_on_a_breach(tmp_path):
     p.write_text(json.dumps({"juror": "x", "name": "n", "verdict": "pass", "allowed": True, "breach": True, "node_check": "accept",
                              "decision_wire": {}, "signed_by_decider": True, "matches_expect": False}) + "\n")
     assert ls.summarize(str(p)) == 1
+
+
+def test_recheck_verifies_every_signed_decision_in_a_rows_file_again_and_fails_on_a_tampered_one(tmp_path, capsys):
+    _, rows = run_against(tmp_path, honest)
+    good = tmp_path / "good.jsonl"
+    good.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    assert ls.recheck(str(good)) == 0
+    assert f"Python reader accepted {len(rows)} of {len(rows)}; Node accepted {len(rows)} of {len(rows)}" in capsys.readouterr().out
+
+    bad_rows = json.loads(json.dumps(rows))
+    wire = bad_rows[0]["decision_wire"]
+    wire["body"]["verdict"] = "pass" if wire["body"].get("verdict") != "pass" else "retry"      # an edit after signing
+    bad_rows[1]["decider"] = bad_rows[1]["requester"]                                            # a row naming the wrong signer
+    bad = tmp_path / "bad.jsonl"
+    bad.write_text("".join(json.dumps(r) + "\n" for r in bad_rows))
+    assert ls.recheck(str(bad)) == 1
+    out = capsys.readouterr().out
+    assert "FAILED" in out and out.count("FAILED") == 2
+
+
+def test_recheck_of_a_file_with_no_signed_decision_fails(tmp_path):
+    empty = tmp_path / "e.jsonl"
+    empty.write_text(json.dumps({"juror": "x", "name": "n", "verdict": "failed:Refused"}) + "\n")
+    assert ls.recheck(str(empty)) == 1
