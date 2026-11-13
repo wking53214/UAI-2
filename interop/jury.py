@@ -4,8 +4,14 @@
     python interop/jury.py --summary jury.jsonl                        # read a finished run again
 
 Jurors are read from the same variables as live_providers.py: ANTHROPIC_MODEL (plus --anthropic-models for more than
-one Claude juror), GEMINI_MODEL, GROQ_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID. A company with no key is left out
-and said so. Each juror walks the document list on its own thread at its own pace, so a slow or rate-limited company
+one Claude juror), GEMINI_MODEL, GROQ_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID. Each of the last three may be a
+comma list of models (one juror each): Groq and Cloudflare host several model families under one key. A company with no key
+is left out and said so. (GitHub Models, once a free route here, was retired by GitHub on 2026-07-30 and is not a juror.)
+
+BEFORE THE RUN, a preflight makes one call per juror on a document that clears. A juror whose provider does not give a
+readable answer (HTTP 200 that the provider layer accepts) is dropped with the reason, and the run refuses to start (exit 4, nothing further called) if fewer than
+--min-providers different providers remain. This is what stops a wrong model name or an empty account from spending a whole
+run on failures. DURING the run a juror also stops after three invalid-request answers in a row (HTTP 400, 402, 404 or 422). Each juror walks the document list on its own thread at its own pace, so a slow or rate-limited company
 never holds up the others; the panels are put together afterwards from the rows.
 
 Every row keeps two verdicts apart: what the MODEL recommended (read by the strict reader) and what the decider FINALLY
@@ -45,7 +51,10 @@ PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's us
     "claude-fable-5-2": (8.00, 40.00),
 }
 MAX_TOKENS = 2000
-SPACING_S = {"anthropic": 0.0, "google": 4.5, "groq": 6.0, "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace
+SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0,
+             "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace; the 2026-11-11 runs saw Gemini rate-limit at 4.5 s
+INVALID = (400, 402, 404, 422)  # the provider refused the request itself: a bad model name, no credit, a bad limit
+PREFLIGHT_DOC = ("honest", "paystub-900000", {"doc_type": "paystub", "monthly_income_cents": 900_000}, "pass")
 ZERO_DIGEST = "00" * 32
 
 
@@ -90,8 +99,9 @@ def jurors_from_env(env: Dict[str, str], anthropic_models: List[str], stub: Opti
               ("groq", "GROQ_API_KEY", "GROQ_MODEL", groq_complete),
               ("cloudflare-workers-ai", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_MODEL", cloudflare_complete))
     for provider, key_var, model_var, fn in simple:
-        k, model = env.get(key_var, "").strip(), env.get(model_var, "").strip()
-        if not k or not model:
+        k = env.get(key_var, "").strip()
+        models = [m.strip() for m in env.get(model_var, "").split(",") if m.strip()]  # a comma list: one juror per model
+        if not k or not models:
             print(f"NOT EXECUTED: {provider} (set {key_var} and {model_var})")
             continue
         kw: Dict[str, Any] = {"timeout_s": 120.0, "max_tokens": MAX_TOKENS}
@@ -103,8 +113,9 @@ def jurors_from_env(env: Dict[str, str], anthropic_models: List[str], stub: Opti
             kw["account_id"] = account
         if stub:
             kw["base_url"] = stub
-        out.append({"provider": provider, "model": model,
-                    "make": lambda log, k=k, model=model, fn=fn, kw=kw: fn(k, model, log, **kw)})
+        for model in models:
+            out.append({"provider": provider, "model": model,
+                        "make": lambda log, k=k, model=model, fn=fn, kw=kw: fn(k, model, log, **kw)})
     return out
 
 
@@ -154,7 +165,7 @@ def worst_case_usd(model: str, disclosed: Dict[str, Any]) -> float:
 
 def run_juror(juror, opts, docs, shared, write: Callable[[Dict[str, Any]], None]) -> None:
     """One juror's walk over the documents, round after round, until a limit says stop."""
-    provider, calls, auth, limited = juror["provider"], 0, 0, 0
+    provider, calls, auth, limited, invalid = juror["provider"], 0, 0, 0, 0
     spacing = opts.spacing if opts.spacing is not None else SPACING_S.get(provider, 1.0)
     for rnd in range(opts.rounds):
         for kind, name, disclosed, expect in docs:
@@ -181,8 +192,13 @@ def run_juror(juror, opts, docs, shared, write: Callable[[Dict[str, Any]], None]
             auth = auth + 1 if status in (401, 403) else 0
             no_answer = status is None and row["verdict"].startswith("refused")  # timed out or never reached
             limited = limited + 1 if status == 429 or (status and status >= 500) or no_answer else 0
+            invalid = invalid + 1 if status in INVALID else 0
             if auth >= 3:
                 juror["ended"] = "three authentication failures in a row; check the key"
+                return
+            if invalid >= 3:
+                juror["ended"] = ("three requests in a row were refused as invalid (HTTP 400, 402, 404 or 422); check the "
+                                  "model name and the account's credit and limits")
                 return
             if limited >= 6:
                 juror["ended"] = "six rate-limit, overload or timed-out calls in a row; the free tier or the provider is spent"
@@ -193,6 +209,31 @@ def run_juror(juror, opts, docs, shared, write: Callable[[Dict[str, Any]], None]
             if pause > 0:
                 time.sleep(pause)
     juror["ended"] = "all rounds done"
+
+
+def preflight(jurors: List[Dict[str, Any]], shared: Dict[str, Any], write: Callable[[Dict[str, Any]], None]) -> List[Dict[str, Any]]:
+    """One call per juror on a document that clears, before the run. Returns the jurors whose provider gave a readable answer:
+    HTTP 200 that the provider layer accepted. A juror that cannot is dropped with the reason printed. Rows are written with
+    round -1, so the record shows what was tried. A 200 whose answer the provider layer cannot read (a retired service that
+    replies a plain "OK" is the case that was missed) does NOT count. A readable answer that the strict reader then refuses
+    (the model formatted it wrongly) still counts as reachable: that is a model result, not an outage."""
+    kind, name, disclosed, expect = PREFLIGHT_DOC
+    good = []
+    for juror in jurors:
+        row = one_call(juror, kind, name, disclosed, expect)
+        row["round"] = -1
+        with shared["lock"]:
+            shared["spent"] += row["cost_usd"]
+            row["cum_usd"] = round(shared["spent"], 4)
+        write(row)
+        label = f"{juror['provider']}:{juror['model']}"
+        if row["http_status"] == 200 and row["verdict"] != "refused:provider":
+            good.append(juror)
+            print(f"  preflight ok      {label}")
+        else:
+            juror["ended"] = f"failed the preflight: {row['reasons'][0][:100]}"
+            print(f"  preflight FAILED  {label}: {row['reasons'][0][:100]}")
+    return good
 
 
 def summarize(path: str) -> int:
@@ -252,6 +293,9 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default="jury.jsonl")
     ap.add_argument("--summary", metavar="FILE", help="only summarize an existing rows file")
     ap.add_argument("--stub", default=None, help="a local test server for every juror; never a real provider")
+    ap.add_argument("--no-preflight", action="store_true", help="skip the one-call-per-juror check before the run")
+    ap.add_argument("--min-providers", type=int, default=3,
+                    help="refuse to start unless this many different providers pass the preflight (default 3)")
     opts = ap.parse_args(argv)
     if opts.summary:
         return summarize(opts.summary)
@@ -270,6 +314,16 @@ def main(argv=None) -> int:
         with write_lock:
             out.write(json.dumps(row, sort_keys=True) + "\n")
             out.flush()
+
+    if not opts.no_preflight:
+        print("preflight (one call per juror):")
+        jurors = preflight(jurors, shared, write)
+        providers = {j["provider"] for j in jurors}
+        if len(providers) < opts.min_providers:
+            out.close()
+            print(f"NOT EXECUTED: {len(providers)} provider(s) passed the preflight, fewer than --min-providers "
+                  f"{opts.min_providers}; nothing further was called (the preflight rows are in {opts.out})")
+            return 4
 
     threads = [threading.Thread(target=run_juror, args=(j, opts, docs, shared, write), daemon=True) for j in jurors]
     try:
