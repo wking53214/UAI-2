@@ -2,6 +2,7 @@
 
     python interop/live_signing.py --out live-signing.jsonl                  # keys and models come from the environment
     python interop/live_signing.py --summary live-signing.jsonl              # read a finished run again
+    python interop/live_signing.py --recheck live-signing.jsonl              # verify every signed decision in a rows file again
 
 Until now every live run stopped at the verdict. Here, for each model and each of a few documents, the full UAI-1 exchange
 runs: a requester commits a document and asks, the decider offers terms, the requester accepts and discloses two fields, the
@@ -168,10 +169,42 @@ def summarize(path: str) -> int:
     return 1 if breaches or any(r["node_check"] not in ("accept", "not-run") for r in signed) else 0
 
 
+def recheck(path: str) -> int:
+    """Verify every signed decision in a rows file again, with no network and no keys: the Python reader (signature, kind,
+    audience, lifetime, and that the signer is the decider the row names) and then the Node implementation. Exit 1 if any
+    decision fails either. This checks the envelope, not the terms the decision was made under (rows do not keep those)."""
+    from cns_interop.envelope import Refused, open_envelope
+
+    rows = [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()]
+    signed = [r for r in rows if r.get("decision_wire")]
+    node, bad = Node(), []
+    try:
+        for r in signed:
+            wire = r["decision_wire"]
+            at = wire["issued_at"] + 1000
+            try:
+                env = open_envelope(wire, now=at, audience=r["requester"], kinds={"decision"})
+                py = "accept" if env.sender == r["decider"] else "wrong signer"
+            except Refused as exc:
+                py = exc.code
+            nd = node.check(wire, now=at, audience=r["requester"], decider=r["decider"])
+            if py != "accept" or nd != "accept":
+                bad.append((r["juror"], r["name"], py, nd))
+    finally:
+        node.close()
+    print(f"{len(rows)} rows, {len(signed)} with a signed decision")
+    print(f"  Python reader accepted {len(signed) - sum(1 for b in bad if b[2] != 'accept')} of {len(signed)}; "
+          f"Node accepted {len(signed) - sum(1 for b in bad if b[3] != 'accept')} of {len(signed)}")
+    for b in bad:
+        print(f"  FAILED {b[0]} {b[1]}: python={b[2]} node={b[3]}")
+    return 1 if bad or not signed else 0
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", default="live-signing.jsonl")
     ap.add_argument("--summary", metavar="FILE", help="only summarize an existing rows file")
+    ap.add_argument("--recheck", metavar="FILE", help="verify every signed decision in an existing rows file again")
     ap.add_argument("--rounds", type=int, default=1, help="how many times each model walks the document list")
     ap.add_argument("--spacing", type=float, default=None, help="seconds between calls (default per company)")
     ap.add_argument("--stub", default=None, help="a local test server for every model; never a real provider")
@@ -179,6 +212,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     opts = ap.parse_args(argv)
     if opts.summary:
         return summarize(opts.summary)
+    if opts.recheck:
+        return recheck(opts.recheck)
     jurors = jurors_from_env(dict(os.environ), [m.strip() for m in opts.anthropic_models.split(",") if m.strip()], opts.stub)
     if not jurors:
         print("NOT EXECUTED: no model has both a key and a model name")
