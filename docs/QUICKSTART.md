@@ -6,8 +6,8 @@ anyone you trust can check. It works the same on every supported provider.
 ## What you need
 
 - Python 3.10 or later.
-- An API key for one provider: Anthropic, Google Gemini, OpenAI, GitHub Models (Copilot), Azure OpenAI, Groq or
-  Cloudflare Workers AI.
+- An API key for one provider: Anthropic, Google Gemini, OpenAI, Azure OpenAI, Groq or Cloudflare Workers AI. (GitHub Models
+  is in the table below but GitHub retired it on 2026-07-30; do not use it.)
 
 ## 1. Install
 
@@ -25,7 +25,7 @@ Python standard library.
 | Anthropic | `anthropic` | `ANTHROPIC_API_KEY` (or `UAI_ANTHROPIC_API_KEY`) |
 | Google Gemini | `gemini` | `GEMINI_API_KEY` |
 | OpenAI | `openai` | `OPENAI_API_KEY` |
-| GitHub Models (Copilot) | `copilot` | `GITHUB_MODELS_TOKEN` |
+| GitHub Models (Copilot), retired by GitHub on 2026-07-30: does not work | `copilot` | `GITHUB_MODELS_TOKEN` |
 | Groq | `groq` | `GROQ_API_KEY` |
 | Cloudflare Workers AI | `cloudflare` | `CLOUDFLARE_API_TOKEN`, and your `CLOUDFLARE_ACCOUNT_ID` |
 | Azure OpenAI | `copilot-azure` | `AZURE_OPENAI_API_KEY`, and your `AZURE_OPENAI_ENDPOINT` |

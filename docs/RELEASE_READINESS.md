@@ -6,8 +6,9 @@ is true today and what a release would need.
 ## Version
 
 - Proposed first version: **0.1.0**. `pyproject.toml` says `0.1.0.dev0` until a release is approved.
-- Reason for 0.x: no team outside this project has implemented UAI-1 yet, and three of the seven provider routes
-  (OpenAI, GitHub Models, Azure OpenAI) have not been run live. 1.0.0 should wait for both.
+- Reason for 0.x: no team outside this project has implemented UAI-1 yet, and two of the seven provider routes
+  (OpenAI, Azure OpenAI) have not been run live; a third, GitHub Models, was retired by GitHub on 2026-07-30 and no longer
+  works. 1.0.0 should wait for both gaps, and for a decision on that dead route.
 - The wire format has its own version (`uai/1`) and does not change with the package version.
 
 ## Changelog for 0.1.0 (draft)
@@ -41,7 +42,7 @@ Retired
 - [ ] One live run per provider you intend to name as supported (`python interop/live_providers.py --out ...`), with
       the evidence file committed. Today: Anthropic, Gemini, Groq and Cloudflare Workers AI answered live on 2026-11-12
       (recorded in `docs/EVIDENCE.md` and `evidence/live-runs/`, from the printed output; the JSON evidence files
-      themselves were not committed). OpenAI, GitHub Models and Azure OpenAI: not run.
+      themselves were not committed). OpenAI and Azure OpenAI: not run. GitHub Models: retired by GitHub on 2026-07-30.
 - [x] Repository name: decided 2026-11-12 by the project owner to keep `UAI-2` for now. The package is `uai`; renaming the
       repository to `UAI` would match and can be done later, since it needs only a GitHub rename and link updates.
 - [x] Import name: decided 2026-11-12 by the project owner to keep `cns_interop` for now. It is kept so that the move from
