@@ -4,11 +4,12 @@
     python interop/jury.py --summary jury.jsonl                        # read a finished run again
 
 Jurors are read from the same variables as live_providers.py: ANTHROPIC_MODEL (plus --anthropic-models for more than
-one Claude juror), GEMINI_MODEL, GROQ_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID, and GITHUB_MODELS_TOKEN with
-GITHUB_MODELS_LIST (a comma list of GitHub Models ids, one juror each). A company with no key is left out and said so.
+one Claude juror), GEMINI_MODEL, GROQ_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID. Each of the last three may be a
+comma list of models (one juror each): Groq and Cloudflare host several model families under one key. A company with no key
+is left out and said so. (GitHub Models, once a free route here, was retired by GitHub on 2026-07-30 and is not a juror.)
 
-BEFORE THE RUN, a preflight makes one call per juror on a document that clears. A juror whose provider does not answer
-(HTTP 200) is dropped with the reason, and the run refuses to start (exit 4, nothing further called) if fewer than
+BEFORE THE RUN, a preflight makes one call per juror on a document that clears. A juror whose provider does not give a
+readable answer (HTTP 200 that the provider layer accepts) is dropped with the reason, and the run refuses to start (exit 4, nothing further called) if fewer than
 --min-providers different providers remain. This is what stops a wrong model name or an empty account from spending a whole
 run on failures. DURING the run a juror also stops after three invalid-request answers in a row (HTTP 400, 402, 404 or 422). Each juror walks the document list on its own thread at its own pace, so a slow or rate-limited company
 never holds up the others; the panels are put together afterwards from the rows.
@@ -40,7 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from cns_interop.adapter import AdapterJudge, PromptedModelAdapter, ProviderInfo  # noqa: E402
 from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete,  # noqa: E402
-                                   copilot_complete, gemini_complete, groq_complete)
+                                   gemini_complete, groq_complete)
 from live_providers import CAP, policy  # noqa: E402
 
 PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's usage page is the authoritative number
@@ -50,9 +51,8 @@ PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's us
     "claude-fable-5-2": (8.00, 40.00),
 }
 MAX_TOKENS = 2000
-SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0, "cloudflare-workers-ai": 1.0,
-             "github-models": 20.0}  # a guess at free-tier pace (per model: its free limits are low and shared); the
-# 2026-11-11 runs saw Gemini rate-limit at 4.5 s
+SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0,
+             "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace; the 2026-11-11 runs saw Gemini rate-limit at 4.5 s
 INVALID = (400, 402, 404, 422)  # the provider refused the request itself: a bad model name, no credit, a bad limit
 PREFLIGHT_DOC = ("honest", "paystub-900000", {"doc_type": "paystub", "monthly_income_cents": 900_000}, "pass")
 ZERO_DIGEST = "00" * 32
@@ -99,8 +99,9 @@ def jurors_from_env(env: Dict[str, str], anthropic_models: List[str], stub: Opti
               ("groq", "GROQ_API_KEY", "GROQ_MODEL", groq_complete),
               ("cloudflare-workers-ai", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_MODEL", cloudflare_complete))
     for provider, key_var, model_var, fn in simple:
-        k, model = env.get(key_var, "").strip(), env.get(model_var, "").strip()
-        if not k or not model:
+        k = env.get(key_var, "").strip()
+        models = [m.strip() for m in env.get(model_var, "").split(",") if m.strip()]  # a comma list: one juror per model
+        if not k or not models:
             print(f"NOT EXECUTED: {provider} (set {key_var} and {model_var})")
             continue
         kw: Dict[str, Any] = {"timeout_s": 120.0, "max_tokens": MAX_TOKENS}
@@ -112,20 +113,9 @@ def jurors_from_env(env: Dict[str, str], anthropic_models: List[str], stub: Opti
             kw["account_id"] = account
         if stub:
             kw["base_url"] = stub
-        out.append({"provider": provider, "model": model,
-                    "make": lambda log, k=k, model=model, fn=fn, kw=kw: fn(k, model, log, **kw)})
-    token = env.get("GITHUB_MODELS_TOKEN", "").strip()
-    listed = [m.strip() for m in (env.get("GITHUB_MODELS_LIST") or env.get("COPILOT_MODEL") or "").split(",") if m.strip()]
-    if not token or not listed:
-        print("NOT EXECUTED: github-models (set GITHUB_MODELS_TOKEN and GITHUB_MODELS_LIST, for example "
-              "openai/gpt-4.1,meta/llama-3.3-70b-instruct)")
-    else:
-        for model in listed:
-            gkw: Dict[str, Any] = {"timeout_s": 120.0, "max_tokens": MAX_TOKENS}
-            if stub:
-                gkw["base_url"] = stub
-            out.append({"provider": "github-models", "model": model, "make": lambda log, model=model, gkw=gkw: copilot_complete(
-                token, model, log, route="github-models", **gkw)})
+        for model in models:
+            out.append({"provider": provider, "model": model,
+                        "make": lambda log, k=k, model=model, fn=fn, kw=kw: fn(k, model, log, **kw)})
     return out
 
 
@@ -222,9 +212,11 @@ def run_juror(juror, opts, docs, shared, write: Callable[[Dict[str, Any]], None]
 
 
 def preflight(jurors: List[Dict[str, Any]], shared: Dict[str, Any], write: Callable[[Dict[str, Any]], None]) -> List[Dict[str, Any]]:
-    """One call per juror on a document that clears, before the run. Returns the jurors whose provider answered (HTTP 200). A
-    juror that cannot answer is dropped with the reason printed. Rows are written with round -1, so the record shows what was
-    tried. A 200 whose answer the strict reader then refuses still counts as reachable: that is a model result, not an outage."""
+    """One call per juror on a document that clears, before the run. Returns the jurors whose provider gave a readable answer:
+    HTTP 200 that the provider layer accepted. A juror that cannot is dropped with the reason printed. Rows are written with
+    round -1, so the record shows what was tried. A 200 whose answer the provider layer cannot read (a retired service that
+    replies a plain "OK" is the case that was missed) does NOT count. A readable answer that the strict reader then refuses
+    (the model formatted it wrongly) still counts as reachable: that is a model result, not an outage."""
     kind, name, disclosed, expect = PREFLIGHT_DOC
     good = []
     for juror in jurors:
@@ -235,7 +227,7 @@ def preflight(jurors: List[Dict[str, Any]], shared: Dict[str, Any], write: Calla
             row["cum_usd"] = round(shared["spent"], 4)
         write(row)
         label = f"{juror['provider']}:{juror['model']}"
-        if row["http_status"] == 200:
+        if row["http_status"] == 200 and row["verdict"] != "refused:provider":
             good.append(juror)
             print(f"  preflight ok      {label}")
         else:
