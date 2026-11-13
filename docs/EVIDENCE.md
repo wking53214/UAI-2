@@ -67,7 +67,8 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 | Every failure is a categorized refusal, never a pass | `tests/test_provider_layer.py::test_every_failure_is_a_refusal_with_a_category_a_status_and_no_key`; `tests/test_front_door.py::test_a_provider_failure_becomes_a_signed_failure_and_never_a_pass` | Tested |
 | The `live` flag is set only by the live runner | `tests/test_front_door.py::test_the_live_flag_is_never_set_by_this_package` | Tested |
 | Anthropic, Gemini, Groq, Cloudflare Workers AI answer through the real service | `interop/live_providers.py`, 2026-11-12: `live=True` for `claude-haiku-5-5`, `gemini-3.5-flash`, `openai/gpt-oss-120b` on Groq, `@cf/meta/llama-3.3-70b-instruct-fp8-fast` | Live (4 of 7 routes) |
-| OpenAI, GitHub Models, Azure OpenAI answer through the real service | no key was available | Not shown |
+| OpenAI and Azure OpenAI answer through the real service | no key was available | Not shown |
+| GitHub Models answers through the real service | not possible: GitHub retired the service on 2026-07-30, and on 2026-11-13 its endpoints answered HTTP 200 with the plain text `OK` | Retired |
 
 ## 5. The model is an untrusted advisor
 
@@ -75,7 +76,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 |---|---|---|
 | A model's pass stands only if the decider's policy keeps it; a pass carries the provider-call record, signed by the decider, not the model | `cns_interop/tests/test_adapter.py`; `tests/test_front_door.py::test_a_pass_carries_the_record_of_the_provider_call_signed_by_the_decider_not_the_model` | Tested |
 | A model recommendation becomes a decision Python signs and Node verifies | `tests/test_front_door.py::test_a_models_recommendation_becomes_a_decision_python_signs_and_node_verifies` | Tested |
-| Against live models from four companies, hostile and edge documents produced no final pass that should not have happened | `interop/jury.py`; raw rows in [evidence/live-runs/2026-11-11-raw/](../evidence/live-runs/2026-11-11-raw/README.md): 3,698 rows over three runs, the provider answered on 1,679, 0 breaches; models were fooled, the policy lowered every one. Claude coverage in run 2 stops at round 8 of 30 (Anthropic calls began failing; the operator reports the credit ran out or expired), and run 3 failed entirely; see the folder's README | Live |
+| Against live models from four companies, hostile and edge documents produced no final pass that should not have happened | `interop/jury.py`; raw rows in [evidence/live-runs/2026-11-11-raw/](../evidence/live-runs/2026-11-11-raw/README.md): 3,698 rows over three runs, the provider answered on 1,679, 0 breaches; models were fooled, the policy lowered every one. Claude coverage in run 2 stops at round 8 of 30 (Anthropic calls began failing; the operator reports the credit ran out or expired), and run 3 failed entirely; see the folder's README. A clean free-tier rerun on 2026-11-13 ([evidence/live-runs/2026-11-13-free-panel/](../evidence/live-runs/2026-11-13-free-panel/README.md)): 315 rows, 7 models from 7 makers on Google, Groq and Cloudflare, 294 readable answers, 26 wrong passes recommended and all 26 lowered, 0 breaches, $0; no Claude model took part | Live |
 | For ANY model answer, hostile or malformed, the strict reader and the decider's policy never let a final pass leave for a document that does not clear (fuzzed: random hostile answers against random documents, checked against an independently written rule) | `interop/fuzz_policy.py`, `tests/test_fuzz_policy.py`: 500,000 cases over five seeds and 200,000 on another, 0 breaches, 0 crashes; the same search finds each of 10 deliberately broken policies. It also found one real flaw, now fixed: a model's `escalate` flag softened its own `terminal_breach` into a `retry` | Tested (random search plus mutation check, not a proof). Limits: the policy checks declared fields, so a forged document with true-looking numbers clears; documents are plain JSON values; the receiver's grants and keys are not covered |
 
 ## 6. Not shown yet
@@ -83,7 +84,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 | Gap | What would close it |
 |---|---|
 | An implementation by anyone outside this project | someone builds UAI-1 from `docs/interop/UAI-1.md` and `contracts/uai1/` alone and runs the suite |
-| Three of seven provider routes live | keys for OpenAI, GitHub Models and Azure OpenAI, then `python interop/live_providers.py` |
+| Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the GitHub Models route in the code needs an owner decision (remove it, or point `copilot` at Azure OpenAI) |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
 | Signing-key custody and compromise recovery as an operating procedure | written procedure: where keys live, who can use them, how a compromise is detected, revoked and rotated (the code for revocation and rotation is tested; the procedure is not written) |
 | Long-running load and soak | a sustained run with mixed traffic, failures injected, and the ledger and audit checked afterwards |
