@@ -11,7 +11,7 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "William N. King" }]
 # CNS supplies the gate contract (cns.gate) and the gate chain (cns_composition.super_gate). The pin is the released
 # tag; nothing here needs a newer CNS. Everything else is the standard library.
-dependencies = ["cns @ git+https://github.com/wking53214/CNS.git@v3.0.0"]
+dependencies = ["cns @ git+https://github.com/wking53214/CNS.git@v4.0.0"]
 
 [project.optional-dependencies]
 # The optional hardened Ed25519 backend (cns_interop.crypto_backend).

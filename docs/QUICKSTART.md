@@ -15,7 +15,7 @@ anyone you trust can check. It works the same on every supported provider.
     cd UAI-2
     python -m pip install -e .
 
-This installs CNS v3.0.0 (the gate contract) with it. Nothing else is needed: the provider clients use only the
+This installs CNS v4.0.0 (the gate contract) with it. Nothing else is needed: the provider clients use only the
 Python standard library.
 
 ## 2. Set one environment variable: your key
