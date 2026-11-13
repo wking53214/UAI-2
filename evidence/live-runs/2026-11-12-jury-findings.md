@@ -8,7 +8,7 @@ The runs can be repeated with the code on `main` (see "Reproduce" at the end).
 > **Correction, 2026-11-13.** The raw rows were not lost. They are now in
 > [`2026-11-11-raw/`](2026-11-11-raw/README.md), copied unaltered, with the facts the printed summaries missed:
 > run 1 matches the summary below exactly; **run 2 is 2,665 rows, not the 157 shown below** (that was an early snapshot), at
-> $1.86; **Claude coverage in run 2 ends at round 8 of 30**, when Anthropic calls began returning HTTP 400 (cause not recorded);
+> $1.86; **Claude coverage in run 2 ends at round 8 of 30**, when Anthropic calls began returning HTTP 400 (the operator reports the credit ran out or expired; not visible in the rows);
 > and a third run (`jury-3.jsonl`, 400 rows) failed entirely on a wrong Gemini model name. Across all three files there are
 > 3,698 rows, of which the provider answered on 1,679, and 0 breaches. So "790 live calls" below understates the rows and
 > overstates how many were answered by Claude. The summaries below are left as first transcribed.
