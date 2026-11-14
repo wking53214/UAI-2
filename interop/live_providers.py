@@ -1,12 +1,12 @@
 """live_providers.py: run ONE real exchange through each provider that has a key, and write the evidence.
 
     UAI_ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...  GEMINI_API_KEY=... GEMINI_MODEL=...
-    OPENAI_API_KEY=... OPENAI_MODEL=...  GITHUB_MODELS_TOKEN=... COPILOT_MODEL=openai/gpt-4.1  python interop/live_providers.py --out evidence.json
+    OPENAI_API_KEY=... OPENAI_MODEL=...  python interop/live_providers.py --out evidence.json
     GROQ_API_KEY=... GROQ_MODEL=...  CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... CLOUDFLARE_MODEL=@cf/...
     AZURE_OPENAI_API_KEY=... AZURE_OPENAI_ENDPOINT=https://<resource>.openai.azure.com AZURE_OPENAI_DEPLOYMENT=...
 
-Azure OpenAI shares the Copilot client's code with GitHub Models but is its own route, with its own address, header and
-URL shape, so it is run and reported on its own: one route answering says nothing about the other.
+Azure OpenAI uses the Copilot client's code and is its own route, with its own address, header and URL shape. (GitHub Models, the
+other route that client had, was retired by GitHub on 2026-07-30 and is no longer run here.)
 
 The Anthropic key is read from UAI_ANTHROPIC_API_KEY first and from ANTHROPIC_API_KEY when that is empty or unset (some hosts
 reserve ANTHROPIC_API_KEY for themselves). A provider with no key is reported as NOT EXECUTED and is never counted. If NOTHING was executed the exit status is 3, so a
@@ -71,7 +71,6 @@ def main(argv: List[str]) -> int:
                                              anthropic_complete),
                                             ("google", ("GEMINI_API_KEY",), "GEMINI_MODEL", gemini_complete),
                                             ("openai", ("OPENAI_API_KEY",), "OPENAI_MODEL", openai_complete),
-                                            ("copilot-github-models", ("GITHUB_MODELS_TOKEN",), "COPILOT_MODEL", copilot_complete),
                                             ("groq", ("GROQ_API_KEY",), "GROQ_MODEL", groq_complete),
                                             ("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), "CLOUDFLARE_MODEL",
                                              cloudflare_complete),

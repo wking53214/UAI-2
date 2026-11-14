@@ -471,10 +471,9 @@ def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks
     monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "my-deployment")
     assert live_providers.main([]) == 3                               # nothing executed is never a pass
     out = capsys.readouterr().out
-    assert out.count("NOT EXECUTED") == 7 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
+    assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
     assert KEY not in out
-    for name in ("anthropic", "google", "openai", "copilot-github-models", "groq", "cloudflare-workers-ai",
-                 "copilot-azure-openai"):
+    for name in ("anthropic", "google", "openai", "groq", "cloudflare-workers-ai", "copilot-azure-openai"):
         assert f"NOT EXECUTED: {name} " in out
 
 

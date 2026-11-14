@@ -2,8 +2,7 @@
 
     python interop/examples/provider_adapter.py
 
-Reads OPENAI_API_KEY/OPENAI_MODEL, ANTHROPIC_API_KEY/ANTHROPIC_MODEL, GEMINI_API_KEY/GEMINI_MODEL or
-GITHUB_MODELS_TOKEN/COPILOT_MODEL. With none set it says NOT EXECUTED and runs a LOCAL STAND-IN that answers in the same
+Reads OPENAI_API_KEY/OPENAI_MODEL, ANTHROPIC_API_KEY/ANTHROPIC_MODEL or GEMINI_API_KEY/GEMINI_MODEL. With none set it says NOT EXECUTED and runs a LOCAL STAND-IN that answers in the same
 strict shape, so you can see the flow without pretending a provider was called. The model only RECOMMENDS: the strict reader
 refuses anything beyond verdict, reasons, evidence and escalate, and the decider's own policy may lower the recommendation.
 """
@@ -19,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from cns_interop.adapter import AdapterJudge, PromptedModelAdapter, ProviderInfo, Recommendation  # noqa: E402
 from cns_interop.manifest import Capability  # noqa: E402
-from cns_interop.providers import (ProvenanceLog, anthropic_complete, copilot_complete, gemini_complete,  # noqa: E402
+from cns_interop.providers import (ProvenanceLog, anthropic_complete, gemini_complete,  # noqa: E402
                                    openai_complete)
 
 CAP = Capability(name="income-screen", version=1, summary="monthly income at or above 4500.00",
@@ -27,8 +26,7 @@ CAP = Capability(name="income-screen", version=1, summary="monthly income at or 
                  evidence=("threshold-check",), max_ttl_ms=120_000)
 PROVIDERS = (("openai", "OPENAI_API_KEY", "OPENAI_MODEL", openai_complete),
              ("anthropic", "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL", anthropic_complete),
-             ("google", "GEMINI_API_KEY", "GEMINI_MODEL", gemini_complete),
-             ("copilot-github-models", "GITHUB_MODELS_TOKEN", "COPILOT_MODEL", copilot_complete))
+             ("google", "GEMINI_API_KEY", "GEMINI_MODEL", gemini_complete))
 
 
 def policy(cap, disclosed, subject, rec: Recommendation) -> Recommendation:

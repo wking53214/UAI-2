@@ -327,7 +327,7 @@ def test_the_live_runner_says_not_executed_and_exits_nonzero_without_keys_so_it_
     done = subprocess.run([sys.executable, str(Path(__file__).resolve().parents[2] / "interop" / "live_providers.py")],
                           capture_output=True, text=True, env=env, timeout=60)
     assert done.returncode == 3
-    assert done.stdout.count("NOT EXECUTED") == 7 and "EXECUTED:" not in done.stdout.replace("NOT EXECUTED", "")
+    assert done.stdout.count("NOT EXECUTED") == 6 and "EXECUTED:" not in done.stdout.replace("NOT EXECUTED", "")
 
 
 def test_copilot_routes_are_explicit_and_the_azure_route_addresses_the_callers_own_deployment():
@@ -487,10 +487,11 @@ def test_the_live_runner_gives_every_provider_120_seconds_so_thinking_is_not_rec
     for fn, key_var, model_var in (("anthropic_complete", "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL"),
                                    ("gemini_complete", "GEMINI_API_KEY", "GEMINI_MODEL"),
                                    ("openai_complete", "OPENAI_API_KEY", "OPENAI_MODEL"),
-                                   ("copilot_complete", "GITHUB_MODELS_TOKEN", "COPILOT_MODEL")):
+                                   ("copilot_complete", "AZURE_OPENAI_API_KEY", "AZURE_OPENAI_DEPLOYMENT")):
         monkeypatch.setattr(live, fn, fake_for(fn))
         monkeypatch.setenv(key_var, KEY)
         monkeypatch.setenv(model_var, "model-x")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://res.example")           # the Copilot client now runs only as Azure OpenAI
     assert live.main([]) == 0
     assert live.LIVE_TIMEOUT_S == 120.0
     assert seen == {fn: 120.0 for fn in ("anthropic_complete", "gemini_complete", "openai_complete", "copilot_complete")}
