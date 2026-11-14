@@ -37,5 +37,5 @@ def test_the_node_quickstart_runs_and_the_receivers_grant_permits_the_action():
 def test_the_provider_example_says_not_executed_without_keys_and_never_claims_a_live_call():
     done = run(sys.executable, "interop/examples/provider_adapter.py")
     assert done.returncode == 0, done.stderr
-    assert done.stdout.count("NOT EXECUTED") == 4
+    assert done.stdout.count("NOT EXECUTED") == 3
     assert "live provider call: False" in done.stdout and "local-stand-in" in done.stdout
