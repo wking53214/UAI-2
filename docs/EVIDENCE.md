@@ -88,7 +88,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 | An implementation by anyone outside this project | someone builds UAI-1 from `docs/interop/UAI-1.md` and `contracts/uai1/` alone and runs the suite |
 | Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level Copilot client keeps its GitHub Models default route (still tested), but `live_providers.py` and the example adapter no longer run GitHub Models |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
-| Signing-key custody and compromise recovery as an operating procedure | written procedure: where keys live, who can use them, how a compromise is detected, revoked and rotated (the code for revocation and rotation is tested; the procedure is not written) |
+| Signing-key custody and compromise recovery as an operating procedure | a DRAFT is in [docs/KEY_CUSTODY.md](KEY_CUSTODY.md): what the code does (tested) and a procedure with every operating choice left marked DECIDE. Not yet filled in by the owner and never drilled; still open until both are done |
 | Long-running load and soak | a sustained run with mixed traffic, failures injected, and the ledger and audit checked afterwards |
 
 ## 7. A note on `reference` cases
