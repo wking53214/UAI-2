@@ -5,33 +5,15 @@ is true today and what a release would need.
 
 ## Version
 
-- Proposed first version: **0.1.0**. `pyproject.toml` says `0.1.0.dev0` until a release is approved.
+- Proposed first version: **0.1.0**. `pyproject.toml` says `0.1.0` as of the release PR; no tag has been cut.
 - Reason for 0.x: no team outside this project has implemented UAI-1 yet, and two of the seven provider routes
   (OpenAI, Azure OpenAI) have not been run live; a third, GitHub Models, was retired by GitHub on 2026-07-30 and no longer
   works. 1.0.0 should wait for both gaps, and for a decision on that dead route.
 - The wire format has its own version (`uai/1`) and does not change with the package version.
 
-## Changelog for 0.1.0 (draft)
+## Changelog for 0.1.0
 
-Added
-- `uai.connect` and `uai.from_env`: one way in, seven provider routes.
-- `cns_interop.providers`: Groq and Cloudflare Workers AI clients beside Anthropic, Gemini, OpenAI and Copilot.
-- The `provider-call` evidence kind: a pass can carry the decider's signed record of the provider call.
-- `docs/QUICKSTART.md` and `interop/examples/uai_quickstart.py`.
-- UAI-1 (specification, Python and Node implementations, conformance suite), moved from CNS unchanged.
-- `interop/jury.py`: the same documents through models from several companies, keeping each model's recommendation
-  apart from the decider's final verdict.
-- 30 adversarial conformance cases and 8 boundary cases (71 in all), agreed by both implementations.
-
-Changed
-- The request digest in a provenance record is the digest of the bytes sent.
-- A provider address must be https, or http to a loopback address.
-- A provider call has an overall time limit, not only a limit per read.
-- Cloudflare Workers AI requests are sent as `messages` and its Chat Completions answers are read by the same rules as
-  the OpenAI-compatible routes.
-
-Retired
-- `uai2_gemini`, `uai2_groq`, `uai2_cloudflare` (they followed redirects). `uai2_factory` and `uai2_bridge` forward.
+Moved to `CHANGELOG.md`.
 
 ## Before tagging
 
@@ -48,7 +30,7 @@ Retired
 - [x] Import name: decided 2026-11-12 by the project owner to keep `cns_interop` for now. It is kept so that the move from
       CNS changed no file. Renaming it is mechanical but touches every import and test and should be its own change, after
       it is known who imports it.
-- [ ] `version` in `pyproject.toml` set to the release version, and this changelog moved to `CHANGELOG.md`.
+- [x] `version` in `pyproject.toml` set to 0.1.0, and the changelog moved to `CHANGELOG.md` (release PR; no tag yet).
 
 ## Pins that would need to move
 
