@@ -79,6 +79,9 @@ DECIDED_BY = {
                                                      "levels are in the profile, so the edited body reaches check 2 (signature)",
     "nesting-33-levels-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is outside the profile; "
                                                       "check 1 (profile) at 33 levels",
+    "nesting-32-levels-ending-in-an-empty-object-reaches-the-signature-check": "UAI-1.md section 1: an empty object is a level "
+        "like any other, so 31 mappings with an empty one inside is exactly 32 levels, in the profile: the edited body reaches "
+        "check 2 (signature)",
     "nesting-33-levels-ending-in-an-empty-object-is-outside-the-value-profile": "UAI-1.md section 1: more than 32 levels is "
         "outside the profile, and an empty object is a level like any other (32 mappings with an empty one inside is 33 levels); "
         "check 1 (profile)",
@@ -235,6 +238,8 @@ def adversarial(req: Dict[str, Any], text: str, issued: int, dumps: Any) -> List
         one("future-by-one-ms-more-than-the-skew-is-refused", "rejected", text, "not_yet_valid", now=issued - SKEW_MS - 1),
         one("nesting-32-levels-reaches-the-signature-check", "tampered", _nested_body(req, 32), "signature"),
         one("nesting-33-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 33), "profile"),
+        one("nesting-32-levels-ending-in-an-empty-object-reaches-the-signature-check", "tampered",
+            _nested_body(req, 31, {}), "signature"),
         one("nesting-33-levels-ending-in-an-empty-object-is-outside-the-value-profile", "rejected",
             _nested_body(req, 32, {}), "profile"),
         one("nesting-100-levels-is-outside-the-value-profile", "rejected", _nested_body(req, 100), "profile"),

@@ -13,7 +13,7 @@ Python or in Node.
 | The provider layer | `cns_interop/providers.py` | The only module that talks to a model provider |
 | UAI-1, the signed format | `cns_interop/`, spec in `docs/interop/UAI-1.md` | Signed envelopes, receiver-decided trust, revocation, replay protection, negotiated terms, selective disclosure |
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
-| For other implementers | `contracts/uai1/` | Schema, error registry, a 71-case conformance suite and its runner |
+| For other implementers | `contracts/uai1/` | Schema, error registry, a 72-case conformance suite and its runner |
 
 Supported providers: Anthropic, Google Gemini, OpenAI, Azure OpenAI (Copilot), Groq, Cloudflare Workers AI. GitHub retired
 GitHub Models on 2026-07-30, so the old name `copilot` now reaches the Azure OpenAI route (your own resource and key).
@@ -43,7 +43,7 @@ shown yet.
 
 No team outside this project has implemented UAI-1 yet, and that is the largest gap in what this repository can claim. If
 you write a receiver in your language **from the documents alone** (`docs/interop/UAI-1.md`, `contracts/uai1/schema.json`,
-`errors.json` and the suite), run it through the 71-case suite, and tell us where you disagreed, you will find either a bug in
+`errors.json` and the suite), run it through the 72-case suite, and tell us where you disagreed, you will find either a bug in
 yours, a bug in ours, or a sentence in the spec that needs fixing. All three are useful.
 
 ```
