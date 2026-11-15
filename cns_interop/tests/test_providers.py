@@ -540,3 +540,46 @@ def test_the_live_runner_names_both_anthropic_key_variables_when_neither_is_set(
     monkeypatch.setenv("ANTHROPIC_MODEL", "model-x")
     assert live.main([]) == 3
     assert "NOT EXECUTED: anthropic (set UAI_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY and ANTHROPIC_MODEL)" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("status,body,expect", [
+    (400, {"type": "error", "error": {"type": "invalid_request_error", "message": "Your credit balance is too low"}},
+     "HTTP 400 (invalid_request_error: Your credit balance is too low)"),
+    (401, {"type": "error", "error": {"type": "authentication_error", "message": "invalid x-api-key"}},
+     "HTTP 401 (authentication_error: invalid x-api-key)"),
+    (429, {"type": "error", "error": {"type": "rate_limit_error", "message": "slow"}}, "HTTP 429) (rate_limit_error: slow)"),
+    (500, {"error": "boom"}, "the provider answered HTTP 500"),                  # not the documented shape: no detail, no failure
+])
+def test_anthropic_http_errors_carry_the_apis_error_type_and_message(status, body, expect):
+    stub, log = Stub(lambda p, h, b: (status, {"content-type": "application/json"}, json.dumps(body).encode())), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make("anthropic", stub, log)("q")
+        assert expect in e.value.reason and e.value.code == "provider"
+        assert log.records[-1].outcome == "rejected" and expect in log.records[-1].call
+    finally:
+        stub.close()
+
+
+def test_an_error_message_that_echoes_the_key_is_redacted_and_long_ones_are_capped():
+    body = {"error": {"type": "invalid_request_error", "message": "bad " + KEY + " " + "x" * 500}}
+    stub, log = Stub(lambda p, h, b: (400, {"content-type": "application/json"}, json.dumps(body).encode())), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make("anthropic", stub, log)("q")
+        assert KEY not in e.value.reason and "[key]" in e.value.reason and len(e.value.reason) < 300
+        assert KEY not in json.dumps([r.__dict__ for r in log.records])
+    finally:
+        stub.close()
+
+
+@pytest.mark.parametrize("provider", ["gemini", "openai", "copilot"])
+def test_other_providers_keep_their_plain_http_error_reason(provider):
+    body = {"error": {"type": "x", "message": "provider text stays out of the record"}}
+    stub, log = Stub(lambda p, h, b: (400, {"content-type": "application/json"}, json.dumps(body).encode())), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make(provider, stub, log)("q")
+        assert e.value.reason == "the provider answered HTTP 400"
+    finally:
+        stub.close()
