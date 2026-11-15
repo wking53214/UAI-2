@@ -55,6 +55,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 | A network partition makes the ledger refuse within its timeout and never grant (Python and Node) | `test_ledger_postgres.py::test_a_network_partition_makes_the_ledger_refuse_within_its_timeout_and_never_grants`; `test_node_quorum.py::test_a_network_partition_between_node_and_the_database_is_unavailable_in_bounded_time_and_never_grants` | Tested |
 | With a synchronous standby, a partition refuses and a failover loses nothing anyone was told | `test_ledger_postgres.py::test_a_synchronous_standby_behind_a_partition_makes_the_ledger_refuse_and_a_failover_loses_nothing_anyone_was_told`; `test_node_quorum.py` | Tested |
 | Leases follow the database server's clock, not the caller's; fences only grow and a stale holder is rejected | `test_ledger_postgres.py::test_the_servers_clock_decides_a_lease_and_the_callers_clock_is_ignored`, `::test_fences_only_grow_and_a_stale_holder_is_rejected_by_a_fenced_target` | Tested |
+| Under sustained contended traffic with the database server killed repeatedly and workers SIGKILLed: exactly one effect per message, spend equals effect, every told-committed commit survives, the audit chain verifies and covers every effect, no lease is stuck | `interop/soak.py`; 2026-11-15, 900 s, 10 workers, seed 7: 2372 messages committed, 88 server kills (`pg_ctl -m immediate`), 77 worker kills, 366,738 contended attempts refused as replayed, 205 late commits refused `lease_lost`; zero findings. The checks were shown able to fail: with atomicity broken in a scratch copy they reported duplicates and exited 1. A 25 s version runs in CI (`tests/test_soak_smoke.py`) | Tested (one machine, 15 min). **Not reached:** no commit was cut off mid-COMMIT (0 ambiguous outcomes in 88 kills), so that window is untested by this run; no network faults, clock drift or standby failover |
 | All of the above across separate machines on a real network | the tests run real clusters and real processes, on one host | Partial |
 
 ## 4. The provider layer
@@ -89,7 +90,7 @@ Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; confor
 | Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level Copilot client keeps its GitHub Models default route (still tested), but `live_providers.py` and the example adapter no longer run GitHub Models |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
 | Signing-key custody and compromise recovery as an operating procedure | a DRAFT is in [docs/KEY_CUSTODY.md](KEY_CUSTODY.md): what the code does (tested) and a procedure with every operating choice left marked DECIDE. Not yet filled in by the owner and never drilled; still open until both are done |
-| Long-running load and soak | a sustained run with mixed traffic, failures injected, and the ledger and audit checked afterwards |
+| A soak longer than 15 minutes, with more than one cause of failure at once | the same `interop/soak.py` for hours; the 15-minute run below is the evidence so far |
 
 ## 7. A note on `reference` cases
 
