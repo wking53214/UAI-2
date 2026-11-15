@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from test_session import CAP, DEC, REQ, THRESHOLD, Clock, doc  # type: ignore[import-not-found]  # noqa: E402
 
 from cns_interop.adapter import (AdapterJudge, PromptedModelAdapter, ProviderInfo, Recommendation, RuleAdapter,  # noqa: E402
-                                 parse_recommendation, render_prompt)
+                                 parse_recommendation, render_prompt, VERDICTS)
 from cns_interop.envelope import Refused  # noqa: E402
 from cns_interop.identity import Signer  # noqa: E402
 from cns_interop.manifest import Capability  # noqa: E402
@@ -189,6 +189,13 @@ def test_the_prompt_names_the_exact_keys_verdicts_and_limits_the_reader_enforces
     assert "at most 16 strings, each at most 500 characters" in PROMPT
     assert "escalate is true or false" in PROMPT
     assert "Every number is an integer" in PROMPT
+
+
+def test_the_prompt_defines_when_each_verdict_is_used_and_says_missing_the_requirement_alone_is_retry():
+    rule = next(x for x in PROMPT.splitlines() if x.startswith("3. "))
+    assert all(f'Use "{v}"' in rule for v in VERDICTS)
+    assert "no resubmission can repair" in rule
+    assert 'Not meeting the requirement alone is "retry", not "terminal_breach"' in rule
 
 
 def test_the_prompt_says_evidence_values_are_mappings():
