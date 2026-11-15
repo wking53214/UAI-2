@@ -202,13 +202,31 @@ def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: fl
     return status, raw
 
 
-def _read_json(status: int, raw: bytes, max_bytes: int) -> Dict[str, Any]:
+def _error_detail(raw: bytes, secrets: Tuple[str, ...]) -> str:
+    """The API's own error type and message from `{"error": {"type", "message"}}`, capped, with any secret removed. Else ''."""
+    try:
+        err = json.loads(raw.decode("utf-8")).get("error")
+    except (ValueError, UnicodeDecodeError, AttributeError):
+        return ""
+    if not isinstance(err, dict):
+        return ""
+    kind, msg = str(err.get("type", ""))[:60], str(err.get("message", ""))[:160]
+    detail = f"{kind}: {msg}" if kind and msg else (kind or msg)
+    for secret in secrets:
+        if secret:
+            detail = detail.replace(secret, "[key]")
+    return " ".join(detail.split())
+
+
+def _read_json(status: int, raw: bytes, max_bytes: int, *, detail_secrets: Optional[Tuple[str, ...]] = None) -> Dict[str, Any]:
     if len(raw) > max_bytes:
         raise _refused(f"the provider's answer is larger than {max_bytes} bytes", "response_too_large")
+    detail = _error_detail(raw, detail_secrets) if detail_secrets is not None and not 200 <= status < 300 else ""
+    suffix = f" ({detail})" if detail else ""
     if status == 429:
-        raise _refused("the provider is rate limiting this caller (HTTP 429)", "rate_limit")
+        raise _refused("the provider is rate limiting this caller (HTTP 429)" + suffix, "rate_limit")
     if not 200 <= status < 300:
-        raise _refused(f"the provider answered HTTP {status}",
+        raise _refused(f"the provider answered HTTP {status}" + suffix,
                        {401: "authentication", 403: "permission"}.get(status, "http_error"))
     try:
         value = json.loads(raw.decode("utf-8"))
@@ -286,7 +304,7 @@ def anthropic_complete(api_key: str, model: str, log: ProvenanceLog, *, base_url
         status, raw = _post(base_url.rstrip("/") + "/v1/messages",
                             {"x-api-key": api_key, "anthropic-version": "2023-06-01"}, body, timeout_s, max_response_bytes, rec)
         rec.response_sha256 = _digest(raw[:max_response_bytes])
-        out = _read_json(status, raw, max_response_bytes)
+        out = _read_json(status, raw, max_response_bytes, detail_secrets=(api_key,))
         rec.model_reported, rec.finish_reason = str(out.get("model", "")), str(out.get("stop_reason", ""))
         _usage(rec, out.get("usage"), "input_tokens", "output_tokens")
         _request_id(rec, out.get("id"))
