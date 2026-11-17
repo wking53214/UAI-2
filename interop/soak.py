@@ -25,6 +25,11 @@ Invariants checked after the run (a failure is a finding, printed with the evide
 
 A commit whose answer was lost because the server died is AMBIGUOUS (it may or may not have happened). The workers log it as
 ambiguous and the checks accept either outcome for it; the other invariants still bind it.
+
+`--mid-commit P` aims at exactly that window. With probability P a worker, at the moment it sends COMMIT, starts a timer that
+SIGKILLs its own database backend a few milliseconds later, so the kill lands while the COMMIT is in flight (the server then
+runs crash recovery). The report counts how many such commits ended up committed and how many rolled back, so a run shows
+that BOTH outcomes of the window were reached, and every invariant is still checked afterwards.
 """
 
 from __future__ import annotations
@@ -37,6 +42,7 @@ import random
 import signal
 import sys
 import tempfile
+import threading
 import time
 import uuid
 from pathlib import Path
@@ -60,7 +66,23 @@ def _log(fh: Any, kind: str, mid: str = "") -> None:
     fh.write(f"{kind} {mid}\n")
 
 
-def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: float, outdir: str, wid: int) -> None:
+def _kill_backend_soon(pid: int, delay_s: float) -> threading.Event:
+    """SIGKILL one database backend after `delay_s`, unless the returned event is set first (the commit already returned)."""
+    cancelled = threading.Event()
+
+    def fire() -> None:
+        if not cancelled.wait(delay_s):
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except OSError:
+                pass
+
+    threading.Thread(target=fire, daemon=True).start()
+    return cancelled
+
+
+def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: float, outdir: str, wid: int,
+           mid_commit: float = 0.0) -> None:
     """One worker process. It is killed at random by the chaos loop and by itself, and it never finishes cleanly on purpose."""
     rnd = random.Random(seed)
     log = open(os.path.join(outdir, f"w{wid}-{seed}.log"), "a", buffering=1)
@@ -100,9 +122,16 @@ def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: floa
                 led.commit_in(db, r)
                 if roll >= 0.86 and roll < 0.93:
                     os.kill(os.getpid(), signal.SIGKILL)  # dies before COMMIT: neither the effect nor the spend may exist
+                cancel = None
+                if mid_commit > 0 and rnd.random() < mid_commit:
+                    cancel = _kill_backend_soon(db.info.backend_pid, rnd.uniform(0.0, 0.002))
                 try:
                     db.commit()
+                    if cancel is not None:
+                        cancel.set()
                 except psycopg.Error:
+                    if cancel is not None:
+                        _log(log, "mid-commit-cut", mid)
                     _log(log, "ambiguous", mid)  # the server went away during COMMIT: it may or may not have happened
                     continue
                 _log(log, "committed", mid)
@@ -127,13 +156,14 @@ def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: floa
 
 
 def run(seconds: float = 60.0, workers: int = 6, ids: int = 30, seed: int = 1, server_kills: int = -1,
-        verbose: bool = True) -> Dict[str, Any]:
+        verbose: bool = True, mid_commit: float = 0.0) -> Dict[str, Any]:
     rnd = random.Random(seed)
     work = tempfile.mkdtemp(prefix="uai-soak-")
     audit = os.path.join(work, "audit.jsonl")
     table = "soak_" + uuid.uuid4().hex[:10]
     cluster = Cluster().start()
-    report: Dict[str, Any] = {"seconds": seconds, "workers": workers, "ids": ids, "seed": seed, "findings": []}
+    report: Dict[str, Any] = {"seconds": seconds, "workers": workers, "ids": ids, "seed": seed, "mid_commit": mid_commit,
+                              "findings": []}
     try:
         cluster.wait_ready()
         PostgresLedger(cluster.dsn, table=table)
@@ -145,7 +175,7 @@ def run(seconds: float = 60.0, workers: int = 6, ids: int = 30, seed: int = 1, s
 
         def spawn(slot: int) -> None:
             counter[0] += 1
-            p = mp.Process(target=worker, args=(cluster.dsn, table, audit, rnd.randrange(1 << 30), ids, deadline, work, slot))
+            p = mp.Process(target=worker, args=(cluster.dsn, table, audit, rnd.randrange(1 << 30), ids, deadline, work, slot, mid_commit))
             p.start()
             procs[slot] = p
 
@@ -229,7 +259,8 @@ def check(dsn: str, table: str, audit: str, work: str) -> Dict[str, Any]:
     if stuck:
         findings.append(f"NOTHING STUCK broken: {stuck} message(s) still hold a live lease after everything stopped")
     out.update({"effects": len(effects), "ledger_committed": len(committed), "told_committed": len(told),
-                "ambiguous": len(ambiguous), "audit_entries": len(entries), "tally": dict(sorted(tally.items())),
+                "ambiguous": len(ambiguous), "ambiguous_committed": len(ambiguous & committed),
+                "ambiguous_rolled_back": len(ambiguous - committed), "audit_entries": len(entries), "tally": dict(sorted(tally.items())),
                 "ok": not findings})
     return out
 
@@ -241,9 +272,11 @@ def main(argv: List[str]) -> int:
     ap.add_argument("--ids", type=int, default=30, help="size of the message pool; smaller means more contention")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--server-kills", type=int, default=-1, help="at most this many server kills (default: no limit)")
+    ap.add_argument("--mid-commit", type=float, default=0.0,
+                    help="chance (0 to 1) that a worker's database backend is killed while its COMMIT is in flight")
     ap.add_argument("--out", default="", help="write the JSON report here")
     opts = ap.parse_args(argv)
-    rep = run(opts.seconds, opts.workers, opts.ids, opts.seed, opts.server_kills)
+    rep = run(opts.seconds, opts.workers, opts.ids, opts.seed, opts.server_kills, mid_commit=opts.mid_commit)
     if opts.out:
         Path(opts.out).write_text(json.dumps(rep, indent=1, sort_keys=True) + "\n")
     return 0 if rep.get("ok") else 1
