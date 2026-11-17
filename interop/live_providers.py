@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from cns_interop.adapter import AdapterJudge, PromptedModelAdapter, ProviderInfo, Recommendation  # noqa: E402
 from cns_interop.manifest import Capability  # noqa: E402
 from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete, copilot_complete,  # noqa: E402
-                                   gemini_complete, groq_complete, openai_complete)
+                                   gemini_complete, groq_complete, openai_complete, openrouter_complete)
 
 CAP = Capability(name="income-screen", version=1, summary=("a document whose doc_type is exactly \"paystub\" or \"tax-return\", showing a monthly_income_cents "
                           "that is a whole number at or above 450000"),
@@ -72,6 +72,7 @@ def main(argv: List[str]) -> int:
                                             ("google", ("GEMINI_API_KEY",), "GEMINI_MODEL", gemini_complete),
                                             ("openai", ("OPENAI_API_KEY",), "OPENAI_MODEL", openai_complete),
                                             ("groq", ("GROQ_API_KEY",), "GROQ_MODEL", groq_complete),
+                                            ("openrouter", ("OPENROUTER_API_KEY",), "OPENROUTER_MODEL", openrouter_complete),
                                             ("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), "CLOUDFLARE_MODEL",
                                              cloudflare_complete),
                                             ("copilot-azure-openai", ("AZURE_OPENAI_API_KEY",), "AZURE_OPENAI_DEPLOYMENT",

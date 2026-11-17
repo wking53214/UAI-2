@@ -44,7 +44,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from .envelope import Refused
 
 __all__ = ["Provenance", "ProvenanceLog", "anthropic_complete", "gemini_complete", "openai_complete", "copilot_complete",
-           "groq_complete", "cloudflare_complete", "MAX_RESPONSE_BYTES"]
+           "groq_complete", "openrouter_complete", "cloudflare_complete", "MAX_RESPONSE_BYTES"]
 
 MAX_RESPONSE_BYTES = 262_144
 
@@ -429,6 +429,26 @@ def groq_complete(api_key: str, model: str, log: ProvenanceLog, *, base_url: str
                           {"authorization": "Bearer " + api_key, "user-agent": _USER_AGENT}, timeout_s, max_tokens,
                           max_response_bytes, truncated_ok=truncated_ok)
     return _client("groq", model, log, call)
+
+
+def openrouter_complete(api_key: str, model: str, log: ProvenanceLog, *, base_url: str = "https://openrouter.ai/api/v1",
+                        timeout_s: float = 30.0, max_tokens: int = 512,
+                        max_response_bytes: int = MAX_RESPONSE_BYTES, truncated_ok: bool = False) -> Callable[[str], str]:
+    """`complete(prompt)` over OpenRouter, which speaks the OpenAI Chat Completions wire format. Read exactly as `openai_complete`.
+
+    OpenRouter is a router: the model that answers can differ from the one asked for (the record keeps both), and a free model
+    (an id ending in `:free`) is served by whichever host has room. An error that arrives with no `choices` is refused like any
+    other answer that is not exactly one choice, and a `finish_reason` of `error` or `content_filter` is not `stop`."""
+    if not api_key or not model:
+        raise ValueError("an API key and a model name are needed")
+    _check_key(api_key)
+    _check_url(base_url)
+
+    def call(prompt: str, rec: Provenance) -> str:
+        return _chat_call(model, prompt, rec, base_url.rstrip("/") + "/chat/completions",
+                          {"authorization": "Bearer " + api_key, "user-agent": _USER_AGENT}, timeout_s, max_tokens,
+                          max_response_bytes, truncated_ok=truncated_ok)
+    return _client("openrouter", model, log, call)
 
 
 def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account_id: str,

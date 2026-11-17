@@ -327,7 +327,7 @@ def test_the_live_runner_says_not_executed_and_exits_nonzero_without_keys_so_it_
     done = subprocess.run([sys.executable, str(Path(__file__).resolve().parents[2] / "interop" / "live_providers.py")],
                           capture_output=True, text=True, env=env, timeout=60)
     assert done.returncode == 3
-    assert done.stdout.count("NOT EXECUTED") == 6 and "EXECUTED:" not in done.stdout.replace("NOT EXECUTED", "")
+    assert done.stdout.count("NOT EXECUTED") == 7 and "EXECUTED:" not in done.stdout.replace("NOT EXECUTED", "")
 
 
 def test_copilot_routes_are_explicit_and_the_azure_route_addresses_the_callers_own_deployment():

@@ -160,3 +160,29 @@ def test_the_run_goes_ahead_when_enough_providers_pass_and_the_failed_models_are
         assert sum(1 for r in rows if r["round"] == -1) == 3            # the preflight, kept in the record
     finally:
         stub.close()
+
+
+def test_an_openrouter_juror_is_built_from_its_own_variables_keeps_its_own_name_and_the_key_stays_in_the_header(capsys):
+    """OpenRouter is its own provider here: its own key, its own model variable, its own name in every row. Never `openai`."""
+    key = "or-test-KEY-0123456789"
+    env = {"OPENROUTER_API_KEY": key, "OPENROUTER_MODEL": "vendor/free-model:free"}
+    stub = Stub()
+    try:
+        jurors = jury.jurors_from_env(env, [], stub.url)
+        assert [(j["provider"], j["model"]) for j in jurors] == [("openrouter", "vendor/free-model:free")]
+        rows = []
+        kept = jury.preflight(jurors, shared(), rows.append)
+        assert [j["provider"] for j in kept] == ["openrouter"]
+        sent = stub.requests[0]
+        assert sent["path"] == "/chat/completions" and sent["body"]["model"] == "vendor/free-model:free"
+        assert {k.lower(): v for k, v in sent["headers"].items()}["authorization"] == "Bearer " + key
+        assert key not in json.dumps(rows) and key not in json.dumps(sent["body"])
+        assert {r["provider"] for r in rows} == {"openrouter"} and all("openai" not in r["juror"] for r in rows)
+    finally:
+        stub.close()
+    out = capsys.readouterr().out
+    assert "NOT EXECUTED: google" in out and "NOT EXECUTED: openrouter" not in out
+
+
+def test_openrouter_is_spaced_inside_its_free_rate_limit():
+    assert 60.0 / jury.SPACING_S["openrouter"] <= 20          # its documented free limit is 20 requests a minute
