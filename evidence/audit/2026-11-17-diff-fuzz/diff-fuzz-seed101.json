@@ -1,0 +1,23 @@
+{
+ "accept_vs_refuse_disagreements": [],
+ "code_only_disagreements": {
+  "{\"refuse\": \"malformed\"} vs {\"refuse\": \"profile\"}": {
+   "count": 34,
+   "example": {
+    "case": "text-float",
+    "first": {
+     "refuse": "malformed"
+    },
+    "second": {
+     "refuse": "profile"
+    },
+    "text": "{\"a\":1.e0}"
+   }
+  }
+ },
+ "comparisons": 10800,
+ "first_accepts": 197,
+ "ok": true,
+ "per_case": 150,
+ "seed": 101
+}

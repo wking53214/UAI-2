@@ -9,7 +9,7 @@ Python or in Node.
 
 | Part | Where | What it is |
 |---|---|---|
-| The way in | `uai/` | `uai.connect(provider, model)`: one call, seven provider routes |
+| The way in | `uai/` | `uai.connect(provider, model)`: one call, six provider routes (GitHub Models, a seventh, was retired) |
 | The provider layer | `cns_interop/providers.py` | The only module that talks to a model provider |
 | UAI-1, the signed format | `cns_interop/`, spec in `docs/interop/UAI-1.md` | Signed envelopes, receiver-decided trust, revocation, replay protection, negotiated terms, selective disclosure |
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |

@@ -1,0 +1,36 @@
+{
+ "accept_vs_refuse_disagreements": [],
+ "code_only_disagreements": {
+  "{\"refuse\": \"malformed\"} vs {\"refuse\": \"profile\"}": {
+   "count": 25,
+   "example": {
+    "case": "reject-missing-field",
+    "first": {
+     "refuse": "malformed"
+    },
+    "second": {
+     "refuse": "profile"
+    },
+    "text": "{\"body\":{\"capability\":\"income-screen\",\"version\":1},\"conversation\":\"00000000000000000000000000000001\",\"expires_at\":180000006000expires_at\":1800000060000,\"from\":\"uai:ed25519:4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29\",\"id\":\"00000000000000000000000000000001\",\"in_reply_to\":\"\",\"issued_at\":1800000000000,\"kind\":\"request\",\"sig\":\"da52f9292a8fa578c67c960a6309d3a934f04d3cbefd5dae3f863aff8ce06a5bd4efe8d94a72599c6e913ea3ab3209e085d80b675335a0900719925474099391c376610950d10b05\",\"v\":\"uai/1\"}"
+   }
+  },
+  "{\"refuse\": \"profile\"} vs {\"refuse\": \"malformed\"}": {
+   "count": 1,
+   "example": {
+    "case": "duplicate-key-nested",
+    "first": {
+     "refuse": "profile"
+    },
+    "second": {
+     "refuse": "malformed"
+    },
+    "text": "{\"bo-dy\":{\"x\":1,\"x\":21.0}"
+   }
+  }
+ },
+ "comparisons": 10800,
+ "first_accepts": 208,
+ "ok": true,
+ "per_case": 150,
+ "seed": 102
+}

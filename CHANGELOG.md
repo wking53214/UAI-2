@@ -5,7 +5,7 @@ The wire format has its own version (`uai/1`) and does not change with the packa
 ## 0.1.0 (not yet tagged)
 
 Added
-- `uai.connect` and `uai.from_env`: one way in, seven provider routes.
+- `uai.connect` and `uai.from_env`: one way in, six provider routes (GitHub Models, a seventh, was retired by GitHub on 2026-07-30).
 - `cns_interop.providers`: Groq and Cloudflare Workers AI clients beside Anthropic, Gemini, OpenAI and Copilot.
 - The `provider-call` evidence kind: a pass can carry the decider's signed record of the provider call.
 - `docs/QUICKSTART.md` and `interop/examples/uai_quickstart.py`.
