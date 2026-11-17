@@ -1,0 +1,124 @@
+[
+ {
+  "executed": false,
+  "provider": "anthropic"
+ },
+ {
+  "executed": false,
+  "provider": "google"
+ },
+ {
+  "executed": false,
+  "provider": "openai"
+ },
+ {
+  "below": {
+   "reasons": [
+    "The document is a paystub, which is an acceptable doc_type, but the reported monthly_income_cents of 100000 is below the required minimum of 450000 cents."
+   ],
+   "verdict": "retry"
+  },
+  "clears": {
+   "refused": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered"
+  },
+  "executed": true,
+  "live": true,
+  "model": "openai/gpt-oss-120b",
+  "provenance": [
+   {
+    "call": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+    "finish_reason": "length",
+    "http_status": 200,
+    "input_tokens": 540,
+    "latency_ms": 1749,
+    "model_reported": "openai/gpt-oss-120b",
+    "model_requested": "openai/gpt-oss-120b",
+    "outcome": "rejected",
+    "output_tokens": 512,
+    "provider": "groq",
+    "reason": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+    "request_id": "chatcmpl-9ff39555-88bf-4458-b554-698a082e079c",
+    "request_sha256": "e0c8e218c75d6eb0c39dcb667707fc746a920bf21ca0533a8f202d3ae42e30fe",
+    "response_sha256": "d7c1e1531b682cd5f521885083067d3183c8f819fed193aee901cffb9956d276"
+   },
+   {
+    "call": "ok",
+    "finish_reason": "stop",
+    "http_status": 200,
+    "input_tokens": 540,
+    "latency_ms": 1072,
+    "model_reported": "openai/gpt-oss-120b",
+    "model_requested": "openai/gpt-oss-120b",
+    "outcome": "accepted",
+    "output_tokens": 273,
+    "provider": "groq",
+    "reason": "verdict retry",
+    "request_id": "chatcmpl-198ff194-4623-4e5a-a871-e1437e74deaf",
+    "request_sha256": "aa7bf38ccffd728b7605c52275d54fd7fc4155e6e70dc6052ace31755289df83",
+    "response_sha256": "f309d9361c470c1dca751b7bd212ae1933c676f62c663876261fbcc005a89975"
+   }
+  ],
+  "provider": "groq"
+ },
+ {
+  "executed": false,
+  "provider": "openrouter"
+ },
+ {
+  "below": {
+   "reasons": [
+    "monthly_income_cents is below the threshold of 450000"
+   ],
+   "verdict": "retry"
+  },
+  "clears": {
+   "reasons": [
+    "doc_type is paystub",
+    "monthly_income_cents is 512000 which is at or above 450000"
+   ],
+   "verdict": "pass"
+  },
+  "executed": true,
+  "live": true,
+  "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  "provenance": [
+   {
+    "call": "ok",
+    "finish_reason": "stop",
+    "http_status": 200,
+    "input_tokens": 504,
+    "latency_ms": 2213,
+    "model_reported": "@cf/meta/llama-3.3-70b-instruct-sd",
+    "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "outcome": "accepted",
+    "output_tokens": 78,
+    "provider": "cloudflare-workers-ai",
+    "reason": "verdict pass",
+    "request_id": "chatcmpl-36dd68fe-bb89-46d8-913b-c3654fec3e04",
+    "request_sha256": "bdd67ac8cdc1b77ddbffd070335337aca014c07e390ef9610697234e43ca479c",
+    "response_sha256": "1657def08d40207d39c691f97d6d7c3f38b5da0bbe2a112dd73ee9a313ea0412"
+   },
+   {
+    "call": "ok",
+    "finish_reason": "stop",
+    "http_status": 200,
+    "input_tokens": 504,
+    "latency_ms": 1143,
+    "model_reported": "@cf/meta/llama-3.3-70b-instruct-sd",
+    "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "outcome": "accepted",
+    "output_tokens": 54,
+    "provider": "cloudflare-workers-ai",
+    "reason": "verdict retry",
+    "request_id": "chatcmpl-c7f7c4c7-507c-4a0e-a1ec-1dcac8dfc2ed",
+    "request_sha256": "22dd3073226490c559f6adf38fe475304e0ff635bd26f09aab496b5b5044c691",
+    "response_sha256": "3052836895c202967b347ee08e1ae5f482c56cfb0886192019217bf070963b40"
+   }
+  ],
+  "provider": "cloudflare-workers-ai"
+ },
+ {
+  "executed": false,
+  "provider": "copilot-azure-openai"
+ }
+]

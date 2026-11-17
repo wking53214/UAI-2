@@ -22,7 +22,8 @@ import live_providers  # type: ignore[import-not-found]  # noqa: E402
 from cns_interop.adapter import Recommendation  # noqa: E402
 
 RUNS = Path(__file__).resolve().parents[1] / "evidence" / "live-runs"
-FILES = {"2026-11-11-raw": ["jury.jsonl", "jury-2.jsonl", "jury-3.jsonl"], "2026-11-13-free-panel": ["jury-4.jsonl"]}
+FILES = {"2026-11-11-raw": ["jury.jsonl", "jury-2.jsonl", "jury-3.jsonl"], "2026-11-13-free-panel": ["jury-4.jsonl"],
+         "2026-11-17-jury-current-prompt": ["jury-5.jsonl"]}
 CORPUS = {name: (kind, disclosed, expect) for kind, name, disclosed, expect in jury.documents()}
 
 
@@ -30,7 +31,7 @@ def _rows(run: str):
     return [json.loads(line) for f in FILES[run] for line in (RUNS / run / f).read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-ALL = _rows("2026-11-11-raw") + _rows("2026-11-13-free-panel")
+ALL = _rows("2026-11-11-raw") + _rows("2026-11-13-free-panel") + _rows("2026-11-17-jury-current-prompt")
 
 
 def test_every_recorded_document_is_still_in_the_corpus_with_the_same_expected_verdict():
@@ -74,3 +75,20 @@ def test_the_totals_the_evidence_readmes_state_are_recomputed_from_the_rows():
     assert sum(1 for r in free if not r["verdict"].startswith("refused")) == 294
     assert sum(1 for r in free if r["model_verdict"] == "pass" and r["expect"] != "pass") == 26
     assert sum(1 for r in free if r["policy_lowered"] and r["expect"] != "pass") == 26
+
+
+def test_the_totals_the_current_prompt_run_readme_states_are_recomputed_from_its_rows():
+    """evidence/live-runs/2026-11-17-jury-current-prompt/README.md: one round, seven models, three providers, no breach, $0."""
+    rows = _rows("2026-11-17-jury-current-prompt")
+    run = [r for r in rows if r["round"] != -1]
+    assert len(rows) == 161 and len(run) == 154 and len(rows) - len(run) == 7           # 7 preflight rows, 7 jurors x 22 documents
+    assert {r["round"] for r in run} == {0}                                              # one round, not the two the plan asks for
+    assert len({r["juror"] for r in rows}) == 7 and {r["provider"] for r in rows} == {"groq", "cloudflare-workers-ai", "openrouter"}
+    assert all(r["http_status"] == 200 for r in rows)
+    assert sum(1 for r in run if r["model_verdict"] is not None) == 147               # README: 147 readable of 154
+    wrong = [r for r in run if r["model_verdict"] == "pass" and r["expect"] != "pass"]
+    assert len(wrong) == 8 and all(r["policy_lowered"] and not r["breach"] for r in wrong)
+    assert not any(r["breach"] for r in rows)
+    assert all(not r["cost_usd"] for r in rows) and not any(r["provider"] == "anthropic" for r in rows)       # README: $0, no Anthropic
+    assert {r["juror"] for r in wrong} == {"groq:allam-2-7b", "cloudflare-workers-ai:@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+                                           "cloudflare-workers-ai:@cf/nvidia/nemotron-3-120b-a12b"}
