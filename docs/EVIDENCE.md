@@ -68,7 +68,7 @@ Last full run: CI run #126 on the default branch (`8e721ab`, the PR #33 merge, 2
 | Every failure is a categorized refusal, never a pass | `tests/test_provider_layer.py::test_every_failure_is_a_refusal_with_a_category_a_status_and_no_key`; `tests/test_front_door.py::test_a_provider_failure_becomes_a_signed_failure_and_never_a_pass` | Tested |
 | The `live` flag is set only by the live runner | `tests/test_front_door.py::test_the_live_flag_is_never_set_by_this_package` | Tested |
 | Anthropic, Gemini, Groq, Cloudflare Workers AI answer through the real service | `interop/live_providers.py`, 2026-11-12: `live=True` for `claude-haiku-5-5`, `gemini-3.5-flash`, `openai/gpt-oss-120b` on Groq, `@cf/meta/llama-3.3-70b-instruct-fp8-fast` | Live (4 of 7 routes) |
-| OpenAI and Azure OpenAI answer through the real service | no key was available | Not shown |
+| OpenAI and Azure OpenAI answer through the real service | no key was available | Not shown. `uai.connect` refuses both (and `copilot`) unless `allow_untested=True`: `tests/test_front_door.py::test_a_route_never_called_against_the_real_service_is_refused_by_default_and_the_refusal_names_why` |
 | GitHub Models answers through the real service | not possible: GitHub retired the service on 2026-07-30, and on 2026-11-13 its endpoints answered HTTP 200 with the plain text `OK` | Retired |
 
 ## 5. The model is an untrusted advisor
@@ -87,7 +87,7 @@ Last full run: CI run #126 on the default branch (`8e721ab`, the PR #33 merge, 2
 | Gap | What would close it |
 |---|---|
 | An implementation by anyone outside this project | someone builds UAI-1 from `docs/interop/UAI-1.md` and `contracts/uai1/` alone and runs the suite |
-| Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level Copilot client keeps its GitHub Models default route (still tested), but `live_providers.py` and the example adapter no longer run GitHub Models |
+| Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level Copilot client keeps its GitHub Models default route (still tested), but `live_providers.py` and the example adapter no longer run GitHub Models The front door refuses both (and `copilot`) by default until then (`uai.UNTESTED`). |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
 | Signing-key custody and compromise recovery as an operating procedure | a DRAFT is in [docs/KEY_CUSTODY.md](KEY_CUSTODY.md): what the code does (tested) and a procedure with every operating choice left marked DECIDE. A SIMULATED compromise drill (`interop/key_drill.py`, 9 scenarios, one machine, not operational) is recorded in `evidence/drills/2026-11-17-key-drill/`. Not yet filled in by the owner and never drilled by a person; still open until both are done |
 | No live jury run covers the current `render_prompt` (verdict definitions, PR #31); every recorded run is older | the plan in [docs/JURY_RERUN_PLAN.md](JURY_RERUN_PLAN.md), run by the operator; the policy side is held offline by `tests/test_jury_regression.py` |

@@ -6,8 +6,9 @@ anyone you trust can check. It works the same on every supported provider.
 ## What you need
 
 - Python 3.10 or later.
-- An API key for one provider: Anthropic, Google Gemini, OpenAI, Azure OpenAI, Groq or Cloudflare Workers AI. (GitHub Models
-  was retired by GitHub on 2026-07-30; the old name `copilot` now means Azure OpenAI.)
+- An API key for one provider: Anthropic, Google Gemini, Groq or Cloudflare Workers AI. OpenAI and Azure OpenAI are written
+  but have never been called against the real service, so `uai.connect` refuses them unless you pass `allow_untested=True`.
+  (GitHub Models was retired by GitHub on 2026-07-30; the old name `copilot` now means Azure OpenAI, with the same refusal.)
 
 ## 1. Install
 
@@ -24,10 +25,10 @@ Python standard library.
 |---|---|---|
 | Anthropic | `anthropic` | `ANTHROPIC_API_KEY` (or `UAI_ANTHROPIC_API_KEY`) |
 | Google Gemini | `gemini` | `GEMINI_API_KEY` |
-| OpenAI | `openai` | `OPENAI_API_KEY` |
+| OpenAI (untested: needs `allow_untested=True`) | `openai` | `OPENAI_API_KEY` |
 | Groq | `groq` | `GROQ_API_KEY` |
 | Cloudflare Workers AI | `cloudflare` | `CLOUDFLARE_API_TOKEN`, and your `CLOUDFLARE_ACCOUNT_ID` |
-| Azure OpenAI | `copilot-azure` (and `copilot`, its old name: GitHub retired GitHub Models on 2026-07-30) | `AZURE_OPENAI_API_KEY`, and your `AZURE_OPENAI_ENDPOINT` |
+| Azure OpenAI (untested: needs `allow_untested=True`) | `copilot-azure` (and `copilot`, its old name: GitHub retired GitHub Models on 2026-07-30) | `AZURE_OPENAI_API_KEY`, and your `AZURE_OPENAI_ENDPOINT` |
 
 For example:
 

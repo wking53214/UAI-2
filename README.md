@@ -9,14 +9,16 @@ Python or in Node.
 
 | Part | Where | What it is |
 |---|---|---|
-| The way in | `uai/` | `uai.connect(provider, model)`: one call, seven provider routes |
+| The way in | `uai/` | `uai.connect(provider, model)`: one call, four provider routes shown live (two more refused until they are) |
 | The provider layer | `cns_interop/providers.py` | The only module that talks to a model provider |
 | UAI-1, the signed format | `cns_interop/`, spec in `docs/interop/UAI-1.md` | Signed envelopes, receiver-decided trust, revocation, replay protection, negotiated terms, selective disclosure |
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
 | For other implementers | `contracts/uai1/` | Schema, error registry, a 72-case conformance suite and its runner |
 
-Supported providers: Anthropic, Google Gemini, OpenAI, Azure OpenAI (Copilot), Groq, Cloudflare Workers AI. GitHub retired
-GitHub Models on 2026-07-30, so the old name `copilot` now reaches the Azure OpenAI route (your own resource and key).
+Supported providers (each has answered through the real service): Anthropic, Google Gemini, Groq, Cloudflare Workers AI.
+**Not supported yet, refused by `uai.connect` unless you pass `allow_untested=True`:** OpenAI and Azure OpenAI (its old name
+`copilot` reaches the same route). Their clients are written and tested offline, but no key was ever available to call the real
+service. GitHub retired GitHub Models on 2026-07-30.
 
 ## The rule everything here follows
 

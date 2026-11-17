@@ -57,7 +57,7 @@ def env_for(provider, **more):
 
 
 def connected(provider, url, **kw):
-    return uai.connect(NAME[provider], MODEL[provider], environ=env_for(provider), base_url=url, **kw)
+    return uai.connect(NAME[provider], MODEL[provider], environ=env_for(provider), base_url=url, allow_untested=True, **kw)
 
 
 def request(provider, **kw):
@@ -80,10 +80,10 @@ def test_the_provider_is_always_named_and_a_stray_key_selects_nothing():
 @pytest.mark.parametrize("provider", ALL)
 def test_each_provider_is_reached_by_its_name_and_reads_its_own_key_variable(provider):
     more = {"AZURE_OPENAI_ENDPOINT": "https://res.example"} if provider in ("copilot", "copilot-azure") else {}
-    got = uai.connect(NAME[provider].upper() + "  ", " " + MODEL[provider] + " ", environ=env_for(provider, **more))
+    got = uai.connect(NAME[provider].upper() + "  ", " " + MODEL[provider] + " ", environ=env_for(provider, **more), allow_untested=True)
     assert got.provider == LABEL[provider] and got.model == MODEL[provider] and callable(got.complete)
     with pytest.raises(ValueError) as e:
-        uai.connect(NAME[provider], MODEL[provider], environ={k: v for k, v in env_for(provider, **more).items() if k != KEY_VAR[provider]})
+        uai.connect(NAME[provider], MODEL[provider], environ={k: v for k, v in env_for(provider, **more).items() if k != KEY_VAR[provider]}, allow_untested=True)
     assert KEY_VAR[provider] in str(e.value) and KEY not in str(e.value)
 
 
@@ -115,7 +115,7 @@ def test_what_else_a_provider_needs_is_named_when_it_is_missing():
     with pytest.raises(ValueError, match="CLOUDFLARE_API_TOKEN"):
         uai.connect("cloudflare", "m", environ={"CLOUDFLARE_ACCOUNT_ID": "acct123"})
     with pytest.raises(ValueError, match="AZURE_OPENAI_ENDPOINT"):
-        uai.connect("copilot-azure", "m", environ={"AZURE_OPENAI_API_KEY": KEY})
+        uai.connect("copilot-azure", "m", environ={"AZURE_OPENAI_API_KEY": KEY}, allow_untested=True)
 
 
 @pytest.mark.parametrize("key", ["sk-SECRET\ninjected: header", "sk-SECRET tail", "sk-​SECRET", "sk-SECRET\ttail"])
@@ -524,7 +524,7 @@ def test_the_old_copilot_name_reaches_the_azure_route_and_never_reads_the_retire
     stub = serving("copilot-azure", plain)
     try:
         got = uai.connect("copilot", "m", environ={"AZURE_OPENAI_API_KEY": KEY, "AZURE_OPENAI_ENDPOINT": stub.url,
-                                                   "GITHUB_MODELS_TOKEN": "ghp_" + "x" * 30})
+                                                   "GITHUB_MODELS_TOKEN": "ghp_" + "x" * 30}, allow_untested=True)
         assert got.provider == "copilot-azure-openai"
         got.complete("hello")
         sent = stub.requests[-1]
@@ -533,4 +533,26 @@ def test_the_old_copilot_name_reaches_the_azure_route_and_never_reads_the_retire
     finally:
         stub.close()
     with pytest.raises(ValueError, match="AZURE_OPENAI_API_KEY"):      # the retired service's token alone is not a key
-        uai.connect("copilot", "m", environ={"GITHUB_MODELS_TOKEN": KEY})
+        uai.connect("copilot", "m", environ={"GITHUB_MODELS_TOKEN": KEY}, allow_untested=True)
+
+
+@pytest.mark.parametrize("name", ["openai", "copilot-azure", "copilot", "OpenAI  "])
+def test_a_route_never_called_against_the_real_service_is_refused_by_default_and_the_refusal_names_why(name):
+    env = {"OPENAI_API_KEY": KEY, "AZURE_OPENAI_API_KEY": KEY, "AZURE_OPENAI_ENDPOINT": "https://res.example"}
+    with pytest.raises(ValueError) as e:
+        uai.connect(name, "m", environ=env)
+    assert "never been called against the real service" in str(e.value) and "allow_untested=True" in str(e.value)
+    assert KEY not in str(e.value)
+    with pytest.raises(ValueError, match="never been called"):
+        uai.from_env({**env, "UAI_PROVIDER": name, "UAI_MODEL": "m"})
+    assert uai.connect(name, "m", environ=env, allow_untested=True).complete is not None
+    assert uai.from_env({**env, "UAI_PROVIDER": name, "UAI_MODEL": "m"}, allow_untested=True).model == "m"
+
+
+def test_only_the_routes_with_no_live_evidence_are_listed_as_untested():
+    assert uai.UNTESTED == frozenset({"openai", "copilot-azure", "copilot"})
+    assert uai.UNTESTED <= set(uai.PROVIDERS)
+    for name in sorted(set(uai.PROVIDERS) - uai.UNTESTED):      # anthropic, gemini, groq, cloudflare have answered live
+        got = uai.connect(name, "m", environ={**{v: KEY for s in uai.PROVIDERS.values() for v in s.key_vars},
+                                              "CLOUDFLARE_ACCOUNT_ID": "acct123"})
+        assert got.name == name

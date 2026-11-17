@@ -9,6 +9,7 @@ is true today and what a release would need.
 - Reason for 0.x: no team outside this project has implemented UAI-1 yet, and two of the seven provider routes
   (OpenAI, Azure OpenAI) have not been run live; a third, GitHub Models, was retired by GitHub on 2026-07-30 and no longer
   works. 1.0.0 should wait for both gaps, and for a decision on that dead route.
+  Until the two routes have run live, `uai.connect` refuses them unless the caller passes `allow_untested=True`.
 - The wire format has its own version (`uai/1`) and does not change with the package version.
 
 ## Changelog for 0.1.0

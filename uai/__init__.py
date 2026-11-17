@@ -10,10 +10,10 @@ decides, a grant permits, a person approves. docs/QUICKSTART.md is the ten-minut
 """
 
 from .bridge import PORTABLE_MAX_OUTPUT_TOKENS, PortableTextProvider, ProviderExecutionError, ProviderResult
-from .connect import PROVIDERS, Connection, connect, from_env
+from .connect import PROVIDERS, UNTESTED, Connection, connect, from_env
 from .judge import PROVIDER_CALL, ProviderJudge
 from .protocol import CompletionStatus, ModelProvider, ModelRequest, ModelResponse, TokenUsage
 
-__all__ = ["connect", "from_env", "Connection", "PROVIDERS", "ProviderJudge", "PROVIDER_CALL", "PortableTextProvider",
+__all__ = ["connect", "from_env", "Connection", "PROVIDERS", "UNTESTED", "ProviderJudge", "PROVIDER_CALL", "PortableTextProvider",
            "ProviderResult", "ProviderExecutionError", "PORTABLE_MAX_OUTPUT_TOKENS", "CompletionStatus", "ModelProvider",
            "ModelRequest", "ModelResponse", "TokenUsage"]

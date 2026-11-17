@@ -32,7 +32,7 @@ from cns_interop.providers import ProvenanceLog
 from .bridge import PORTABLE_MAX_OUTPUT_TOKENS, PortableTextProvider, ProviderResult
 from .protocol import CompletionStatus, TokenUsage
 
-__all__ = ["PROVIDERS", "Connection", "connect", "from_env"]
+__all__ = ["PROVIDERS", "UNTESTED", "Connection", "connect", "from_env"]
 
 
 @dataclass(frozen=True)
@@ -60,6 +60,12 @@ PROVIDERS: Mapping[str, _Spec] = {
 # the Azure OpenAI route: your own resource, your own key. Code that said `connect("copilot", ...)` keeps its call and needs
 # AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT instead of GITHUB_MODELS_TOKEN.
 PROVIDERS = {**PROVIDERS, "copilot": PROVIDERS["copilot-azure"]}
+
+#: Routes that are implemented and tested offline against local stand-in servers, but have never been called against the real
+#: service (no key was ever available). `connect` refuses them unless the caller passes `allow_untested=True`, so nobody reads
+#: a working front door as a shown one. To remove a name from this set, run `interop/live_providers.py` with a real key and
+#: keep the rows (docs/EVIDENCE.md, section 6).
+UNTESTED = frozenset({"openai", "copilot-azure", "copilot"})
 
 _COMPLETE = {"end_turn", "STOP", "stop"}
 _CUT_OFF = {"max_tokens", "MAX_TOKENS", "length"}
@@ -124,8 +130,10 @@ def _first(env: Mapping[str, str], names: Tuple[str, ...]) -> str:
 
 
 def connect(provider: str, model: str, *, environ: Optional[Mapping[str, str]] = None, log: Optional[ProvenanceLog] = None,
-            timeout_s: Optional[float] = None, base_url: Optional[str] = None) -> Connection:
+            timeout_s: Optional[float] = None, base_url: Optional[str] = None, allow_untested: bool = False) -> Connection:
     """Connect to `provider` (one of `PROVIDERS`) and `model`. The key comes from the provider's environment variable.
+
+    Providers in `UNTESTED` (never called against the real service) are refused unless `allow_untested=True`.
 
     Raises ValueError, naming the variable to set and never a key, when the provider is unknown, the model is empty, or
     something it needs is missing. No request is made here."""
@@ -134,6 +142,9 @@ def connect(provider: str, model: str, *, environ: Optional[Mapping[str, str]] =
     spec = PROVIDERS.get(name)
     if spec is None:
         raise ValueError("unknown provider; expected one of: " + ", ".join(sorted(PROVIDERS)))
+    if name in UNTESTED and not allow_untested:
+        raise ValueError(f"{name} is not supported through the front door: it has never been called against the real service "
+                         "(see docs/EVIDENCE.md, section 6). Pass allow_untested=True to use it at your own risk")
     if not isinstance(model, str) or not model.strip():
         raise ValueError("a model name is needed")
     model = model.strip()
@@ -170,7 +181,8 @@ def _one(env: Mapping[str, str], names: Tuple[str, str]) -> str:
     return values.pop() if values else ""
 
 
-def from_env(environ: Optional[Mapping[str, str]] = None, *, log: Optional[ProvenanceLog] = None) -> Connection:
+def from_env(environ: Optional[Mapping[str, str]] = None, *, log: Optional[ProvenanceLog] = None,
+             allow_untested: bool = False) -> Connection:
     """`connect`, with the provider and the model read from UAI_PROVIDER and UAI_MODEL.
 
     UAI2_PROVIDER and UAI2_MODEL, the names the UAI-2 factory read, are accepted as the same two settings."""
@@ -181,4 +193,4 @@ def from_env(environ: Optional[Mapping[str, str]] = None, *, log: Optional[Prove
     model = _one(env, ("UAI_MODEL", "UAI2_MODEL"))
     if not model:
         raise ValueError("UAI_MODEL is not set")
-    return connect(provider, model, environ=env, log=log)
+    return connect(provider, model, environ=env, log=log, allow_untested=allow_untested)
