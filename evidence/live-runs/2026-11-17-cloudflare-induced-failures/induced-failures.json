@@ -1,0 +1,174 @@
+{
+ "base_url": "https://api.cloudflare.com/client/v4",
+ "cases": [
+  {
+   "answer_chars": 2,
+   "behaved_as_expected": true,
+   "change": "nothing: a plain, correct call",
+   "expected": "answered",
+   "label": "baseline",
+   "provenance": [
+    {
+     "call": "ok",
+     "finish_reason": "stop",
+     "http_status": 200,
+     "input_tokens": 42,
+     "latency_ms": 918,
+     "model_reported": "@cf/meta/llama-3.3-70b-instruct-sd",
+     "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+     "outcome": "pending",
+     "output_tokens": 2,
+     "provider": "cloudflare-workers-ai",
+     "reason": "",
+     "request_id": "chatcmpl-a44ae168-81b9-4c90-b194-647dd6f449e2",
+     "request_sha256": "be8df1a790c42c98ba2bf204b54370dfec47cef89f37b0da9f299d3415c53dd5",
+     "response_sha256": "debc4a4fa1aae8d2dacf2f6c1cd823943446d5115cd46857323a9ce25857aac3"
+    }
+   ],
+   "result": "answered"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "model name that no service has",
+   "code": "provider",
+   "expected": "refused",
+   "label": "model-that-does-not-exist",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 400 (7000: No route for that URI)",
+     "finish_reason": "",
+     "http_status": 400,
+     "input_tokens": null,
+     "latency_ms": 147,
+     "model_reported": "",
+     "model_requested": "no-such-model-uai-check",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "cloudflare-workers-ai",
+     "reason": "provider: the provider answered HTTP 400 (7000: No route for that URI)",
+     "request_id": "",
+     "request_sha256": "be8df1a790c42c98ba2bf204b54370dfec47cef89f37b0da9f299d3415c53dd5",
+     "response_sha256": "184971629088a307ab808e9fa6b7ce82327ac3cbf92dab2286fcb4534099c1f0"
+    }
+   ],
+   "reason": "the provider answered HTTP 400 (7000: No route for that URI)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "max_tokens of -5",
+   "code": "provider",
+   "expected": "refused",
+   "label": "request-it-cannot-accept",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 400 (8007: AiError: AiError: {\"error\":{\"message\":\"max_tokens must be at least 1, got -5. (parameter=max_tokens, value=-5)\",\"type\":\"Ba",
+     "finish_reason": "",
+     "http_status": 400,
+     "input_tokens": null,
+     "latency_ms": 729,
+     "model_reported": "",
+     "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "cloudflare-workers-ai",
+     "reason": "provider: the provider answered HTTP 400 (8007: AiError: AiError: {\"error\":{\"message\":\"max_tokens must be at least 1, got -5. (parameter=max_tokens, value=-5)\",\"type\":\"BadRequestError\",\"param\":\"max_to",
+     "request_id": "",
+     "request_sha256": "62e6f19b21eb4e1f37921d4534f91264174e70fad9fb53a4fa865b4647e1fd9a",
+     "response_sha256": "7ca6255f596dc82343ecbc543a23265d42b26f86eb8ba1d88143bc92b246b522"
+    }
+   ],
+   "reason": "the provider answered HTTP 400 (8007: AiError: AiError: {\"error\":{\"message\":\"max_tokens must be at least 1, got -5. (parameter=max_tokens, value=-5)\",\"type\":\"BadRequestError\",\"param\":\"max_tokens\",\"c)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "invalid_response",
+   "change": "max_tokens of 1, so the answer stops at the limit",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-cut-off",
+   "provenance": [
+    {
+     "call": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "finish_reason": "length",
+     "http_status": 200,
+     "input_tokens": 42,
+     "latency_ms": 223,
+     "model_reported": "@cf/meta/llama-3.3-70b-instruct-sd",
+     "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+     "outcome": "rejected",
+     "output_tokens": 1,
+     "provider": "cloudflare-workers-ai",
+     "reason": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "request_id": "chatcmpl-21f0c56b-201f-4fa2-a3b7-92467594611d",
+     "request_sha256": "3d4555bba7b74864f3887f2ca59b276c07fcd7175141c3d554ade395ef9e0e7c",
+     "response_sha256": "df836b159027be9355c3d1179620f529d3a75b640db997b7b9ca6ec130251113"
+    }
+   ],
+   "reason": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "response_too_large",
+   "change": "the caller allows only 40 bytes back",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-larger-than-allowed",
+   "provenance": [
+    {
+     "call": "the provider's answer is larger than 40 bytes",
+     "finish_reason": "",
+     "http_status": 200,
+     "input_tokens": null,
+     "latency_ms": 386,
+     "model_reported": "",
+     "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "cloudflare-workers-ai",
+     "reason": "provider: the provider's answer is larger than 40 bytes",
+     "request_id": "a5c1cce11f2605ec-IAD",
+     "request_sha256": "be8df1a790c42c98ba2bf204b54370dfec47cef89f37b0da9f299d3415c53dd5",
+     "response_sha256": "f3faa23d70c1a0b1672013569416ab8e78596c648fb4e41fd80aa652e634727c"
+    }
+   ],
+   "reason": "the provider's answer is larger than 40 bytes",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "timeout",
+   "change": "a time limit of 0.05 seconds",
+   "code": "provider",
+   "expected": "refused",
+   "label": "runs-out-of-time",
+   "provenance": [
+    {
+     "call": "the provider could not be reached or timed out (TimeoutError)",
+     "finish_reason": "",
+     "http_status": null,
+     "input_tokens": null,
+     "latency_ms": 50,
+     "model_reported": "",
+     "model_requested": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "cloudflare-workers-ai",
+     "reason": "provider: the provider could not be reached or timed out (TimeoutError)",
+     "request_id": "",
+     "request_sha256": "be8df1a790c42c98ba2bf204b54370dfec47cef89f37b0da9f299d3415c53dd5",
+     "response_sha256": ""
+    }
+   ],
+   "reason": "the provider could not be reached or timed out (TimeoutError)",
+   "result": "refused"
+  }
+ ],
+ "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+ "name": "cloudflare-workers-ai",
+ "user_agent": ""
+}

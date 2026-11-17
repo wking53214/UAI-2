@@ -103,3 +103,35 @@ def test_a_user_agent_is_sent_only_when_asked_for(monkeypatch, capsys, tmp_path)
     finally:
         stub.close()
     assert "STACK-UAI2-Provider/1.0" not in without and with_flag == {"STACK-UAI2-Provider/1.0"}
+
+
+def cloudflare_service():
+    """Workers AI as the older models answer it: `{"success", "result": {"response"}}`, with no word on why the answer ended."""
+    def respond(path, headers, raw):
+        body = json.loads(raw)
+        time.sleep(0.15)
+        if path.endswith("no-such-model-uai-check"):
+            return 404, J, json.dumps({"success": False, "errors": [{"code": 7000, "message": "No route for that URI"}], "result": None}).encode()
+        if body["max_tokens"] < 1:
+            return 400, J, json.dumps({"success": False, "errors": [{"code": 5006, "message": "max_tokens invalid"}], "result": None}).encode()
+        return 200, J, json.dumps({"success": True, "errors": [], "result": {"response": "ok"}}).encode()
+    return Raw(respond)
+
+
+def test_the_cloudflare_style_uses_its_own_client_records_that_a_cut_off_cannot_be_told_and_never_prints_the_account(monkeypatch, capsys, tmp_path):
+    stub = cloudflare_service()
+    account = "95d61c4bd9fd85311a2e86717ecc7a60"
+    try:
+        monkeypatch.setenv("OPENAI_STYLE_KEY", KEY)
+        out = tmp_path / "o.json"
+        code = induced.main(["--name", "cf", "--base-url", stub.url, "--model", "@cf/meta/model-x", "--account-id", account, "--out", str(out)])
+        paths = {r["path"] for r in stub.requests}
+    finally:
+        stub.close()
+    printed = capsys.readouterr().out
+    data = json.loads(out.read_text())
+    by = {c["label"]: c for c in data["cases"]}
+    assert code == 0 and paths >= {f"/accounts/{account}/ai/run/@cf/meta/model-x"}
+    assert by["answer-cut-off"]["result"] == "answered" and by["answer-cut-off"]["cannot_tell_if_cut_off"] is True
+    assert "7000: No route for that URI" in by["model-that-does-not-exist"]["reason"] and "5006: max_tokens invalid" in by["request-it-cannot-accept"]["reason"]
+    assert account not in out.read_text() and KEY not in out.read_text() and KEY not in printed
