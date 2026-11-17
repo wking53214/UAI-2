@@ -2,6 +2,11 @@
 
 **Status: a plan for the operator. Nothing in this file has been run. No provider was called and no key was used to write it.**
 
+**Update 2026-11-17:** the plan was run once, with these differences: one round (not two), Gemini left out (its native endpoint refuses the
+credential stored in that environment), OpenRouter added as the third provider so the preflight's three-provider minimum held, keys supplied through
+a network proxy and not shell variables, and `--cap 0.01` added as a guard. Results: `evidence/live-runs/2026-11-17-jury-current-prompt/`. Everything
+below is the plan as written and was not edited.
+
 ## Why a rerun
 
 Every recorded jury run (`evidence/live-runs/2026-11-11-raw/`, `2026-11-13-free-panel/`) was made **before** PR #31 changed
