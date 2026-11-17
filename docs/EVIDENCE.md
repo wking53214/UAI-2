@@ -18,7 +18,7 @@ Run everything that is not live:
     python contracts/uai1/run_conformance.py --cmd "python interop/conformance/reference_adapter.py"
     python contracts/uai1/run_conformance.py --cmd "node interop/node/conformance_adapter.mjs"
 
-Last full run (2026-11-12, this branch): 1538 tests passed, none skipped; conformance 70 of 70 for Python and for Node.
+Last full run (2026-11-14, CI run #114 on the default branch): 1581 tests passed on Python 3.12 and 3.13 in CI run #114 (the logs for 3.10 and 3.11 did not show a final count), none skipped; conformance 72 of 72 for Python and for Node.
 
 ## 1. The signed format (UAI-1)
 
