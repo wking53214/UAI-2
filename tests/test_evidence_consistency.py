@@ -1,6 +1,6 @@
 """The repository's evidence must agree with itself, and CI is where that is checked.
 
-1. Every file under evidence/live-runs/<run>/ has its SHA-256 written in that run's README, and every SHA-256 written
+1. Every file under evidence/<group>/<run>/ has its SHA-256 written in that run's README, and every SHA-256 written
    in a README belongs to a file in the same folder. An edited or swapped evidence file, or a README that was
    not updated, fails here.
 2. The conformance step names in .github/workflows/ci.yml and the case count in docs/EVIDENCE.md equal the number of
@@ -20,7 +20,8 @@ HEX64 = re.compile(r"\b[0-9a-f]{64}\b")
 
 
 def _run_dirs():
-    return sorted(d for d in RUNS.iterdir() if d.is_dir())
+    """Every evidence folder, in every group under evidence/ (live-runs, drills, and any group added later)."""
+    return sorted(d for group in (ROOT / "evidence").iterdir() if group.is_dir() for d in group.iterdir() if d.is_dir())
 
 
 def test_every_evidence_file_matches_the_hash_its_readme_records():
