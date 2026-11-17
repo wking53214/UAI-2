@@ -56,7 +56,8 @@ Your adapter reads one JSON request per line on stdin and writes one JSON answer
 `docs/interop/implementers/README.md`. Report a disagreement as an issue: the case name, what you returned, what the suite
 expected.
 
-We ran this ourselves with two fresh Go and Rust implementations written from the kit alone. It found real problems (a spec
+We ran this ourselves with fresh Go, Rust and Java implementations written from the kit alone (Java: 72 of 72, with its faults
+listed in `evidence/independent-implementations/2026-11-17-java.md`). It found real problems (a spec
 sentence that contradicted the test vectors, and signature checks that the suite could not detect when skipped), now fixed.
 That test was internal, so it shows little about how an outside reader would fare. Not covered: grants, approvals, the full
 request and reply exchange, and ledgers shared across machines. This is a reference design, not a production system.
