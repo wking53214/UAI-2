@@ -1,6 +1,6 @@
 # Signing-key custody and compromise recovery
 
-**Status: DRAFT for the project owner.** Part 1 is what the code does today, each point read from the source or backed by a
+**Status: DRAFT for the project owner, partly filled in on 2026-11-17 (see the DECIDED marks and the table at the end).** Part 1 is what the code does today, each point read from the source or backed by a
 named test. Part 2 is a procedure built on Part 1. Every line marked **DECIDE** is an operating choice this repository
 cannot make for you; fill it in before relying on this page. Nothing here has been exercised as a drill.
 
@@ -82,9 +82,10 @@ So the owner cannot repair a stolen key by acting as itself; recovery needs the 
 
 | Role | Who | DECIDE |
 |---|---|---|
-| Key owner (may sign with the decider key) | | name a person or service account |
-| Revocation authority (may revoke on behalf of the identity) | | a **separate** key from the decider key, kept offline, so a stolen decider key cannot revoke itself away or block its own revocation |
-| Receiver operators (hold the pin list and the revocation store) | | |
+| Key owner (may sign with the decider key) | The project owner, William N. King, and no one else | **DECIDED 2026-11-17 (project owner)**: one accountable person |
+| Revocation authority (may revoke on behalf of the identity) | A separate key from the decider key, kept offline on a hardware token in a safe | **DECIDED 2026-11-17 (project owner)**. Opened in an emergency by the owner or the backup person. Still **DECIDE** where the safe is |
+| Backup person (may order a revocation and open the safe) | | **DECIDED 2026-11-17 (project owner)**: one backup person. Still **DECIDE** who |
+| Receiver operators (hold the pin list and the revocation store) | | **DECIDE** name each operator; section 2.4 emails them |
 
 Keep the revocation authority's key apart from every key it can revoke. A single key that signs decisions and also holds
 the only power to revoke it leaves no recovery path when it is stolen. **INFERRED** from the rules in Part 1.
@@ -92,12 +93,16 @@ the only power to revoke it leaves no recovery path when it is stolen. **INFERRE
 ### 2.2 Generation and storage
 
 1. Generate the decider key with `Signer.generate()` on a machine you trust, or inside the HSM or keystore if you use
-   `Signer.external`. **DECIDE** which.
+   `Signer.external`. **DECIDED 2026-11-17 (project owner)**: inside the hardware token, through `Signer.external`. **OPEN, to prove before relying on it**: the
+   hook exists and checks every signature against the identity (Part 1), but its tests sign with a software key function,
+   never a real token. UAI-1 signs with Ed25519 only, so the token must be able to produce Ed25519 signatures; not every hardware
+   token can (**INFERRED**, confirm for the model you buy) before you create the key in it.
 2. Production profile: set `UAI_PROFILE=production` and `UAI_CRYPTO_BACKEND=cryptography` (required; the process refuses
    the pure backend with a local seed).
-3. Where the seed is stored at rest and how it reaches the process: **DECIDE** (environment variable from a secrets
-   manager, mounted file with mode 0400, or an HSM behind `Signer.external`). The software enforces none of these.
-4. Record the public identity (`uai:ed25519:...`) and its creation date in a register: **DECIDE** where.
+3. Where the seed is stored at rest and how it reaches the process: **DECIDED 2026-11-17 (project owner)**: there is no seed to store. The key is created inside the
+   token and never leaves it, and the process asks the token to sign. This replaces an earlier answer of 2026-11-17 (a secrets
+   manager), which cannot hold a key that never leaves the token. The software enforces none of this.
+4. Record the public identity (`uai:ed25519:...`) and its creation date in a register: **DECIDED 2026-11-17 (project owner)**: a file in this repository (public identities are not secret, and the history shows when each changed).
 
 ### 2.3 Planned rotation (no compromise)
 
@@ -105,24 +110,26 @@ the only power to revoke it leaves no recovery path when it is stolen. **INFERRE
 2. Have each receiver **pin the successor** before the old key stops signing.
 3. Sign `rotate(old_signer, successor, reason="scheduled rotation")` and deliver it. Receivers that set `follow_rotation`
    follow it from the pinned predecessor.
-4. Stop signing with the old key. Have each receiver unpin it. **DECIDE** the rotation interval and who checks each
-   receiver finished.
+4. Stop signing with the old key. Have each receiver unpin it. Rotation interval **DECIDED 2026-11-17 (project owner)**: every 12 months. Still **DECIDE**
+   who checks that each receiver finished.
 
 ### 2.4 Suspected compromise (the order matters)
 
 1. **Revoke first.** From the **revocation authority**, sign `revoke(authority_signer, compromised_identity,
    reason="suspected compromise", effective_at=<earliest time you believe the key was exposed>)`. Revocation binds from its
    effective time, so set it to the earliest plausible exposure, not to now. Anything the key signed after that time should
-   be re-judged by each receiver. **DECIDE** who may order this and how fast.
-2. **Get it to every receiver.** The software gives you no channel. **DECIDE** the channel (email to named operators, a
-   shared signed file, an admin API) and the time limit. Until a receiver has the statement it still trusts the key.
+   be re-judged by each receiver. Who may order it **DECIDED 2026-11-17 (project owner)**: the owner or the backup person. How fast: see step 2.
+2. **Get it to every receiver.** The software gives you no channel. Channel **DECIDED 2026-11-17 (project owner)**: email to the named receiver
+   operators (see 2.1). Time limit **DECIDED 2026-11-17 (project owner)**: every receiver has the statement within 4 hours of the order. Until a receiver has the statement it still trusts the key.
 3. **Shorten staleness where you can.** Receivers that set `max_staleness_ms` refuse when they have not refreshed in time,
-   which is the safe direction. **DECIDE** the value per receiver.
+   which is the safe direction. Value **DECIDED 2026-11-17 (project owner)**: 24 hours, `max_staleness_ms = 86_400_000`, on every receiver. A receiver
+   that is offline for more than a day refuses requests until it refreshes.
 4. **Stop the old key signing.** Remove it from its store or disable it in the HSM.
 5. **Bring up a replacement** identity (2.2), have receivers pin it, and tell them. Do not use `rotate` from the
    compromised key as the recovery step (see Part 1, "Why rotation alone is not compromise recovery").
 6. **Review.** Each receiver's audit record (`GrantTable` audit chain) shows every decision it permitted under the old key.
-   Find those after the effective time and decide whether to reverse them. **DECIDE** who reviews and how.
+   Find those after the effective time and decide whether to reverse them. Reviewer **DECIDED 2026-11-17 (project owner)**: a second person, independent of the one who
+   ordered the revocation. Still **DECIDE** who, and how (what they read, and who decides to reverse).
 
 ### 2.5 Loss of the key (no theft)
 
@@ -132,19 +139,20 @@ itself, which is why the revocation authority must be separate.
 ### 2.6 Loss of the revocation authority's key
 
 **OPEN, and the most dangerous gap.** A receiver lists its authorities itself, so recovery is a receiver-side change: each
-receiver adds a new authority. **DECIDE** how you would reach every receiver quickly, and keep a second authority key in a
-separate place for exactly this case.
+receiver adds a new authority. A second authority key, kept in a place separate from the first, is **DECIDED 2026-11-17 (project owner)**, and it is
+kept in the backup person's safe. Still **DECIDE** how you would reach every receiver quickly.
 
 ### 2.7 Drill
 
 Part 2 has not been run by a person. A **software simulation** of the order of events in 2.4 has been run (see Part 1); it measured
 no time and involved no operator, key store or receiver. Before relying on this procedure, rehearse 2.4 against a test deployment: revoke a test key, time how
-long until every test receiver refuses it, and write down what you find. **DECIDE** the date.
+long until every test receiver refuses it, and write down what you find. Date **DECIDED 2026-11-17 (project owner)**: not scheduled. Until a date is set and the drill is run, treat this procedure as unproven.
 
 ## What closing this gap still needs
 
 | Item | Who |
 |---|---|
-| Every DECIDE above filled in | project owner |
+| Every DECIDE above filled in (open now: who the backup person is, who the receiver operators are, where the first safe is, who the independent reviewer is and how they review, how to reach every receiver quickly if the authority key is lost, who checks a rotation finished) | project owner |
 | A drill of 2.4, with timings and results recorded here | operator |
+| A real hardware token that signs Ed25519 through `Signer.external`, with a test or recorded run | operator |
 | A channel to deliver revocations | operator; a published revocation list is a protocol change and is out of scope for this page |
