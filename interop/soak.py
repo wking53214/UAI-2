@@ -30,6 +30,10 @@ ambiguous and the checks accept either outcome for it; the other invariants stil
 SIGKILLs its own database backend a few milliseconds later, so the kill lands while the COMMIT is in flight (the server then
 runs crash recovery). The report counts how many such commits ended up committed and how many rolled back, so a run shows
 that BOTH outcomes of the window were reached, and every invariant is still checked afterwards.
+
+Reaching that window is a matter of timing, and a short run on a fast runner can miss it. `--min-cuts N` (with --mid-commit) keeps the
+run going past --seconds until N commits were really cut off in flight, up to --max-extend seconds; the report says how long it ran
+(`ran_seconds`, `extended_seconds`). Nothing about the invariants is relaxed: a run that never reaches the window still shows zero cuts.
 """
 
 from __future__ import annotations
@@ -62,6 +66,21 @@ from cns_interop.ledger_postgres import PostgresLedger  # noqa: E402
 SENDER = "uai:ed25519:" + "b" * 64
 
 
+def _until(deadline: Any) -> float:
+    """A worker's deadline is a plain time, or a shared value the supervisor may push later (see `min_cuts`)."""
+    return float(deadline.value) if hasattr(deadline, "value") else float(deadline)
+
+
+def _count(work: str, kind: str) -> int:
+    """How many times any worker has logged `kind` so far."""
+    n = 0
+    for name in os.listdir(work):
+        if name.endswith(".log"):
+            with open(os.path.join(work, name)) as fh:
+                n += sum(1 for line in fh if line.split(" ", 1)[0].strip() == kind)
+    return n
+
+
 def _log(fh: Any, kind: str, mid: str = "") -> None:
     fh.write(f"{kind} {mid}\n")
 
@@ -81,13 +100,13 @@ def _kill_backend_soon(pid: int, delay_s: float) -> threading.Event:
     return cancelled
 
 
-def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: float, outdir: str, wid: int,
+def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: Any, outdir: str, wid: int,
            mid_commit: float = 0.0) -> None:
     """One worker process. It is killed at random by the chaos loop and by itself, and it never finishes cleanly on purpose."""
     rnd = random.Random(seed)
     log = open(os.path.join(outdir, f"w{wid}-{seed}.log"), "a", buffering=1)
     led = None
-    while time.time() < deadline:
+    while time.time() < _until(deadline):
         try:
             if led is None:
                 led = PostgresLedger(dsn, table=table, connect_timeout_s=1, statement_timeout_ms=2_000)
@@ -124,7 +143,9 @@ def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: floa
                     os.kill(os.getpid(), signal.SIGKILL)  # dies before COMMIT: neither the effect nor the spend may exist
                 cancel = None
                 if mid_commit > 0 and rnd.random() < mid_commit:
-                    cancel = _kill_backend_soon(db.info.backend_pid, rnd.uniform(0.0, 0.002))
+                    # The delay is denser near zero (one draw, so seeded runs use the same random stream): on a runner where COMMIT takes well
+                    # under a millisecond a uniform 0 to 2 ms timer almost always fires after the commit has returned.
+                    cancel = _kill_backend_soon(db.info.backend_pid, 0.002 * rnd.random() ** 2)
                 try:
                     db.commit()
                     if cancel is not None:
@@ -156,20 +177,21 @@ def worker(dsn: str, table: str, audit: str, seed: int, ids: int, deadline: floa
 
 
 def run(seconds: float = 60.0, workers: int = 6, ids: int = 30, seed: int = 1, server_kills: int = -1,
-        verbose: bool = True, mid_commit: float = 0.0) -> Dict[str, Any]:
+        verbose: bool = True, mid_commit: float = 0.0, min_cuts: int = 0, max_extend_s: float = 90.0) -> Dict[str, Any]:
     rnd = random.Random(seed)
     work = tempfile.mkdtemp(prefix="uai-soak-")
     audit = os.path.join(work, "audit.jsonl")
     table = "soak_" + uuid.uuid4().hex[:10]
     cluster = Cluster().start()
     report: Dict[str, Any] = {"seconds": seconds, "workers": workers, "ids": ids, "seed": seed, "mid_commit": mid_commit,
-                              "findings": []}
+                              "min_cuts": min_cuts, "findings": []}
     try:
         cluster.wait_ready()
         PostgresLedger(cluster.dsn, table=table)
         with psycopg.connect(cluster.dsn, autocommit=True) as db:
             db.execute(f"CREATE TABLE {table}_effects (key text PRIMARY KEY, n int NOT NULL)")
-        deadline = time.time() + seconds
+        started = time.time()
+        deadline = mp.Value("d", started + seconds)  # shared, so the supervisor can extend it
         procs: Dict[int, mp.Process] = {}
         counter = [0]
 
@@ -183,10 +205,18 @@ def run(seconds: float = 60.0, workers: int = 6, ids: int = 30, seed: int = 1, s
             spawn(slot)
         kills = {"server": 0, "worker": 0}
         next_chaos = time.time() + 3
-        while time.time() < deadline:
+        while True:
+            if time.time() >= deadline.value:
+                # `min_cuts`: the window under test is reached by chance, so a short run may miss it. Keep going, up to a cap,
+                # until enough commits were really cut off in flight. The assertions stay as strict; only the run gets longer.
+                if (mid_commit > 0 and min_cuts > 0 and _count(work, "mid-commit-cut") < min_cuts
+                        and time.time() < started + seconds + max_extend_s):
+                    deadline.value = time.time() + 2.0
+                else:
+                    break
             time.sleep(0.25)
             for slot, p in list(procs.items()):
-                if not p.is_alive() and time.time() < deadline - 1:
+                if not p.is_alive() and time.time() < deadline.value - 1:
                     spawn(slot)
             if time.time() >= next_chaos:
                 next_chaos = time.time() + rnd.uniform(3, 8)
@@ -206,6 +236,8 @@ def run(seconds: float = 60.0, workers: int = 6, ids: int = 30, seed: int = 1, s
             if p.is_alive():
                 p.kill()
         report["kills"] = kills
+        report["ran_seconds"] = round(time.time() - started, 1)
+        report["extended_seconds"] = round(max(0.0, time.time() - started - seconds), 1)
         time.sleep(2.0)  # let every lease lapse
         report.update(check(cluster.dsn, table, audit, work))
     finally:
@@ -274,9 +306,13 @@ def main(argv: List[str]) -> int:
     ap.add_argument("--server-kills", type=int, default=-1, help="at most this many server kills (default: no limit)")
     ap.add_argument("--mid-commit", type=float, default=0.0,
                     help="chance (0 to 1) that a worker's database backend is killed while its COMMIT is in flight")
+    ap.add_argument("--min-cuts", type=int, default=0,
+                    help="with --mid-commit: keep running past --seconds until this many commits were really cut off in flight")
+    ap.add_argument("--max-extend", type=float, default=90.0, help="the most --min-cuts may extend the run, in seconds")
     ap.add_argument("--out", default="", help="write the JSON report here")
     opts = ap.parse_args(argv)
-    rep = run(opts.seconds, opts.workers, opts.ids, opts.seed, opts.server_kills, mid_commit=opts.mid_commit)
+    rep = run(opts.seconds, opts.workers, opts.ids, opts.seed, opts.server_kills, mid_commit=opts.mid_commit,
+              min_cuts=opts.min_cuts, max_extend_s=opts.max_extend)
     if opts.out:
         Path(opts.out).write_text(json.dumps(rep, indent=1, sort_keys=True) + "\n")
     return 0 if rep.get("ok") else 1

@@ -1,0 +1,36 @@
+{
+ "ambiguous": 519,
+ "ambiguous_committed": 473,
+ "ambiguous_rolled_back": 46,
+ "audit_entries": 18328,
+ "effects": 14549,
+ "extended_seconds": 1.7,
+ "findings": [],
+ "ids": 30,
+ "kills": {
+  "server": 126,
+  "worker": 143
+ },
+ "ledger_committed": 14549,
+ "mid_commit": 0.05,
+ "min_cuts": 0,
+ "ok": true,
+ "ran_seconds": 1501.7,
+ "seconds": 1500.0,
+ "seed": 23,
+ "tally": {
+  "abandoned": 1806,
+  "ambiguous": 525,
+  "commit-lease_lost": 1284,
+  "committed": 14277,
+  "db-error": 636,
+  "mid-commit-cut": 452,
+  "released": 2206,
+  "reserve-replayed": 366856,
+  "reserve-unavailable": 7930,
+  "reserved": 22395,
+  "unavailable-unavailable": 986
+ },
+ "told_committed": 14277,
+ "workers": 10
+}

@@ -22,9 +22,11 @@ def test_a_short_soak_with_a_server_kill_holds_every_invariant():
 def test_a_commit_cut_off_mid_flight_leaves_every_invariant_intact():
     """The window the main soak never reached: the database backend is killed while COMMIT is in flight. The outcome of such
     a commit is unknown to the worker (ambiguous), so the run must reach it, and nothing may be duplicated, lost or half done."""
-    report = soak.run(seconds=25, workers=6, ids=6, seed=5, server_kills=0, verbose=False, mid_commit=0.5)
+    report = soak.run(seconds=25, workers=6, ids=6, seed=5, server_kills=0, verbose=False, mid_commit=0.5, min_cuts=3)
     assert report["findings"] == [], report["findings"]
     assert report["ok"] is True
-    assert report["tally"].get("mid-commit-cut", 0) > 0             # commits really were cut off in flight
+    # Reaching the window is chance, and one CI run reached it zero times in 25 s. The run therefore continues (up to a cap) until
+    # it has really cut off commits; the requirement is not lowered.
+    assert report["tally"].get("mid-commit-cut", 0) >= 3, report["tally"]
     assert report["ambiguous"] > 0                                  # and the workers really did not know the outcome
     assert report["ambiguous"] == report["ambiguous_committed"] + report["ambiguous_rolled_back"]
