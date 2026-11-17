@@ -70,6 +70,11 @@ keys, any number with a fraction or exponent, NaN and Infinity, and anything tha
 mark (U+FEFF) before the object is refused as `malformed`, not skipped: a receiver never guesses at an encoding. Key order and
 spacing do not matter; the signature is over the canonical digest.
 
+**One defect or two.** The refusal code is fixed when a text has **one** defect. When a text has more than one (for example a duplicate
+key and an oversize integer, or invalid JSON that also contains a number with a fraction), UAI-1 does not say which code a reader gives:
+both `malformed` and `profile` are conforming, and the refusal itself is required. A receiver must therefore not depend on which of
+two codes it sees for such a text, and an implementation need not match another's choice there.
+
 **Checking a received envelope**, in this order, each failure a refusal with the stable code shown:
 
 1. exactly the fields above, each in its form (`malformed`), which includes `kind` being one of the eight kinds above (any
