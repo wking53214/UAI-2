@@ -21,7 +21,9 @@ disagreement is the most useful thing you can do: each is either a bug in yours,
 | `contracts/uai1/run_conformance.py` | stand-alone runner (standard library only) that drives your adapter program through the suite |
 | `contracts/uai-vectors.json`, `contracts/digest-vectors.json` | signed envelopes and the canonical digest answer key |
 | `docs/interop/SECURITY_PROFILES.md` | crypto and transport profiles, and what each does not give |
-| `interop/conformance/reference_adapter.py`, `interop/node/conformance_adapter.mjs` | two example adapters (about 30 lines each) |
+| `docs/interop/implementers/DISAGREEMENT_REPORT.md` | a template for reporting where your implementation and the suite or the text disagree |
+| `contracts/uai1/build_kit.py` | builds a zip of everything above with a SHA-256 manifest and **no implementation source** (`python contracts/uai1/build_kit.py --out uai1-kit.zip`); hand that to a team that should work from the documents alone |
+| `interop/conformance/reference_adapter.py`, `interop/node/conformance_adapter.mjs` | two example adapters (about 30 lines each). **Not in the kit**: they sit on the shipped implementations |
 
 ## Minimal implementation, in order
 
@@ -87,6 +89,6 @@ Runnable, using only the supported API: `interop/examples/quickstart.py`, `inter
 
 ## What this package does not establish
 
-That a third party can implement UAI-1 from it (no one has), that the specification is free of ambiguity beyond the 33
-cases, that the two shipped implementations are correct against anything outside this repository, or anything about the
+That a third party can implement UAI-1 from it (no one has), that the specification is free of ambiguity beyond what the
+suite's cases cover, that the two shipped implementations are correct against anything outside this repository, or anything about the
 content a participant sends. Delegation is deliberately not specified.
