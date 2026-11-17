@@ -20,6 +20,9 @@ Supported providers (each has answered through the real service): Anthropic, Goo
 `copilot` reaches the same route). Their clients are written and tested offline, but no key was ever available to call the real
 service. GitHub retired GitHub Models on 2026-07-30.
 
+OpenRouter (a router that also serves free models) is written and tested offline and is refused the same way until it has
+answered live; run `interop/live_providers.py` with `OPENROUTER_API_KEY` and an `OPENROUTER_MODEL` ending in `:free`.
+
 ## The rule everything here follows
 
 A model is an untrusted advisor. A model recommends, the decider's policy decides, a grant permits, a person approves.

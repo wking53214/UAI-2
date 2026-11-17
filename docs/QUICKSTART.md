@@ -27,6 +27,7 @@ Python standard library.
 | Google Gemini | `gemini` | `GEMINI_API_KEY` |
 | OpenAI (untested: needs `allow_untested=True`) | `openai` | `OPENAI_API_KEY` |
 | Groq | `groq` | `GROQ_API_KEY` |
+| OpenRouter (untested: needs `allow_untested=True`) | `openrouter` | `OPENROUTER_API_KEY` (a model id ending in `:free` costs nothing) |
 | Cloudflare Workers AI | `cloudflare` | `CLOUDFLARE_API_TOKEN`, and your `CLOUDFLARE_ACCOUNT_ID` |
 | Azure OpenAI (untested: needs `allow_untested=True`) | `copilot-azure` (and `copilot`, its old name: GitHub retired GitHub Models on 2026-07-30) | `AZURE_OPENAI_API_KEY`, and your `AZURE_OPENAI_ENDPOINT` |
 

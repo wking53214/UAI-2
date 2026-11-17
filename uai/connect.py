@@ -53,6 +53,7 @@ PROVIDERS: Mapping[str, _Spec] = {
     "copilot-azure": _Spec("copilot-azure-openai", ("AZURE_OPENAI_API_KEY",), _p.copilot_complete,
                            extra=(("base_url", "AZURE_OPENAI_ENDPOINT"),), fixed=(("route", "azure-openai"),)),
     "groq": _Spec("groq", ("GROQ_API_KEY",), _p.groq_complete),
+    "openrouter": _Spec("openrouter", ("OPENROUTER_API_KEY",), _p.openrouter_complete),
     "cloudflare": _Spec("cloudflare-workers-ai", ("CLOUDFLARE_API_TOKEN",), _p.cloudflare_complete,
                         extra=(("account_id", "CLOUDFLARE_ACCOUNT_ID"),), reports_finish=False),
 }
@@ -65,7 +66,7 @@ PROVIDERS = {**PROVIDERS, "copilot": PROVIDERS["copilot-azure"]}
 #: service (no key was ever available). `connect` refuses them unless the caller passes `allow_untested=True`, so nobody reads
 #: a working front door as a shown one. To remove a name from this set, run `interop/live_providers.py` with a real key and
 #: keep the rows (docs/EVIDENCE.md, section 6).
-UNTESTED = frozenset({"openai", "copilot-azure", "copilot"})
+UNTESTED = frozenset({"openai", "copilot-azure", "copilot", "openrouter"})
 
 _COMPLETE = {"end_turn", "STOP", "stop"}
 _CUT_OFF = {"max_tokens", "MAX_TOKENS", "length"}

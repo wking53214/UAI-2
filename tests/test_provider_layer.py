@@ -25,13 +25,13 @@ from test_providers import anthropic_ok, exchange, gemini_ok, openai_ok  # type:
 
 from cns_interop.envelope import Refused  # noqa: E402
 from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete, copilot_complete,  # noqa: E402
-                                   gemini_complete, groq_complete, openai_complete)
+                                   gemini_complete, groq_complete, openai_complete, openrouter_complete)
 
 KEY = "sk-test-SECRET-0123456789abcdef"
-ALL = ["anthropic", "gemini", "openai", "copilot", "copilot-azure", "groq", "cloudflare"]
-NEW = ["groq", "cloudflare"]
+ALL = ["anthropic", "gemini", "openai", "copilot", "copilot-azure", "groq", "cloudflare", "openrouter"]
+NEW = ["groq", "cloudflare", "openrouter"]
 LABEL = {"anthropic": "anthropic", "gemini": "google", "openai": "openai", "copilot": "copilot-github-models",
-         "copilot-azure": "copilot-azure-openai", "groq": "groq", "cloudflare": "cloudflare-workers-ai"}
+         "copilot-azure": "copilot-azure-openai", "groq": "groq", "cloudflare": "cloudflare-workers-ai", "openrouter": "openrouter"}
 KEY_HEADER = {"anthropic": "x-api-key", "gemini": "x-goog-api-key", "copilot-azure": "api-key"}
 
 
@@ -98,7 +98,8 @@ def make(provider, url, log, **kw):
         return copilot_complete(KEY, "model-x", log, route="azure-openai", base_url=url, **kw)
     if provider == "cloudflare":
         return cloudflare_complete(KEY, "@cf/meta/model-x", log, account_id="acct123", base_url=url, **kw)
-    fn = {"anthropic": anthropic_complete, "gemini": gemini_complete, "openai": openai_complete, "groq": groq_complete}[provider]
+    fn = {"anthropic": anthropic_complete, "gemini": gemini_complete, "openai": openai_complete, "groq": groq_complete,
+          "openrouter": openrouter_complete}[provider]
     return fn(KEY, "model-x", log, base_url=url, **kw)
 
 
@@ -132,8 +133,8 @@ def test_an_honest_answer_becomes_a_verified_decision_and_the_call_is_recorded(p
         assert rec.model_requested.endswith("model-x") and rec.http_status == 200
         assert len(rec.request_sha256) == 64 and len(rec.response_sha256) == 64
         assert (rec.input_tokens, rec.output_tokens) == (7, 3)
-        assert rec.finish_reason == ("stop" if provider == "groq" else "")     # Workers AI never says why it stopped
-        assert rec.request_id == ("c1" if provider == "groq" else "ray-123")
+        assert rec.finish_reason == ("stop" if provider != "cloudflare" else "")     # Workers AI never says why it stopped
+        assert rec.request_id == ("c1" if provider != "cloudflare" else "ray-123")
         low = exchange(make(provider, stub.url, log), log, income=100_000)
         assert low.verdict == "retry" and not low.allowed                      # the policy re-checked; the model's pass did not stand
     finally:
@@ -148,7 +149,7 @@ def test_groq_and_cloudflare_send_what_each_api_expects_and_nothing_else():
             sent = stub.requests[0]
             body = json.loads(sent["raw"])
             assert sent["headers"]["authorization"] == "Bearer " + KEY and sent["headers"]["user-agent"] == "STACK-UAI2-Provider/1.0"
-            if provider == "groq":
+            if provider != "cloudflare":
                 assert sent["path"] == "/chat/completions"
                 assert body == {"model": "model-x", "messages": [{"role": "user", "content": "the prompt"}], "max_tokens": 512}
             else:
@@ -196,6 +197,10 @@ SHAPES = {
                    "no result": {"success": True}, "no text": {"success": True, "result": {"response": ""}},
                    "text is not text": {"success": True, "result": {"response": ["x"]}}},
 }
+
+SHAPES["openrouter"] = {**SHAPES["groq"],
+    "an error in a 200 with no choices": {"error": {"code": 402, "message": "insufficient credits"}},
+    "finished with error": {"choices": [{"finish_reason": "error", "message": {"role": "assistant", "content": "x"}}]}}
 
 
 @pytest.mark.parametrize("provider,name", [(p, n) for p in NEW for n in sorted(SHAPES[p])])
@@ -577,5 +582,41 @@ def test_a_cloudflare_chat_completions_answer_that_is_not_exactly_one_finished_t
     try:
         with pytest.raises(Refused, match=why):
             complete("p")
+    finally:
+        stub.close()
+
+
+# ------------------------------------------------------------------------------------- OpenRouter specifics
+def test_openrouter_goes_to_its_own_address_and_a_free_model_id_travels_in_the_body_only():
+    stub, log = serving("openrouter", plain), ProvenanceLog()
+    try:
+        openrouter_complete(KEY, "vendor/some-model:free", log, base_url=stub.url)("hi")
+        sent = stub.requests[0]
+        assert sent["path"] == "/chat/completions" and json.loads(sent["raw"])["model"] == "vendor/some-model:free"
+        assert KEY not in sent["path"] and log.records[0].provider == "openrouter"
+    finally:
+        stub.close()
+    assert openrouter_complete(KEY, "m", ProvenanceLog()) is not None          # the default address is https, so it is accepted
+
+
+def test_openrouter_records_the_model_that_actually_answered_and_does_not_assume_it_is_the_one_asked_for():
+    out = {**envelope("openrouter", "ok"), "model": "other-vendor/served-instead"}
+    stub, log = answering(200, json.dumps(out).encode()), ProvenanceLog()
+    try:
+        assert openrouter_complete(KEY, "vendor/asked-for:free", log, base_url=stub.url)("hi") == "ok"
+        assert log.records[0].model_requested == "vendor/asked-for:free"
+        assert log.records[0].model_reported == "other-vendor/served-instead"
+    finally:
+        stub.close()
+
+
+@pytest.mark.parametrize("reason", ["error", "content_filter", "tool_calls", "something-new"])
+def test_openrouter_refuses_every_finish_reason_but_stop(reason):
+    out = envelope("openrouter", "x")
+    out["choices"][0]["finish_reason"] = reason
+    stub = answering(200, json.dumps(out).encode())
+    try:
+        with pytest.raises(Refused):
+            openrouter_complete(KEY, "m", ProvenanceLog(), base_url=stub.url)("hi")
     finally:
         stub.close()

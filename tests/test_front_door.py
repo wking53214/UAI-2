@@ -39,10 +39,10 @@ from cns_interop.trust import TrustPolicy  # noqa: E402
 from uai.protocol import CompletionStatus, ModelProvider, ModelRequest, ModelResponse, TokenUsage  # noqa: E402
 
 NAME = {"anthropic": "anthropic", "gemini": "gemini", "openai": "openai", "copilot": "copilot", "copilot-azure": "copilot-azure",
-        "groq": "groq", "cloudflare": "cloudflare"}
+        "groq": "groq", "cloudflare": "cloudflare", "openrouter": "openrouter"}
 KEY_VAR = {"anthropic": "ANTHROPIC_API_KEY", "gemini": "GEMINI_API_KEY", "openai": "OPENAI_API_KEY",
            "copilot": "AZURE_OPENAI_API_KEY", "copilot-azure": "AZURE_OPENAI_API_KEY", "groq": "GROQ_API_KEY",
-           "cloudflare": "CLOUDFLARE_API_TOKEN"}
+           "cloudflare": "CLOUDFLARE_API_TOKEN", "openrouter": "OPENROUTER_API_KEY"}
 MODEL = {p: "model-x" for p in ALL} | {"cloudflare": "@cf/meta/model-x"}
 # GitHub Models is retired (2026-07-30): the front door's `copilot` now means the Azure OpenAI route, so through `uai.connect`
 # it is recorded under the Azure label. The lower-level client's own default route is untouched and still tested elsewhere.
@@ -99,7 +99,7 @@ def test_the_anthropic_key_is_read_from_the_uai_variable_first():
 
 @pytest.mark.parametrize("bad", ["", "  ", "bard", "gemini,groq", "../groq", None, 7])
 def test_an_unknown_provider_is_refused_with_the_list_of_known_ones(bad):
-    with pytest.raises(ValueError, match="expected one of: anthropic, cloudflare, copilot, copilot-azure, gemini, groq, openai"):
+    with pytest.raises(ValueError, match="expected one of: anthropic, cloudflare, copilot, copilot-azure, gemini, groq, openai, openrouter"):
         uai.connect(bad, "m", environ={})
 
 
@@ -460,7 +460,7 @@ def test_refused_is_what_a_strict_client_raises_so_callers_have_one_thing_to_cat
         stub.close()
 
 
-def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks_its_account_or_address(monkeypatch, capsys):
+def test_the_live_runner_knows_all_eight_routes_and_will_not_call_one_that_lacks_its_account_or_address(monkeypatch, capsys):
     import live_providers
 
     for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID", "AZURE_OPENAI_ENDPOINT"]:
@@ -471,9 +471,9 @@ def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks
     monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "my-deployment")
     assert live_providers.main([]) == 3                               # nothing executed is never a pass
     out = capsys.readouterr().out
-    assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
+    assert out.count("NOT EXECUTED") == 7 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
     assert KEY not in out
-    for name in ("anthropic", "google", "openai", "groq", "cloudflare-workers-ai", "copilot-azure-openai"):
+    for name in ("anthropic", "google", "openai", "groq", "openrouter", "cloudflare-workers-ai", "copilot-azure-openai"):
         assert f"NOT EXECUTED: {name} " in out
 
 
@@ -536,9 +536,10 @@ def test_the_old_copilot_name_reaches_the_azure_route_and_never_reads_the_retire
         uai.connect("copilot", "m", environ={"GITHUB_MODELS_TOKEN": KEY}, allow_untested=True)
 
 
-@pytest.mark.parametrize("name", ["openai", "copilot-azure", "copilot", "OpenAI  "])
+@pytest.mark.parametrize("name", ["openai", "copilot-azure", "copilot", "OpenAI  ", "openrouter"])
 def test_a_route_never_called_against_the_real_service_is_refused_by_default_and_the_refusal_names_why(name):
-    env = {"OPENAI_API_KEY": KEY, "AZURE_OPENAI_API_KEY": KEY, "AZURE_OPENAI_ENDPOINT": "https://res.example"}
+    env = {"OPENAI_API_KEY": KEY, "AZURE_OPENAI_API_KEY": KEY, "AZURE_OPENAI_ENDPOINT": "https://res.example",
+           "OPENROUTER_API_KEY": KEY}
     with pytest.raises(ValueError) as e:
         uai.connect(name, "m", environ=env)
     assert "never been called against the real service" in str(e.value) and "allow_untested=True" in str(e.value)
@@ -550,7 +551,7 @@ def test_a_route_never_called_against_the_real_service_is_refused_by_default_and
 
 
 def test_only_the_routes_with_no_live_evidence_are_listed_as_untested():
-    assert uai.UNTESTED == frozenset({"openai", "copilot-azure", "copilot"})
+    assert uai.UNTESTED == frozenset({"openai", "copilot-azure", "copilot", "openrouter"})
     assert uai.UNTESTED <= set(uai.PROVIDERS)
     for name in sorted(set(uai.PROVIDERS) - uai.UNTESTED):      # anthropic, gemini, groq, cloudflare have answered live
         got = uai.connect(name, "m", environ={**{v: KEY for s in uai.PROVIDERS.values() for v in s.key_vars},
