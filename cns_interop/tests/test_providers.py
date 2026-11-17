@@ -574,12 +574,12 @@ def test_an_error_message_that_echoes_the_key_is_redacted_and_long_ones_are_capp
 
 
 @pytest.mark.parametrize("provider", ["gemini", "openai", "copilot"])
-def test_other_providers_keep_their_plain_http_error_reason(provider):
+def test_other_providers_now_carry_the_apis_error_type_and_message_in_their_http_error_reason(provider):
     body = {"error": {"type": "x", "message": "provider text stays out of the record"}}
     stub, log = Stub(lambda p, h, b: (400, {"content-type": "application/json"}, json.dumps(body).encode())), ProvenanceLog()
     try:
         with pytest.raises(Refused) as e:
             make(provider, stub, log)("q")
-        assert e.value.reason == "the provider answered HTTP 400"
+        assert e.value.reason == "the provider answered HTTP 400 (x: provider text stays out of the record)"
     finally:
         stub.close()

@@ -203,19 +203,40 @@ def _post(url: str, headers: Dict[str, str], body: Dict[str, Any], timeout_s: fl
 
 
 def _error_detail(raw: bytes, secrets: Tuple[str, ...]) -> str:
-    """The API's own error type and message from `{"error": {"type", "message"}}`, capped, with any secret removed. Else ''."""
+    """The API's own error type and message, capped, with any secret removed. Else ''.
+
+    Read from `{"error": {"type", "message"}}` (Anthropic, OpenAI and the services that copy it), where `status` or `code` stands in
+    for a missing `type` (Gemini sends `status`; OpenRouter sends a numeric `code`), and from the first entry of
+    `{"errors": [{"code", "message"}]}` (Cloudflare)."""
     try:
-        err = json.loads(raw.decode("utf-8")).get("error")
+        body = json.loads(raw.decode("utf-8"))
+        err = body.get("error")
+        if not isinstance(err, dict):
+            listed = body.get("errors")
+            err = listed[0] if isinstance(listed, list) and listed else None
     except (ValueError, UnicodeDecodeError, AttributeError):
         return ""
     if not isinstance(err, dict):
         return ""
-    kind, msg = str(err.get("type", ""))[:60], str(err.get("message", ""))[:160]
+    kind, msg = str(err.get("type") or err.get("status") or err.get("code") or "")[:60], str(err.get("message", ""))[:160]
     detail = f"{kind}: {msg}" if kind and msg else (kind or msg)
     for secret in secrets:
         if secret:
             detail = detail.replace(secret, "[key]")
     return " ".join(detail.split())
+
+
+_PLAIN_HEADERS = frozenset({"user-agent", "accept", "content-type"})
+
+
+def _secrets_in(headers: Dict[str, str]) -> Tuple[str, ...]:
+    """What in a request's headers must never be echoed back into a record: each credential header's value, and the key alone."""
+    out = []
+    for name, value in headers.items():
+        if name.lower() not in _PLAIN_HEADERS and value:
+            out.append(value)
+            out.append(value.split(" ", 1)[-1])
+    return tuple(out)
 
 
 def _read_json(status: int, raw: bytes, max_bytes: int, *, detail_secrets: Optional[Tuple[str, ...]] = None) -> Dict[str, Any]:
@@ -346,7 +367,7 @@ def gemini_complete(api_key: str, model: str, log: ProvenanceLog, *, base_url: s
         url = f"{base_url.rstrip('/')}/v1beta/models/{urllib.parse.quote(model)}:generateContent"
         status, raw = _post(url, {"x-goog-api-key": api_key}, body, timeout_s, max_response_bytes, rec)
         rec.response_sha256 = _digest(raw[:max_response_bytes])
-        out = _read_json(status, raw, max_response_bytes)
+        out = _read_json(status, raw, max_response_bytes, detail_secrets=(api_key,))
         rec.model_reported = str(out.get("modelVersion", ""))
         _usage(rec, out.get("usageMetadata"), "promptTokenCount", "candidatesTokenCount")
         _request_id(rec, out.get("responseId"))
@@ -372,7 +393,7 @@ def _chat_call(model: str, prompt: str, rec: Provenance, url: str, headers: Dict
     rec.request_sha256 = _digest(_encode(body))
     status, raw = _post(url, headers, body, timeout_s, max_bytes, rec)
     rec.response_sha256 = _digest(raw[:max_bytes])
-    out = _read_json(status, raw, max_bytes)
+    out = _read_json(status, raw, max_bytes, detail_secrets=_secrets_in(headers))
     rec.model_reported = str(out.get("model", ""))
     _usage(rec, out.get("usage"), "prompt_tokens", "completion_tokens")
     _request_id(rec, out.get("id"))
@@ -476,7 +497,7 @@ def cloudflare_complete(api_key: str, model: str, log: ProvenanceLog, *, account
         status, raw = _post(url, {"authorization": "Bearer " + api_key, "user-agent": _USER_AGENT}, body, timeout_s,
                             max_response_bytes, rec)
         rec.response_sha256 = _digest(raw[:max_response_bytes])
-        out = _read_json(status, raw, max_response_bytes)
+        out = _read_json(status, raw, max_response_bytes, detail_secrets=(api_key,))
         if out.get("success") is not True:
             raise _refused("the provider reported an unsuccessful inference", "provider_error")
         result = out.get("result")

@@ -620,3 +620,63 @@ def test_openrouter_refuses_every_finish_reason_but_stop(reason):
             openrouter_complete(KEY, "m", ProvenanceLog(), base_url=stub.url)("hi")
     finally:
         stub.close()
+
+
+# ------------------------------------------------------------------------------------- the provider's own error text
+ERROR_SHAPES = {
+    "gemini": (404, {"error": {"code": 404, "message": "models/nope is not found", "status": "NOT_FOUND"}},
+               "HTTP 404 (NOT_FOUND: models/nope is not found)"),
+    "openai": (404, {"error": {"message": "The model `nope` does not exist", "type": "invalid_request_error",
+                               "code": "model_not_found"}}, "HTTP 404 (invalid_request_error: The model `nope` does not exist)"),
+    "groq": (404, {"error": {"message": "The model `nope` does not exist", "type": "invalid_request_error"}},
+             "HTTP 404 (invalid_request_error: The model `nope` does not exist)"),
+    "openrouter": (402, {"error": {"code": 402, "message": "insufficient credits"}}, "HTTP 402 (402: insufficient credits)"),
+    "copilot-azure": (401, {"error": {"code": "401", "message": "Access denied due to invalid subscription key"}},
+                      "HTTP 401 (401: Access denied due to invalid subscription key)"),
+    "cloudflare": (400, {"success": False, "errors": [{"code": 7000, "message": "No route for that URI"}], "result": None},
+                   "HTTP 400 (7000: No route for that URI)"),
+}
+
+
+@pytest.mark.parametrize("provider", sorted(ERROR_SHAPES))
+def test_an_http_error_carries_the_providers_own_type_and_message_so_a_billing_failure_does_not_look_like_a_bad_request(provider):
+    status, body, expect = ERROR_SHAPES[provider]
+    stub, log = answering(status, json.dumps(body).encode()), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make(provider, stub.url, log)("hi")
+        assert expect in e.value.reason and e.value.code == "provider"
+        assert log.records[-1].outcome == "rejected" and expect in log.records[-1].call
+        assert KEY not in e.value.reason
+    finally:
+        stub.close()
+
+
+@pytest.mark.parametrize("provider", sorted(ERROR_SHAPES))
+def test_an_error_message_that_echoes_the_key_is_redacted_for_every_provider_and_stays_capped(provider):
+    status, body, _ = ERROR_SHAPES[provider]
+    text = "bad key " + KEY + " Bearer " + KEY + " " + "x" * 500
+    if provider == "cloudflare":
+        body = {**body, "errors": [{**body["errors"][0], "message": text}]}
+    else:
+        body = {"error": {**body["error"], "message": text}}
+    stub, log = answering(status, json.dumps(body).encode()), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make(provider, stub.url, log)("hi")
+        assert KEY not in e.value.reason and "[key]" in e.value.reason and len(e.value.reason) < 320
+        assert KEY not in json.dumps([r.__dict__ for r in log.records])
+    finally:
+        stub.close()
+
+
+@pytest.mark.parametrize("provider", sorted(ERROR_SHAPES))
+@pytest.mark.parametrize("raw", [b"<html>nope</html>", b'{"error": "boom"}', b'{"errors": "x"}', b'{"errors": []}', b"[1]", b'{"error": {}}'])
+def test_an_error_body_in_no_known_shape_adds_nothing_and_breaks_nothing(provider, raw):
+    stub, log = answering(500, raw), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make(provider, stub.url, log)("hi")
+        assert e.value.reason == "the provider answered HTTP 500" and e.value.code == "provider"
+    finally:
+        stub.close()
