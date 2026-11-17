@@ -15,13 +15,11 @@ Python or in Node.
 | A second implementation | `interop/node/` | Node, sharing no code with the Python one, held to the same answer key |
 | For other implementers | `contracts/uai1/` | Schema, error registry, a 72-case conformance suite and its runner |
 
-Supported providers (each has answered through the real service): Anthropic, Google Gemini, Groq, Cloudflare Workers AI.
+Supported providers (each has answered through the real service): Anthropic, Google Gemini, Groq, Cloudflare Workers AI,
+OpenRouter (a free model, two calls, 2026-11-17).
 **Not supported yet, refused by `uai.connect` unless you pass `allow_untested=True`:** OpenAI and Azure OpenAI (its old name
 `copilot` reaches the same route). Their clients are written and tested offline, but no key was ever available to call the real
 service. GitHub retired GitHub Models on 2026-07-30.
-
-OpenRouter (a router that also serves free models) is written and tested offline and is refused the same way until it has
-answered live; run `interop/live_providers.py` with `OPENROUTER_API_KEY` and an `OPENROUTER_MODEL` ending in `:free`.
 
 ## The rule everything here follows
 

@@ -66,7 +66,7 @@ PROVIDERS = {**PROVIDERS, "copilot": PROVIDERS["copilot-azure"]}
 #: service (no key was ever available). `connect` refuses them unless the caller passes `allow_untested=True`, so nobody reads
 #: a working front door as a shown one. To remove a name from this set, run `interop/live_providers.py` with a real key and
 #: keep the rows (docs/EVIDENCE.md, section 6).
-UNTESTED = frozenset({"openai", "copilot-azure", "copilot", "openrouter"})
+UNTESTED = frozenset({"openai", "copilot-azure", "copilot"})
 
 _COMPLETE = {"end_turn", "STOP", "stop"}
 _CUT_OFF = {"max_tokens", "MAX_TOKENS", "length"}
