@@ -45,3 +45,14 @@ def test_conformance_labels_match_the_suite_size():
     evidence = (ROOT / "docs" / "EVIDENCE.md").read_text(encoding="utf-8")
     m = re.search(r"conformance (\d+) of (\d+)", evidence)
     assert m and int(m.group(1)) == int(m.group(2)) == n, f"EVIDENCE.md last-run line does not say {n} of {n}"
+
+
+def test_evidence_and_release_readiness_name_the_same_green_ci_run():
+    """The two status documents must cite the same current CI run and commit, so one cannot be updated without the other."""
+    ev = (ROOT / "docs" / "EVIDENCE.md").read_text(encoding="utf-8")
+    rr = (ROOT / "docs" / "RELEASE_READINESS.md").read_text(encoding="utf-8")
+    m_ev = re.search(r"Last full run: CI run #(\d+) on the default branch \(`([0-9a-f]{7,40})`", ev)
+    assert m_ev, "EVIDENCE.md no longer states the last full CI run in the expected form"
+    m_rr = re.search(r"green on this repository's default branch.*?run #(\d+) on `([0-9a-f]{7,40})`", rr, re.S)
+    assert m_rr, "RELEASE_READINESS.md no longer states the current green CI run"
+    assert m_ev.groups() == m_rr.groups(), f"EVIDENCE.md says {m_ev.groups()}, RELEASE_READINESS.md says {m_rr.groups()}"

@@ -17,8 +17,8 @@ Moved to `CHANGELOG.md`.
 
 ## Before tagging
 
-- [x] CI is green on this repository's default branch for Python 3.10 to 3.13: run #114 on `d2cc38d` (the PR #29
-      merge), 2026-11-14 (earlier: run #36 on `60e103a`, the PR #8 merge, 2026-11-12). It runs on every push. From the PR #4 merge to the PR #7 merge it failed at the type-check
+- [x] CI is green on this repository's default branch for Python 3.10 to 3.13: run #126 on `8e721ab` (the PR #33
+      merge), 2026-11-17 (earlier: run #114 on `d2cc38d`, the PR #29 merge, 2026-11-14; before that: run #36 on `60e103a`, the PR #8 merge, 2026-11-12). It runs on every push. From the PR #4 merge to the PR #7 merge it failed at the type-check
       step only (tests, conformance and lint passed on all four versions); PR #8 fixed it. Keep it green: a red main
       reopens this item.
 - [ ] One live run per provider you intend to name as supported (`python interop/live_providers.py --out ...`), with
