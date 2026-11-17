@@ -1,0 +1,76 @@
+[
+ {
+  "executed": false,
+  "provider": "anthropic"
+ },
+ {
+  "executed": false,
+  "provider": "google"
+ },
+ {
+  "executed": false,
+  "provider": "openai"
+ },
+ {
+  "executed": false,
+  "provider": "groq"
+ },
+ {
+  "below": {
+   "refused": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered"
+  },
+  "clears": {
+   "reasons": [
+    "doc_type is exactly paystub, which is one of the accepted document types.",
+    "monthly_income_cents is 512000, a whole number at or above the required 450000."
+   ],
+   "verdict": "pass"
+  },
+  "executed": true,
+  "live": true,
+  "model": "inclusionai/ling-3.2-flash:free",
+  "provenance": [
+   {
+    "call": "ok",
+    "finish_reason": "stop",
+    "http_status": 200,
+    "input_tokens": 558,
+    "latency_ms": 13391,
+    "model_reported": "inclusionai/ling-3.2-flash:free",
+    "model_requested": "inclusionai/ling-3.2-flash:free",
+    "outcome": "accepted",
+    "output_tokens": 331,
+    "provider": "openrouter",
+    "reason": "verdict pass",
+    "request_id": "gen-1794952782-FFXux9ZTzVyPDU5RRyJW",
+    "request_sha256": "e0e0df44415696a7a5cd07c2f545a57d89e829ed9ff39d484ba096a65fe71c0d",
+    "response_sha256": "97b1ee8b06b2dc950490b0991fb0b47d96f7f2cf4c15adf4a326ecb87c61dd0f"
+   },
+   {
+    "call": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+    "finish_reason": "length",
+    "http_status": 200,
+    "input_tokens": 558,
+    "latency_ms": 13965,
+    "model_reported": "inclusionai/ling-3.2-flash:free",
+    "model_requested": "inclusionai/ling-3.2-flash:free",
+    "outcome": "rejected",
+    "output_tokens": 512,
+    "provider": "openrouter",
+    "reason": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+    "request_id": "gen-1794952795-m7Ojy0xrKkfZxGMeeLeH",
+    "request_sha256": "2b29e238136be5f6a56d7709f31e0de17c2a776b253b358066ef71eeac72eb58",
+    "response_sha256": "6cd2d0ac51096232cb55d75ac07674f8a4547adf169c6fbdbed3ab5631f38947"
+   }
+  ],
+  "provider": "openrouter"
+ },
+ {
+  "executed": false,
+  "provider": "cloudflare-workers-ai"
+ },
+ {
+  "executed": false,
+  "provider": "copilot-azure-openai"
+ }
+]
