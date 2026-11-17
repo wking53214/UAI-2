@@ -50,6 +50,9 @@ yours, a bug in ours, or a sentence in the spec that needs fixing. All three are
 python3 contracts/uai1/run_conformance.py --cmd "<your adapter command>"
 ```
 
+To hand a team only the documents, with no implementation source, build the kit: `python contracts/uai1/build_kit.py --out uai1-kit.zip`
+(contents and SHA-256 manifest inside). Reports of disagreements can use `docs/interop/implementers/DISAGREEMENT_REPORT.md`.
+
 Your adapter reads one JSON request per line on stdin and writes one JSON answer per line on stdout; the protocol is in
 `docs/interop/implementers/README.md`. Report a disagreement as an issue: the case name, what you returned, what the suite
 expected.
