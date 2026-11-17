@@ -4,7 +4,7 @@
     python interop/jury.py --summary jury.jsonl                        # read a finished run again
 
 Jurors are read from the same variables as live_providers.py: ANTHROPIC_MODEL (plus --anthropic-models for more than
-one Claude juror), GEMINI_MODEL, GROQ_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID. Each of the last three may be a
+one Claude juror), GEMINI_MODEL, GROQ_MODEL, OPENROUTER_MODEL, CLOUDFLARE_MODEL with CLOUDFLARE_ACCOUNT_ID. Each of the last three may be a
 comma list of models (one juror each): Groq and Cloudflare host several model families under one key. A company with no key
 is left out and said so. (GitHub Models, once a free route here, was retired by GitHub on 2026-07-30 and is not a juror.)
 
@@ -41,7 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from cns_interop.adapter import AdapterJudge, PromptedModelAdapter, ProviderInfo  # noqa: E402
 from cns_interop.providers import (ProvenanceLog, anthropic_complete, cloudflare_complete,  # noqa: E402
-                                   gemini_complete, groq_complete)
+                                   gemini_complete, groq_complete, openrouter_complete)
 from live_providers import CAP, policy  # noqa: E402
 
 PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's usage page is the authoritative number
@@ -51,7 +51,7 @@ PRICE = {  # Anthropic, (input, output) USD per million tokens; the console's us
     "claude-fable-5-2": (8.00, 40.00),
 }
 MAX_TOKENS = 2000
-SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0,
+SPACING_S = {"anthropic": 0.0, "google": 12.0, "groq": 6.0, "openrouter": 4.0,
              "cloudflare-workers-ai": 1.0}  # a guess at free-tier pace; the 2026-11-11 runs saw Gemini rate-limit at 4.5 s
 INVALID = (400, 402, 404, 422)  # the provider refused the request itself: a bad model name, no credit, a bad limit
 PREFLIGHT_DOC = ("honest", "paystub-900000", {"doc_type": "paystub", "monthly_income_cents": 900_000}, "pass")
@@ -97,6 +97,7 @@ def jurors_from_env(env: Dict[str, str], anthropic_models: List[str], stub: Opti
             print(f"NOT EXECUTED: anthropic {model} (no price for it in PRICE)")
     simple = (("google", "GEMINI_API_KEY", "GEMINI_MODEL", gemini_complete),
               ("groq", "GROQ_API_KEY", "GROQ_MODEL", groq_complete),
+              ("openrouter", "OPENROUTER_API_KEY", "OPENROUTER_MODEL", openrouter_complete),
               ("cloudflare-workers-ai", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_MODEL", cloudflare_complete))
     for provider, key_var, model_var, fn in simple:
         k = env.get(key_var, "").strip()

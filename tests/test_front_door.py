@@ -460,10 +460,10 @@ def test_refused_is_what_a_strict_client_raises_so_callers_have_one_thing_to_cat
         stub.close()
 
 
-def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks_its_account_or_address(monkeypatch, capsys):
+def test_the_live_runner_knows_all_eight_routes_and_will_not_call_one_that_lacks_its_account_or_address(monkeypatch, capsys):
     import live_providers
 
-    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID", "AZURE_OPENAI_ENDPOINT"]:
+    for name in list(KEY_VAR.values()) + ["UAI_ANTHROPIC_API_KEY", "CLOUDFLARE_ACCOUNT_ID", "AZURE_OPENAI_ENDPOINT", "OPENROUTER_API_KEY"]:
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("CLOUDFLARE_API_TOKEN", KEY)
     monkeypatch.setenv("CLOUDFLARE_MODEL", "@cf/meta/m")
@@ -471,9 +471,9 @@ def test_the_live_runner_knows_all_seven_routes_and_will_not_call_one_that_lacks
     monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "my-deployment")
     assert live_providers.main([]) == 3                               # nothing executed is never a pass
     out = capsys.readouterr().out
-    assert out.count("NOT EXECUTED") == 6 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
+    assert out.count("NOT EXECUTED") == 7 and "CLOUDFLARE_ACCOUNT_ID" in out and "AZURE_OPENAI_ENDPOINT" in out
     assert KEY not in out
-    for name in ("anthropic", "google", "openai", "groq", "cloudflare-workers-ai", "copilot-azure-openai"):
+    for name in ("anthropic", "google", "openai", "groq", "openrouter", "cloudflare-workers-ai", "copilot-azure-openai"):
         assert f"NOT EXECUTED: {name} " in out
 
 
