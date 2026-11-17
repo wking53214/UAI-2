@@ -18,7 +18,7 @@ Run everything that is not live:
     python contracts/uai1/run_conformance.py --cmd "python interop/conformance/reference_adapter.py"
     python contracts/uai1/run_conformance.py --cmd "node interop/node/conformance_adapter.mjs"
 
-Last full run (2026-11-14, CI run #114 on the default branch): 1581 tests passed on Python 3.12 and 3.13 in CI run #114 (the logs for 3.10 and 3.11 did not show a final count), none skipped; conformance 72 of 72 for Python and for Node.
+Last full run: CI run #126 on the default branch (`8e721ab`, the PR #33 merge, 2026-11-17): all four Python jobs (3.10 to 3.13) passed tests, conformance 72 of 72 for Python and for Node, ruff and mypy. CI logs were not read for a per-version test count. A separate cloud-local run (not CI) of the same commit on 2026-11-17, Python 3.13, with real PostgreSQL 16: 1593 passed, none skipped, conformance 72 of 72 for Python and for Node.
 
 ## 1. The signed format (UAI-1)
 
