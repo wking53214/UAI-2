@@ -680,3 +680,17 @@ def test_an_error_body_in_no_known_shape_adds_nothing_and_breaks_nothing(provide
         assert e.value.reason == "the provider answered HTTP 500" and e.value.code == "provider"
     finally:
         stub.close()
+
+
+@pytest.mark.parametrize("provider", ["openai", "groq", "openrouter"])
+def test_an_error_wrapped_in_a_one_element_list_is_read_the_same_way(provider):
+    """Found live, 2026-11-17: Google's OpenAI-style endpoint answers `[{"error": {...}}]`, and the message was being dropped."""
+    body = [{"error": {"code": 404, "message": "This model is no longer available to new users: " + KEY, "status": "NOT_FOUND"}}]
+    stub, log = answering(404, json.dumps(body).encode()), ProvenanceLog()
+    try:
+        with pytest.raises(Refused) as e:
+            make(provider, stub.url, log)("hi")
+        assert "HTTP 404 (NOT_FOUND: This model is no longer available to new users: [key])" in e.value.reason
+        assert KEY not in e.value.reason and KEY not in json.dumps([r.__dict__ for r in log.records])
+    finally:
+        stub.close()

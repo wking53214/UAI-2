@@ -1,0 +1,173 @@
+{
+ "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+ "cases": [
+  {
+   "answer_chars": 2,
+   "behaved_as_expected": true,
+   "change": "nothing: a plain, correct call",
+   "expected": "answered",
+   "label": "baseline",
+   "provenance": [
+    {
+     "call": "ok",
+     "finish_reason": "stop",
+     "http_status": 200,
+     "input_tokens": 8,
+     "latency_ms": 1255,
+     "model_reported": "gemini-3.1-flash-lite",
+     "model_requested": "gemini-3.1-flash-lite",
+     "outcome": "pending",
+     "output_tokens": 1,
+     "provider": "google-openai-compat",
+     "reason": "",
+     "request_id": "1ML8aueeGtq-uMYPubDysAE",
+     "request_sha256": "589001a2ce8eac2230aba74e5d01e28b448fc693f61b4af9457c27ddfe82e863",
+     "response_sha256": "d7e86cb5c56ed6b24773f22566c0d49f1a1398a7a2061de6b2fddbfc53e77e20"
+    }
+   ],
+   "result": "answered"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "model name that no service has",
+   "code": "provider",
+   "expected": "refused",
+   "label": "model-that-does-not-exist",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 404 (NOT_FOUND: models/no-such-model-uai-check is not found for API version v1main, or is not supported for generateContent. Call Mod",
+     "finish_reason": "",
+     "http_status": 404,
+     "input_tokens": null,
+     "latency_ms": 237,
+     "model_reported": "",
+     "model_requested": "no-such-model-uai-check",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "google-openai-compat",
+     "reason": "provider: the provider answered HTTP 404 (NOT_FOUND: models/no-such-model-uai-check is not found for API version v1main, or is not supported for generateContent. Call ModelService.ListModels to see th",
+     "request_id": "",
+     "request_sha256": "bf20ed42c7f8fae7b16f8cf37a1f8b6a14d392608ee6fcec86d59484b39be3c3",
+     "response_sha256": "6defc42b5d1cb8e80b5c5b298fb7fd22ed967532551487008f7eb74757595986"
+    }
+   ],
+   "reason": "the provider answered HTTP 404 (NOT_FOUND: models/no-such-model-uai-check is not found for API version v1main, or is not supported for generateContent. Call ModelService.ListModels to see the list of ava)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "max_tokens of -5",
+   "code": "provider",
+   "expected": "refused",
+   "label": "request-it-cannot-accept",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 400 (INVALID_ARGUMENT: max_tokens must be positive but was -5)",
+     "finish_reason": "",
+     "http_status": 400,
+     "input_tokens": null,
+     "latency_ms": 125,
+     "model_reported": "",
+     "model_requested": "gemini-3.1-flash-lite",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "google-openai-compat",
+     "reason": "provider: the provider answered HTTP 400 (INVALID_ARGUMENT: max_tokens must be positive but was -5)",
+     "request_id": "",
+     "request_sha256": "3612fd6d588d495958c724d687fb36387c374c56ce3345cd9de988efef124900",
+     "response_sha256": "e0b08a151b27a58e7dd8fa219e0bed8dc85542fabf4b61d7b404bbd576926780"
+    }
+   ],
+   "reason": "the provider answered HTTP 400 (INVALID_ARGUMENT: max_tokens must be positive but was -5)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "invalid_response",
+   "change": "max_tokens of 1, so the answer stops at the limit",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-cut-off",
+   "provenance": [
+    {
+     "call": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "finish_reason": "length",
+     "http_status": 200,
+     "input_tokens": 8,
+     "latency_ms": 1084,
+     "model_reported": "gemini-3.1-flash-lite",
+     "model_requested": "gemini-3.1-flash-lite",
+     "outcome": "rejected",
+     "output_tokens": 0,
+     "provider": "google-openai-compat",
+     "reason": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "request_id": "1cL8arWGLufbytMPsfn1qAs",
+     "request_sha256": "4c3b586bb26b970f2c930210d9713f036a45616df935442b93c89432bc1f9f6e",
+     "response_sha256": "7bd1bc7b264af08e1db79e9681d89a217e7fb6fa0358066763d80b8cbd1e0f3c"
+    }
+   ],
+   "reason": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "response_too_large",
+   "change": "the caller allows only 40 bytes back",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-larger-than-allowed",
+   "provenance": [
+    {
+     "call": "the provider's answer is larger than 40 bytes",
+     "finish_reason": "",
+     "http_status": 200,
+     "input_tokens": null,
+     "latency_ms": 1156,
+     "model_reported": "",
+     "model_requested": "gemini-3.1-flash-lite",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "google-openai-compat",
+     "reason": "provider: the provider's answer is larger than 40 bytes",
+     "request_id": "",
+     "request_sha256": "589001a2ce8eac2230aba74e5d01e28b448fc693f61b4af9457c27ddfe82e863",
+     "response_sha256": "a71a345503337e5a46e26d91b8652ef962ec08cf7b986e1beb89ba0abe0e0809"
+    }
+   ],
+   "reason": "the provider's answer is larger than 40 bytes",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "timeout",
+   "change": "a time limit of 0.05 seconds",
+   "code": "provider",
+   "expected": "refused",
+   "label": "runs-out-of-time",
+   "provenance": [
+    {
+     "call": "the provider could not be reached or timed out (TimeoutError)",
+     "finish_reason": "",
+     "http_status": null,
+     "input_tokens": null,
+     "latency_ms": 50,
+     "model_reported": "",
+     "model_requested": "gemini-3.1-flash-lite",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "google-openai-compat",
+     "reason": "provider: the provider could not be reached or timed out (TimeoutError)",
+     "request_id": "",
+     "request_sha256": "589001a2ce8eac2230aba74e5d01e28b448fc693f61b4af9457c27ddfe82e863",
+     "response_sha256": ""
+    }
+   ],
+   "reason": "the provider could not be reached or timed out (TimeoutError)",
+   "result": "refused"
+  }
+ ],
+ "model": "gemini-3.1-flash-lite",
+ "name": "google-openai-compat"
+}

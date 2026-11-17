@@ -207,9 +207,11 @@ def _error_detail(raw: bytes, secrets: Tuple[str, ...]) -> str:
 
     Read from `{"error": {"type", "message"}}` (Anthropic, OpenAI and the services that copy it), where `status` or `code` stands in
     for a missing `type` (Gemini sends `status`; OpenRouter sends a numeric `code`), and from the first entry of
-    `{"errors": [{"code", "message"}]}` (Cloudflare)."""
+    `{"errors": [{"code", "message"}]}` (Cloudflare). Either may arrive as the one element of a list (Google's OpenAI-style endpoint)."""
     try:
         body = json.loads(raw.decode("utf-8"))
+        if isinstance(body, list) and body and isinstance(body[0], dict):
+            body = body[0]            # Google's OpenAI-style endpoint wraps its one error in a list
         err = body.get("error")
         if not isinstance(err, dict):
             listed = body.get("errors")
