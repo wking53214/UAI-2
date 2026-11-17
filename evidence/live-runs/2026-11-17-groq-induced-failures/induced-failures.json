@@ -1,0 +1,174 @@
+{
+ "base_url": "https://api.groq.com/openai/v1",
+ "cases": [
+  {
+   "answer_chars": 2,
+   "behaved_as_expected": true,
+   "change": "nothing: a plain, correct call",
+   "expected": "answered",
+   "label": "baseline",
+   "provenance": [
+    {
+     "call": "ok",
+     "finish_reason": "stop",
+     "http_status": 200,
+     "input_tokens": 78,
+     "latency_ms": 804,
+     "model_reported": "openai/gpt-oss-120b",
+     "model_requested": "openai/gpt-oss-120b",
+     "outcome": "pending",
+     "output_tokens": 64,
+     "provider": "groq",
+     "reason": "",
+     "request_id": "chatcmpl-0b16a71c-7aaa-4bb2-9fe1-61ed59d45793",
+     "request_sha256": "f8c5d2a5d5103f570409411134be80397565eea26217df4ef6cd1cef66417294",
+     "response_sha256": "c42061225030b5dcfa687e3b559d41cb905f07e6a557ca95814ef8b614d6e58c"
+    }
+   ],
+   "result": "answered"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "model name that no service has",
+   "code": "provider",
+   "expected": "refused",
+   "label": "model-that-does-not-exist",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 404 (invalid_request_error: The model `no-such-model-uai-check` does not exist or you do not have access to it. Please pass the full ",
+     "finish_reason": "",
+     "http_status": 404,
+     "input_tokens": null,
+     "latency_ms": 135,
+     "model_reported": "",
+     "model_requested": "no-such-model-uai-check",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "groq",
+     "reason": "provider: the provider answered HTTP 404 (invalid_request_error: The model `no-such-model-uai-check` does not exist or you do not have access to it. Please pass the full model_id including any prefixe",
+     "request_id": "",
+     "request_sha256": "bf20ed42c7f8fae7b16f8cf37a1f8b6a14d392608ee6fcec86d59484b39be3c3",
+     "response_sha256": "e9beca578ea6c34a007302ab2ee59a652677458ba341cd7a0e949684660c66ca"
+    }
+   ],
+   "reason": "the provider answered HTTP 404 (invalid_request_error: The model `no-such-model-uai-check` does not exist or you do not have access to it. Please pass the full model_id including any prefixes.)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "http_error",
+   "change": "max_tokens of -5",
+   "code": "provider",
+   "expected": "refused",
+   "label": "request-it-cannot-accept",
+   "provenance": [
+    {
+     "call": "the provider answered HTTP 400 (invalid_request_error: `max_tokens` has type number -5, but it should be a positive integer)",
+     "finish_reason": "",
+     "http_status": 400,
+     "input_tokens": null,
+     "latency_ms": 140,
+     "model_reported": "",
+     "model_requested": "openai/gpt-oss-120b",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "groq",
+     "reason": "provider: the provider answered HTTP 400 (invalid_request_error: `max_tokens` has type number -5, but it should be a positive integer)",
+     "request_id": "",
+     "request_sha256": "0edd146a3f37321ffb1c64539c56c3c9e0ab6c07597493123eb8b2e2d4dba57c",
+     "response_sha256": "bd1242c5aa8e2f05804cd7165a7f2f7da564463cbe2559229b4abc87e9aeb936"
+    }
+   ],
+   "reason": "the provider answered HTTP 400 (invalid_request_error: `max_tokens` has type number -5, but it should be a positive integer)",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "invalid_response",
+   "change": "max_tokens of 1, so the answer stops at the limit",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-cut-off",
+   "provenance": [
+    {
+     "call": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "finish_reason": "length",
+     "http_status": 200,
+     "input_tokens": 78,
+     "latency_ms": 350,
+     "model_reported": "openai/gpt-oss-120b",
+     "model_requested": "openai/gpt-oss-120b",
+     "outcome": "rejected",
+     "output_tokens": 1,
+     "provider": "groq",
+     "reason": "provider: the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+     "request_id": "chatcmpl-132bdba1-a6f9-4748-87b4-24196b125a6d",
+     "request_sha256": "819c3215ae3da1cf366c5377754af29b6b0c331eea8be6cb136a4f829b4d21b0",
+     "response_sha256": "04f54f47adc006663294bd49eb5b3558d8910774243f0932313e9291552b4aa5"
+    }
+   ],
+   "reason": "the answer did not finish normally (finish_reason 'length'): it may be cut off or filtered",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "response_too_large",
+   "change": "the caller allows only 40 bytes back",
+   "code": "provider",
+   "expected": "refused",
+   "label": "answer-larger-than-allowed",
+   "provenance": [
+    {
+     "call": "the provider's answer is larger than 40 bytes",
+     "finish_reason": "",
+     "http_status": 200,
+     "input_tokens": null,
+     "latency_ms": 532,
+     "model_reported": "",
+     "model_requested": "openai/gpt-oss-120b",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "groq",
+     "reason": "provider: the provider's answer is larger than 40 bytes",
+     "request_id": "a5c1c4190a1105ad-IAD",
+     "request_sha256": "f8c5d2a5d5103f570409411134be80397565eea26217df4ef6cd1cef66417294",
+     "response_sha256": "94c64d366afd297268497a391249c9cb5f271bf161e4d47da7a5ecbd87dfa6f5"
+    }
+   ],
+   "reason": "the provider's answer is larger than 40 bytes",
+   "result": "refused"
+  },
+  {
+   "behaved_as_expected": true,
+   "category": "timeout",
+   "change": "a time limit of 0.05 seconds",
+   "code": "provider",
+   "expected": "refused",
+   "label": "runs-out-of-time",
+   "provenance": [
+    {
+     "call": "the provider could not be reached or timed out (TimeoutError)",
+     "finish_reason": "",
+     "http_status": null,
+     "input_tokens": null,
+     "latency_ms": 50,
+     "model_reported": "",
+     "model_requested": "openai/gpt-oss-120b",
+     "outcome": "rejected",
+     "output_tokens": null,
+     "provider": "groq",
+     "reason": "provider: the provider could not be reached or timed out (TimeoutError)",
+     "request_id": "",
+     "request_sha256": "f8c5d2a5d5103f570409411134be80397565eea26217df4ef6cd1cef66417294",
+     "response_sha256": ""
+    }
+   ],
+   "reason": "the provider could not be reached or timed out (TimeoutError)",
+   "result": "refused"
+  }
+ ],
+ "model": "openai/gpt-oss-120b",
+ "name": "groq",
+ "user_agent": "STACK-UAI2-Provider/1.0"
+}

@@ -90,3 +90,16 @@ def test_a_plain_http_address_to_another_machine_is_refused_before_a_key_is_sent
     monkeypatch.setenv("OPENAI_STYLE_KEY", KEY)
     with pytest.raises(ValueError):
         induced.run_case(induced.CASES[0], "n", bad, KEY, "m")
+
+
+def test_a_user_agent_is_sent_only_when_asked_for(monkeypatch, capsys, tmp_path):
+    stub = service()
+    try:
+        monkeypatch.setenv("OPENAI_STYLE_KEY", KEY)
+        induced.main(["--name", "n", "--base-url", stub.url, "--model", "m"])
+        without = {r["headers"].get("user-agent", "") for r in stub.requests}
+        induced.main(["--name", "n", "--base-url", stub.url, "--model", "m", "--user-agent", "STACK-UAI2-Provider/1.0"])
+        with_flag = {r["headers"].get("user-agent", "") for r in stub.requests[len(stub.requests) // 2:]}
+    finally:
+        stub.close()
+    assert "STACK-UAI2-Provider/1.0" not in without and with_flag == {"STACK-UAI2-Provider/1.0"}

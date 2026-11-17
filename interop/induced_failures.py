@@ -35,13 +35,14 @@ PROMPT = "Reply with exactly the word: ok"
 
 
 def build(name: str, base_url: str, key: str, model: str, log: ProvenanceLog, *, timeout_s: float = 60.0, max_tokens: int = 512,
-          max_response_bytes: int = MAX_RESPONSE_BYTES) -> Callable[[str], str]:
+          max_response_bytes: int = MAX_RESPONSE_BYTES, user_agent: str = "") -> Callable[[str], str]:
     _check_key(key)
     _check_url(base_url)                      # https, or http to this machine only: a key over plain http to another host is readable
     url = base_url.rstrip("/") + "/chat/completions"
 
     def call(prompt: str, rec: Any) -> str:
-        return _chat_call(model, prompt, rec, url, {"authorization": "Bearer " + key}, timeout_s, max_tokens, max_response_bytes)
+        headers = {"authorization": "Bearer " + key, **({"user-agent": user_agent} if user_agent else {})}
+        return _chat_call(model, prompt, rec, url, headers, timeout_s, max_tokens, max_response_bytes)
     return _client(name, model, log, call)
 
 
@@ -61,10 +62,10 @@ CASES: List[Dict[str, Any]] = [
 ]
 
 
-def run_case(case: Dict[str, Any], name: str, base_url: str, key: str, model: str) -> Dict[str, Any]:
+def run_case(case: Dict[str, Any], name: str, base_url: str, key: str, model: str, user_agent: str = "") -> Dict[str, Any]:
     log = ProvenanceLog()
     kw = {k: case[k] for k in ("max_tokens", "timeout_s", "max_response_bytes") if k in case}
-    complete = build(name, base_url, key, case.get("model", model), log, **kw)
+    complete = build(name, base_url, key, case.get("model", model), log, user_agent=user_agent, **kw)
     out: Dict[str, Any] = {"label": case["label"], "change": case["change"], "expected": case["expect"]}
     try:
         text = complete(PROMPT)
@@ -86,17 +87,19 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--base-url", required=True)
     ap.add_argument("--model", required=True)
     ap.add_argument("--key-env", default="OPENAI_STYLE_KEY")
+    ap.add_argument("--user-agent", default="", help="sent as User-Agent; Groq's own client sends STACK-UAI2-Provider/1.0 (default: none, urllib's own)")
     ap.add_argument("--out")
     opts = ap.parse_args(argv)
     key = os.environ.get(opts.key_env, "").strip()
     if not key:
         print(f"NOT EXECUTED: set {opts.key_env}")
         return 3
-    results = [run_case(c, opts.name, opts.base_url, key, opts.model) for c in CASES]
+    results = [run_case(c, opts.name, opts.base_url, key, opts.model, opts.user_agent) for c in CASES]
     for r in results:
         print(f"{'ok ' if r['behaved_as_expected'] else 'BAD'} {r['label']}: {r['result']}"
               + (f" [{r.get('category')}] {r.get('reason')}" if r["result"] == "refused" else ""))
-    blob = json.dumps({"name": opts.name, "base_url": opts.base_url, "model": opts.model, "cases": results}, indent=1, sort_keys=True) + "\n"
+    blob = json.dumps({"name": opts.name, "base_url": opts.base_url, "model": opts.model, "user_agent": opts.user_agent, "cases": results},
+                      indent=1, sort_keys=True) + "\n"
     assert key not in blob
     if opts.out:
         Path(opts.out).write_text(blob)
