@@ -89,7 +89,7 @@ Last full run (2026-11-14, CI run #114 on the default branch): 1581 tests passed
 | An implementation by anyone outside this project | someone builds UAI-1 from `docs/interop/UAI-1.md` and `contracts/uai1/` alone and runs the suite |
 | Two of seven provider routes not live (OpenAI, Azure OpenAI), and a third, GitHub Models, retired | keys for OpenAI and Azure OpenAI, then `python interop/live_providers.py`; the front door's `copilot` name now means the Azure OpenAI route (owner decision, 2026-11-13); the low-level Copilot client keeps its GitHub Models default route (still tested), but `live_providers.py` and the example adapter no longer run GitHub Models |
 | The ledger across separate machines | the section 3 tests run with the database and the processes on different hosts |
-| Signing-key custody and compromise recovery as an operating procedure | a DRAFT is in [docs/KEY_CUSTODY.md](KEY_CUSTODY.md): what the code does (tested) and a procedure with every operating choice left marked DECIDE. Not yet filled in by the owner and never drilled; still open until both are done |
+| Signing-key custody and compromise recovery as an operating procedure | a DRAFT is in [docs/KEY_CUSTODY.md](KEY_CUSTODY.md): what the code does (tested) and a procedure with every operating choice left marked DECIDE. A SIMULATED compromise drill (`interop/key_drill.py`, 9 scenarios, one machine, not operational) is recorded in `evidence/drills/2026-11-17-key-drill/`. Not yet filled in by the owner and never drilled by a person; still open until both are done |
 | A soak longer than 15 minutes, with more than one cause of failure at once | the same `interop/soak.py` for hours; the 15-minute run below is the evidence so far |
 
 ## 7. A note on `reference` cases

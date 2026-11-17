@@ -50,13 +50,22 @@ seed to the process is entirely the operator's job.
 - **An unreadable store is "unavailable", never "empty".** **TESTED** (`::test_an_unreadable_store_is_unavailable_not_empty`).
 - **The Node receiver supports revocation too** (`interop/node/revocation.test.mjs`). **TESTED.**
 
-### Why rotation alone is not compromise recovery (INFERRED)
+### Why rotation alone is not compromise recovery (SIMULATED)
 
 A rotate statement is signed by the old key. Someone holding a stolen key can sign a rotate naming a successor of their
 own. The receiver protections that stop this are the ones above: it follows a rotate only if it chose to, only from a
 pinned predecessor, and an authority's revoke withdraws the successor. So after a compromise, **the revoke from an
 authority the receiver already trusts is what ends the incident**, not the compromised key's own rotate. Plan on that.
-No test builds this exact attack; it follows from the rules above.
+A software simulation of this attack now exists (`interop/key_drill.py`, report and hash in
+`evidence/drills/2026-11-17-key-drill/`, held by `tests/test_key_drill.py`). It is a simulation on one machine, not an operational
+drill. It shows that an authority's revoke ends the incident whether it arrives before or after the attacker's rotate, and adds two facts
+the draft did not have:
+
+- **First statement wins.** If the attacker's rotate reaches a receiver first, the owner's own later rotate to the real successor does not
+  take effect there, and the attacker's successor stays followed until an authority revokes.
+- **A self-revoke does not withdraw it.** Only a revoke from an authority the receiver lists withdraws the successor the key named.
+
+So the owner cannot repair a stolen key by acting as itself; recovery needs the separate authority (2.1) and a new identity (2.4).
 
 ### What the software does not do (OPEN)
 
@@ -128,7 +137,8 @@ separate place for exactly this case.
 
 ### 2.7 Drill
 
-Nothing in Part 2 has been run. Before relying on it, rehearse 2.4 against a test deployment: revoke a test key, time how
+Part 2 has not been run by a person. A **software simulation** of the order of events in 2.4 has been run (see Part 1); it measured
+no time and involved no operator, key store or receiver. Before relying on this procedure, rehearse 2.4 against a test deployment: revoke a test key, time how
 long until every test receiver refuses it, and write down what you find. **DECIDE** the date.
 
 ## What closing this gap still needs

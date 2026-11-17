@@ -1,0 +1,126 @@
+{
+  "kind": "SIMULATED key-compromise drill; not operational",
+  "ok": true,
+  "scenarios": [
+    {
+      "expected": {
+        "new_after": "rotated",
+        "old_after": "untrusted",
+        "old_before": "pinned"
+      },
+      "observed": {
+        "new_after": "rotated",
+        "old_after": "untrusted",
+        "old_before": "pinned"
+      },
+      "ok": true,
+      "scenario": "planned_rotation"
+    },
+    {
+      "expected": {
+        "attacker_successor_after_revoke": "untrusted",
+        "attacker_successor_during_window": "rotated",
+        "stolen_key_after_revoke": "untrusted"
+      },
+      "observed": {
+        "attacker_successor_after_revoke": "untrusted",
+        "attacker_successor_during_window": "rotated",
+        "stolen_key_after_revoke": "untrusted"
+      },
+      "ok": true,
+      "scenario": "compromise_attacker_rotates_first_then_authority_revokes"
+    },
+    {
+      "expected": {
+        "attacker_successor": "untrusted",
+        "stolen_key": "untrusted"
+      },
+      "observed": {
+        "attacker_successor": "untrusted",
+        "stolen_key": "untrusted"
+      },
+      "ok": true,
+      "scenario": "compromise_authority_revokes_before_attacker_rotates"
+    },
+    {
+      "expected": {
+        "attacker_successor_admitted": "rotated",
+        "real_successor_admitted": "untrusted"
+      },
+      "note": "first statement wins: until an authority revokes, the attacker's successor is the one followed",
+      "observed": {
+        "attacker_successor_admitted": "rotated",
+        "real_successor_admitted": "untrusted"
+      },
+      "ok": true,
+      "scenario": "attacker_rotation_first_blocks_the_owners_real_rotation"
+    },
+    {
+      "expected": {
+        "attacker_successor_after_self_revoke": "rotated"
+      },
+      "note": "a self-revoke cannot end this incident; an authority the receiver lists must revoke",
+      "observed": {
+        "attacker_successor_after_self_revoke": "rotated"
+      },
+      "ok": true,
+      "scenario": "the_owners_own_revoke_does_not_withdraw_the_attackers_successor"
+    },
+    {
+      "expected": {
+        "attacker_successor": "untrusted",
+        "fresh_identity_pinned_out_of_band": "pinned",
+        "stolen_key": "untrusted"
+      },
+      "note": "recovery after compromise is a new identity pinned by each receiver, not a rotation",
+      "observed": {
+        "attacker_successor": "untrusted",
+        "fresh_identity_pinned_out_of_band": "pinned",
+        "stolen_key": "untrusted"
+      },
+      "ok": true,
+      "scenario": "recovery_by_pinning_a_fresh_identity"
+    },
+    {
+      "expected": {
+        "revoke_from_unlisted_authority": "untrusted",
+        "stolen_key_still": "pinned"
+      },
+      "note": "the authority must be configured on every receiver before the incident",
+      "observed": {
+        "revoke_from_unlisted_authority": "untrusted",
+        "stolen_key_still": "pinned"
+      },
+      "ok": true,
+      "scenario": "a_receiver_that_does_not_list_the_authority_cannot_be_told"
+    },
+    {
+      "expected": {
+        "receiver_not_told": "pinned",
+        "receiver_told": "untrusted"
+      },
+      "note": "nothing in the software carries the revocation to a receiver; that is the operator's channel",
+      "observed": {
+        "receiver_not_told": "pinned",
+        "receiver_told": "untrusted"
+      },
+      "ok": true,
+      "scenario": "a_receiver_that_never_got_the_revocation_keeps_trusting_the_key"
+    },
+    {
+      "expected": {
+        "fresh": "pinned",
+        "never_refreshed": "unavailable",
+        "stale": "unavailable"
+      },
+      "note": "off unless the receiver sets max_staleness_ms",
+      "observed": {
+        "fresh": "pinned",
+        "never_refreshed": "unavailable",
+        "stale": "unavailable"
+      },
+      "ok": true,
+      "scenario": "a_stale_list_refuses_instead_of_trusting"
+    }
+  ]
+}
