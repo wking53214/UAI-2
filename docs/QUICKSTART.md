@@ -1,7 +1,9 @@
 # Use it in 10 minutes
 
 This gets one AI model to make a recommendation, has your own rule decide, and produces a signed decision that
-anyone you trust can check. It works the same on every supported provider.
+anyone you trust can check. It uses the same call and returns the same shape on every provider listed below. Two
+differences are known: Cloudflare Workers AI does not always report whether an answer was cut off, and OpenAI and Azure
+OpenAI have been tested only against local stand-in servers, never against the real service.
 
 ## What you need
 
