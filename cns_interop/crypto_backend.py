@@ -3,7 +3,7 @@
 TWO BACKENDS, ONE SET OF ACCEPTED SIGNATURES
 
   pure          cns_interop.ed25519, the RFC written out in Python. No dependency. Not constant time (see ed25519.py).
-  cryptography  the `cryptography` package, which delegates to OpenSSL. An optional extra: `pip install cns[crypto]`.
+  cryptography  the `cryptography` package, which delegates to OpenSSL. An optional extra: `pip install 'uai[crypto] @ git+https://github.com/wking53214/UAI-2.git@main'`.
 
 Verification on EITHER backend first runs the strict checks every UAI-1 implementation shares (`ed25519.acceptable`:
 canonical points, canonical s, no small-order key), because OpenSSL on its own accepts some encodings the protocol
@@ -86,7 +86,7 @@ class CryptographyBackend:
             from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
         except ImportError:
             raise RuntimeError("the cryptography backend was requested and the `cryptography` package is not "
-                               "installed (pip install 'cns[crypto]'); there is no fallback") from None
+                               "installed (pip install 'uai[crypto] @ git+https://github.com/wking53214/UAI-2.git@main'); there is no fallback") from None
         self._invalid, self._ser = InvalidSignature, serialization
         self._priv, self._pub = Ed25519PrivateKey, Ed25519PublicKey
 

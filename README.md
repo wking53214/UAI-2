@@ -266,14 +266,11 @@ Expected: every test passes and none is skipped (a skipped test fails the run by
 reports 72 of 72; the demo exits with status 0. None of this needs a provider key. There is no tagged release, so
 record the commit you ran.
 
-Two error messages in the code print an install command that does not work: `pip install 'cns[postgres]'`
-(`cns_interop/ledger_postgres.py`) and `pip install 'cns[crypto]'` (`cns_interop/crypto_backend.py`, which also names
-`cns[crypto]` in its opening comment). Do not run them.
-With this repository installed, pip reports the requirement as already satisfied and installs nothing. In an
-environment without this project's CNS, the same command would install an unrelated public package called `cns`
-(version 2.3.50 on 2026-11-19, by another author) and five packages it depends on (EXECUTED 2026-11-19 as dry runs;
-nothing was installed). From a clone, use `pip install -e ".[postgres]"` or `pip install -e ".[crypto]"`; the
-`.[dev]` install above already includes both.
+Two error messages in the code (`cns_interop/ledger_postgres.py` and `cns_interop/crypto_backend.py`) print an install
+command for the optional PostgreSQL and cryptography extras. The command installs this repository from its GitHub address, not
+from a bare package name, because an unrelated public package called `cns` (another author) is on the public package index.
+From a clone, `pip install -e ".[postgres]"` or `pip install -e ".[crypto]"` does the same; the `.[dev]` install above
+already includes both.
 
 Live provider runs need your own keys and may cost money: `python interop/live_providers.py`. It prints
 `NOT EXECUTED` for each provider without a key.

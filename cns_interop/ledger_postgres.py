@@ -70,7 +70,7 @@ class PgGuard:
         try:
             import psycopg
         except ImportError:
-            raise RuntimeError("PostgreSQL support needs the optional extra: pip install 'cns[postgres]'") from None
+            raise RuntimeError("PostgreSQL support needs the optional extra: pip install 'uai[postgres] @ git+https://github.com/wking53214/UAI-2.git@main'") from None
         self._pg, self._dsn = psycopg, dsn
         self._connect_kw: dict[str, Any] = {"connect_timeout": connect_timeout_s, "tcp_user_timeout": tcp_user_timeout_ms,
                             "options": f"-c statement_timeout={statement_timeout_ms} -c lock_timeout={statement_timeout_ms}"}
