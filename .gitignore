@@ -8,3 +8,6 @@ venv/
 *.pem
 *.key
 *.log
+*.egg-info/
+build/
+dist/
