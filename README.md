@@ -20,6 +20,18 @@ unproven, and how to check or break it. It asks for independent evaluation, not 
 | each claim and its evidence | [CLAIM_EVIDENCE_CROSSWALK.md](CLAIM_EVIDENCE_CROSSWALK.md) |
 | to implement it yourself | [docs/interop/implementers/README.md](docs/interop/implementers/README.md) |
 
+## Role within ≡TACK
+
+- **What it is.** A thin way in for model calls plus UAI-1, a signed decision format: a model recommends, the decider's policy decides, and the decision leaves signed so a receiver can verify it.
+- **Authority matrix.** Authentication: Ed25519 signatures on envelopes, checked against identities the receiver pins or endorses. Authorization on the receiver's side: the receiver's own grants, a person's signed approval where a grant requires one, and single-use permits (`cns_interop/grants.py`, `cns_interop/decision.py`). Evidence generation and verification: signed envelopes, replay protection and a hash-chained audit record. Transport to model providers (`cns_interop/providers.py`). Enforcement is partial: the receiver programs `interop/act.py` and `interop/node/act.mjs` answer permitted or refused and spend the permit. They are a permit gate, not an executor, so a caller that ignores the answer is not stopped. The content of policy is the decider's. It does not hold a model's signing key: no model is handed a key, ledger, grant or approval.
+- **Does not own.** What a policy or a grant says (the decider and the receiver write those), a person's decision to approve, or the gate contract (CNS defines it). The code that checks grants and approvals is here.
+- **Depends on.** CNS v4.0.0 (released tag). The provider clients use only the Python standard library.
+- **Depended on by.** UNKNOWN (not inspected here).
+- **Fail behavior.** The trust decision is the receiver's. Fail-closed by default: `interop/act.py` refuses to start with no receiver policy options (EXECUTED 2026-11-16 and again 2026-11-19), a provider failure becomes a refusal and never a pass, and a stale revocation list refuses (both tested). Three things to know. First, `--decision-only` lets a verified signature open the action with no receiver grant and no audit record; it says so on stderr, and the production profile accepts it (INSPECTED in `interop/act.py` and `docs/interop/SECURITY_PROFILES.md`). Second, the two receiver programs take no revocation store. They trust the identities named on `--trust`, and a signed revocation of one of them is not consulted: a `TrustPolicy` built the way `act.py` builds it reported a revoked key as not revoked (EXECUTED 2026-11-16). Revocation works in the library when the caller passes a store. Third, without `--max-clock-skew-ms`, which only the default profile (`UAI_PROFILE` unset) allows, message lifetimes are judged by this host's clock (INSPECTED). `interop/act.py`, `interop/node/act.mjs` and the trust, grant and decision modules are unchanged between the 2026-11-16 checks and commit `51216c2` (VERIFIED 2026-11-19 with `git diff`). Grants, approvals and the PostgreSQL ledgers are covered by the test suite on one host; ledgers across separate machines are not shown (`docs/EVIDENCE.md`). This is a reference design, not a production system.
+- **Trust boundary.** A model is an untrusted advisor. API keys come from environment variables; the retired `uai2_gemini`, `uai2_groq` and `uai2_cloudflare` modules are refused because their clients followed redirects that could send a key to another host.
+
+EXECUTED 2026-11-19 at `51216c2` (Python 3.13, Node 22, PostgreSQL 16, one container): 1660 passed, 0 failed, 0 skipped (9 min 36 s); both conformance commands reported 72 of 72; `python interop/demo.py` exited with status 0. At the review of 2026-11-15 (`4e30427`) the suite had 1589 tests, all passing. Not run: live provider calls (no keys here; `interop/live_providers.py` printed `NOT EXECUTED` for each provider) and CI.
+
 ## The problem
 
 Two problems, usually mixed together.
@@ -253,6 +265,15 @@ throwaway clusters), git and network access to GitHub (CNS is installed from the
 Expected: every test passes and none is skipped (a skipped test fails the run by design); each conformance run
 reports 72 of 72; the demo exits with status 0. None of this needs a provider key. There is no tagged release, so
 record the commit you ran.
+
+Two error messages in the code print an install command that does not work: `pip install 'cns[postgres]'`
+(`cns_interop/ledger_postgres.py`) and `pip install 'cns[crypto]'` (`cns_interop/crypto_backend.py`, which also names
+`cns[crypto]` in its opening comment). Do not run them.
+With this repository installed, pip reports the requirement as already satisfied and installs nothing. In an
+environment without this project's CNS, the same command would install an unrelated public package called `cns`
+(version 2.3.50 on 2026-11-19, by another author) and five packages it depends on (EXECUTED 2026-11-19 as dry runs;
+nothing was installed). From a clone, use `pip install -e ".[postgres]"` or `pip install -e ".[crypto]"`; the
+`.[dev]` install above already includes both.
 
 Live provider runs need your own keys and may cost money: `python interop/live_providers.py`. It prints
 `NOT EXECUTED` for each provider without a key.
