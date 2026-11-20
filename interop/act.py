@@ -46,7 +46,8 @@ every receiver host, and refuses to start if this host's grants file is not the 
 `--grant-store` and `--audit` are not given. The production profile requires it.
 
 `--decision-only` keeps the behavior of revision 2, in which a verified decision opens the action by itself. It is NOT
-receiver-authorized, it says so on stderr, and it is refused if any grants option is also given. Without either set of
+receiver-authorized, it says so on stderr, it is refused if any grants option is also given, and the production profile
+refuses it. Without either set of
 options this program refuses to start (exit 2): there is no silent default that lets a signature stand in for policy.
 """
 
@@ -204,7 +205,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     if shared_policy and (cfg.grant_store or cfg.audit):
         return _refuse_startup(cfg, "config", "--policy-backend postgres keeps withdrawals and the audit record in the "
                                               "database; do not give --grant-store or --audit")
-    if crypto_backend.production() and not shared_policy and not cfg.decision_only:
+    if crypto_backend.production() and cfg.decision_only:
+        return _refuse_startup(cfg, "config", "the production profile does not accept --decision-only: a signature alone "
+                                              "must not open an action; give receiver policy options")
+    if crypto_backend.production() and not shared_policy:
         return _refuse_startup(cfg, "config", "the production profile does not accept host-local withdrawals and audit; "
                                               "use --policy-backend postgres")
     if cfg.publish_policy is not None and not shared_policy:

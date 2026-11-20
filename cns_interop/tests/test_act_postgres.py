@@ -87,10 +87,25 @@ def test_no_dsn_or_a_bad_option_combination_refuses_and_never_falls_back_to_a_fi
 
 def test_the_production_profile_refuses_the_single_host_file_backend(tmp_path):
     args = [sys.executable, str(ACT_PY), "--acting-for", REQ.agent, "--capability", "income-screen", "--capability-version", "1",
-            "--trust", DEC.agent, "--ledger", str(tmp_path / "spent.jsonl"), "--decision-only"]
+            "--trust", DEC.agent, "--ledger", str(tmp_path / "spent.jsonl")]
     env = {"PYTHONPATH": ROOT, "PATH": "/usr/bin:/bin", "UAI_PROFILE": "production", "UAI_CRYPTO_BACKEND": "cryptography"}
     done = subprocess.run(args, input="{}", capture_output=True, text=True, env=env, timeout=60)
     assert done.returncode == 2 and "production profile" in json.loads(done.stdout)["refused"]["reason"]
+
+
+def test_the_production_profile_refuses_decision_only_in_python_and_in_node(tmp_path):
+    env = {"PYTHONPATH": ROOT, "PATH": "/usr/bin:/bin:/opt/node22/bin", "UAI_PROFILE": "production", "UAI_CRYPTO_BACKEND": "cryptography"}
+    base = ["--acting-for", REQ.agent, "--capability", "income-screen", "--capability-version", "1", "--trust", DEC.agent]
+    py = [sys.executable, str(ACT_PY), *base, "--ledger", str(tmp_path / "spent.jsonl"), "--decision-only"]
+    done = subprocess.run(py, input="{}", capture_output=True, text=True, env=env, timeout=60)
+    out = json.loads(done.stdout)
+    assert done.returncode == 2 and out["refused"]["code"] == "config" and "--decision-only" in out["refused"]["reason"]
+    assert not (tmp_path / "spent.jsonl").exists()
+    node = ["node", str(Path(ROOT) / "interop" / "node" / "act.mjs"), *base, "--ledger-backend", "postgres", "--ledger-dsn-env", "NO_DSN",
+            "--ledger-prefix", "p", "--decision-only"]
+    done = subprocess.run(node, input="{}", capture_output=True, text=True, env={**env, "NO_DSN": "postgresql://none.invalid/none"}, timeout=60)
+    out = json.loads(done.stdout)
+    assert done.returncode == 2 and out["refused"]["code"] == "config" and "--decision-only" in out["refused"]["reason"]
 
 
 def test_diagnostics_name_the_backend_in_force_connect_for_real_and_never_print_the_dsn(cluster, tmp_path):

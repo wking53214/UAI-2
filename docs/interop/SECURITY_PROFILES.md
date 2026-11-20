@@ -95,9 +95,9 @@ nothing is swallowed. A clock that fails when re-read for a decision is recorded
 
 Limits of that record, said plainly:
 
-- A decision-only receiver (a production receiver in either language can take this form, with no receiver policy) has no audit record at all. Its
-  refusals are the stderr line, which is only as durable as wherever the operator sends stderr, and is not hash-chained.
-  *Limit.*
+- A decision-only receiver has no audit record at all. Its refusals are the stderr line, which is only as durable as wherever the
+  operator sends stderr, and is not hash-chained. The production profile refuses `--decision-only` in both languages (`config`,
+  exit 2), so this limit applies to the default profile only. *Limit.*
 - When the database is what is down, the production audit sink (the same database) is down too: the refusal is the stderr
   line only. *Tested for Python in production.*
 - The entry's `at` is the receiver host's clock, because the refusal may be about the database's clock. *Limit.*
