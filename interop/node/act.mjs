@@ -23,7 +23,7 @@
 //   clock.
 //   UAI_PROFILE=production is enforced exactly as act.py enforces it, before any file or table is touched: the postgres
 //   ledger (sqlite is refused as config, exit 2), --policy-backend postgres (host-local withdrawals and audit are refused as
-//   config; only --decision-only can run without it), and --max-clock-skew-ms (required).
+//   config; --decision-only is refused), and --max-clock-skew-ms (required).
 
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -104,11 +104,12 @@ function main() {
   if (shared && (cfg["grant-store"] || cfg.audit)) return refuseStartup(cfg, "config", "--policy-backend postgres keeps withdrawals and the audit record in the database; do not give --grant-store or --audit");
   if (shared && backend !== "postgres") return refuseStartup(cfg, "config", "--policy-backend postgres needs --ledger-backend postgres (one database, one DSN variable)");
   if (cfg["publish-policy"] !== undefined && !shared) return refuseStartup(cfg, "config", "--publish-policy belongs to --policy-backend postgres");
-  // The production profile, exactly as act.py applies it: the shared ledger, the shared policy store (or --decision-only,
-  // which has no policy), and the clock check, all before any state is created.
+  // The production profile, exactly as act.py applies it: the shared ledger, the shared policy store (--decision-only is
+  // refused: it has no policy), and the clock check, all before any state is created.
   if (PRODUCTION) {
     if (backend !== "postgres") return refuseStartup(cfg, "config", "the production profile does not accept a single-host ledger; use --ledger-backend postgres");
-    if (!shared && !cfg["decision-only"]) return refuseStartup(cfg, "config", "the production profile does not accept host-local withdrawals and audit; use --policy-backend postgres");
+    if (cfg["decision-only"]) return refuseStartup(cfg, "config", "the production profile does not accept --decision-only: a signature alone must not open an action; give receiver policy options");
+    if (!shared) return refuseStartup(cfg, "config", "the production profile does not accept host-local withdrawals and audit; use --policy-backend postgres");
     if (maxSkew === null) return refuseStartup(cfg, "config", "the production profile judges message lifetimes by the ledger database's clock: give --max-clock-skew-ms (strictly below the ledger's 120000 ms retention window)");
   }
   const policy = (shared ? ["grants", "action"] : ["grants", "grant-store", "action", "audit"]).map((k) => cfg[k]);

@@ -151,13 +151,16 @@ def test_node_enforces_the_production_profile_as_python_does_and_creates_no_stat
     pg_policy = run_receiver("node", tmp_path / "c", [*node_local_args(tmp_path / "c", pg), "--policy-backend", "postgres"], act_job(),
                              cluster.dsn, env_extra=PRODUCTION)
     assert refused(pg_policy) == (2, "config") and "do not give --grant-store or --audit" in pg_policy[1]["refused"]["reason"] and no_state(tmp_path / "c")
-    no_clock = run_receiver("node", tmp_path / "d", [*BASE, *pg, "--decision-only"], act_job(), cluster.dsn, env_extra=PRODUCTION)
-    assert refused(no_clock) == (2, "config") and "--max-clock-skew-ms" in no_clock[1]["refused"]["reason"]
-    ok = run_receiver("node", tmp_path / "e", [*BASE, *pg, "--decision-only", "--max-clock-skew-ms", "5000"], act_job(), cluster.dsn,
-                      env_extra=PRODUCTION)
+    # --decision-only is refused under production (it has no receiver policy), with or without the clock flag
+    for name, extra in (("d", []), ("e", ["--max-clock-skew-ms", "5000"])):
+        decision_only = run_receiver("node", tmp_path / name, [*BASE, *pg, "--decision-only", *extra], act_job(), cluster.dsn,
+                                     env_extra=PRODUCTION)
+        assert refused(decision_only) == (2, "config") and "--decision-only" in decision_only[1]["refused"]["reason"]
+    # the clock check itself, in the default profile (it used to be reached here through --decision-only under production)
+    ok = run_receiver("node", tmp_path / "e2", [*BASE, *pg, "--decision-only", "--max-clock-skew-ms", "5000"], act_job(), cluster.dsn)
     assert ok[0] == 0 and ok[1] == {"permitted": True}, ok
     skewed = run_receiver("node", tmp_path / "f", [*BASE, *pg, "--decision-only", "--max-clock-skew-ms", "5000"], act_job(), cluster.dsn,
-                          env_extra=PRODUCTION, shift_ms=-HOUR)
+                          shift_ms=-HOUR)
     assert refused(skewed) == (2, "clock_skew")
     # the same refusals in Python, word for word where both can reach them
     py_sqlite = run_receiver("py", tmp_path / "g", [*node_local_args(tmp_path / "g", ["--ledger-backend", "sqlite", "--ledger",
