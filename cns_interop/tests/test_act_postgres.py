@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import uuid
@@ -94,14 +95,17 @@ def test_the_production_profile_refuses_the_single_host_file_backend(tmp_path):
 
 
 def test_the_production_profile_refuses_decision_only_in_python_and_in_node(tmp_path):
-    env = {"PYTHONPATH": ROOT, "PATH": "/usr/bin:/bin:/opt/node22/bin", "UAI_PROFILE": "production", "UAI_CRYPTO_BACKEND": "cryptography"}
+    env = {"PYTHONPATH": ROOT, "PATH": "/usr/bin:/bin", "UAI_PROFILE": "production", "UAI_CRYPTO_BACKEND": "cryptography"}
     base = ["--acting-for", REQ.agent, "--capability", "income-screen", "--capability-version", "1", "--trust", DEC.agent]
     py = [sys.executable, str(ACT_PY), *base, "--ledger", str(tmp_path / "spent.jsonl"), "--decision-only"]
     done = subprocess.run(py, input="{}", capture_output=True, text=True, env=env, timeout=60)
     out = json.loads(done.stdout)
     assert done.returncode == 2 and out["refused"]["code"] == "config" and "--decision-only" in out["refused"]["reason"]
     assert not (tmp_path / "spent.jsonl").exists()
-    node = ["node", str(Path(ROOT) / "interop" / "node" / "act.mjs"), *base, "--ledger-backend", "postgres", "--ledger-dsn-env", "NO_DSN",
+    node_bin = shutil.which("node")
+    if node_bin is None:
+        pytest.skip("node is not installed")
+    node = [node_bin, str(Path(ROOT) / "interop" / "node" / "act.mjs"), *base, "--ledger-backend", "postgres", "--ledger-dsn-env", "NO_DSN",
             "--ledger-prefix", "p", "--decision-only"]
     done = subprocess.run(node, input="{}", capture_output=True, text=True, env={**env, "NO_DSN": "postgresql://none.invalid/none"}, timeout=60)
     out = json.loads(done.stdout)
