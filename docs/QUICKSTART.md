@@ -17,7 +17,7 @@ OpenAI have been tested only against local stand-in servers, never against the r
     cd UAI-2
     python -m pip install -e .
 
-This installs CNS v4.0.0 (the gate contract) with it. Nothing else is needed: the provider clients use only the
+This installs CNS v4.1.0 (the gate contract) with it. Nothing else is needed: the provider clients use only the
 Python standard library.
 
 ## 2. Set one environment variable: your key
