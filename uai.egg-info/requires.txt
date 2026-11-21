@@ -1,4 +1,4 @@
-cns @ git+https://github.com/wking53214/CNS.git@v4.0.0
+cns @ git+https://github.com/wking53214/CNS.git@v4.1.0
 
 [crypto]
 cryptography>=42

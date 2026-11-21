@@ -408,8 +408,8 @@ The full boundary is [UAI_CNS_INTEGRATION_BOUNDARY.md](UAI_CNS_INTEGRATION_BOUND
 - **Bridge and adapter.** There is no adapter layer between UAI and CNS beyond those imports. `from_super_gate`
   refuses any decision that a `SuperGate` in the same process did not issue, and sends a pass that the roster does
   not confirm as a `terminal_breach`.
-- **Pin:** `cns @ git+https://github.com/wking53214/CNS.git@v4.0.0`, a tag, resolving to commit `eabe6c7` on
-  2026-11-18.
+- **Pin:** `cns @ git+https://github.com/wking53214/CNS.git@v4.1.0`, a tag, resolving to commit `c84ef8c` on
+  2026-11-20.
 - The Node implementation uses no CNS code.
 
 ## G. Security and integrity
