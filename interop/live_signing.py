@@ -67,7 +67,7 @@ DOCUMENTS = (
 
 
 class Node:
-    """The Node conformance adapter as an independent receiver: it reads the signed decision with its own strict reader and
+    """The Node conformance adapter as a second, separately written receiver (same author, so not an independent one): it reads the signed decision with its own strict reader and
     checks the signature, the audience, the kind and that the signer is the pinned decider."""
 
     def __init__(self) -> None:

@@ -1,12 +1,12 @@
-"""demo_adapters.py: two independently implemented agents, one receiver, and everything between them that UAI-1 says.
+"""demo_adapters.py: two separately written agents, one receiver, and everything between them that UAI-1 says.
 
     python interop/demo_adapters.py            a readable transcript
     python interop/demo_adapters.py --json     the same run as one JSON object (cns_interop/tests/test_demo_adapters.py)
 
 WHO IS WHO, AND WHAT IS REAL
 
-  Node decider        REAL, independent: interop/node/agent.mjs. Its own parser, canonical encoder, OpenSSL Ed25519 and
-                      rule (income at or above 450000 from a paystub or tax return). Shares no code with Python.
+  Node decider        REAL, separately written: interop/node/agent.mjs. Its own parser, canonical encoder, OpenSSL Ed25519 and
+                      rule (income at or above 450000 from a paystub or tax return). Shares no code with Python. Same author and AI model family as the Python side, so agreement is not independent evidence.
   Python decider      a Python implementation whose judgment comes from an ADAPTER. The adapter here is a DETERMINISTIC
                       SCRIPT standing in for a model: no model provider is called and nothing here shows that any
                       provider's model interoperates. The seam where a real provider plugs in is
@@ -114,8 +114,8 @@ def run() -> Dict[str, Any]:
     node_seed, py_signer = secrets.token_bytes(32), Signer.generate()
     node_id = Signer(node_seed).agent
     facts: Dict[str, Any] = {"actors": {
-        "node_decider": {"id": node_id, "implementation": "node/uai.mjs", "real_independent_implementation": True, "provider": "none (rule)"},
-        "python_decider": {"id": py_signer.agent, "implementation": "python/cns_interop", "real_independent_implementation": True,
+        "node_decider": {"id": node_id, "implementation": "node/uai.mjs", "real_separately_written_implementation": True, "provider": "none (rule)"},
+        "python_decider": {"id": py_signer.agent, "implementation": "python/cns_interop", "real_separately_written_implementation": True,
                            "judgment_source": "scripted-double", "live_model_called": False},
         "receiver": {"id": me.agent}, "human_approver": {"id": human.agent}}}
     steps: List[Dict[str, Any]] = []

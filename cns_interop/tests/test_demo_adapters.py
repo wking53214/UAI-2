@@ -25,7 +25,7 @@ def facts():
 
 def test_the_actors_are_labeled_truthfully(facts):
     a = facts["actors"]
-    assert a["node_decider"]["real_independent_implementation"] is True
+    assert a["node_decider"]["real_separately_written_implementation"] is True
     assert a["python_decider"]["judgment_source"] == "scripted-double" and a["python_decider"]["live_model_called"] is False
 
 
