@@ -28,6 +28,9 @@ trust (a successor), so it is never honored by default, and a compromised key ca
 policy (`TrustPolicy.follow_rotation`), and even then only a pinned predecessor's successor is admitted, never one
 whose predecessor an authority revoked. Rotation also revokes the predecessor.
 
+The earliest effective time wins: a statement can bring a revocation forward but never push it back, so a
+compromised key can not shelter itself with a future-dated statement of its own.
+
 There is no un-revoke. A key that was declared dead stays dead for the receiver that stored the statement. An
 authority's revoke of a key that already rotated also withdraws the successor that key named.
 
@@ -148,7 +151,15 @@ class RevocationStore:
             db = sqlite3.connect(self._path, timeout=self._busy / 1000, isolation_level=None)
             try:
                 db.execute("BEGIN IMMEDIATE")
-                have = db.execute("SELECT action FROM revoked WHERE subject=?", (st.subject,)).fetchone()
+                have = db.execute("SELECT action, effective_at FROM revoked WHERE subject=?",
+                                  (st.subject,)).fetchone()
+                if have is not None:
+                    # The earliest effective time any valid statement gave always wins. Without this, a compromised
+                    # key could sign its own revoke or rotate dated far in the future FIRST, and the authority's
+                    # real, immediate revoke would be stored but never bind (it used to be ignored, or to keep the
+                    # attacker's time). A statement can only bring a revocation forward, never push it back.
+                    db.execute("UPDATE revoked SET effective_at=? WHERE subject=?",
+                               (min(int(have[1]), st.effective_at), st.subject))
                 if have is not None and have[0] == "rotate" and st.action == "revoke" and st.signer != st.subject:
                     # An authority revoking a key that already named a successor: the key may have been compromised
                     # when it did, so the successor it named is no longer admitted.
