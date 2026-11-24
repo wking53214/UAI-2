@@ -1,4 +1,4 @@
-"""demo.py: two independent systems, in two languages, exchange a request, negotiate, disclose, decide and verify.
+"""demo.py: two separately written systems, in two languages (same author, so not independent evidence), exchange a request, negotiate, disclose, decide and verify.
 
     python interop/demo.py          a readable transcript
     python interop/demo.py --json   the same run as one JSON object (what cns_interop/tests/test_two_systems.py reads)
@@ -63,7 +63,7 @@ class NodeAgent:
     def __init__(self, role: str, seed: bytes, trust: List[str], doc: Optional[Dict[str, Any]] = None) -> None:
         node = shutil.which("node")
         if node is None:
-            raise RuntimeError("node is not installed; the demo needs a second, independent implementation to talk to")
+            raise RuntimeError("node is not installed; the demo needs a second, separately written implementation to talk to")
         env = dict(os.environ, UAI_SEED=seed.hex(), UAI_TRUST=",".join(trust), UAI_DOC=json.dumps(doc or {}))
         self.proc = subprocess.Popen([node, str(AGENT_JS), role], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE, text=True, encoding="utf-8", env=env)
@@ -279,7 +279,7 @@ def main(argv: List[str]) -> int:
     if "--json" in argv:
         print(json.dumps(out, sort_keys=True))
     else:
-        print("UAI-1: two independent systems, two languages, one exchange each way\n")
+        print("UAI-1: two separately written systems, two languages, one exchange each way\n")
         for line in log:
             print(" - " + line)
     return 0
