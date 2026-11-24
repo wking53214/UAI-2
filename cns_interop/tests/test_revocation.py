@@ -196,3 +196,19 @@ def test_an_unreadable_store_is_unavailable_not_empty(tmp_path):
     pol = TrustPolicy(pinned=frozenset({KEY.agent}), revocations=store)
     (tmp_path / "ok.db").write_bytes(b"corrupted after open" * 300)
     assert code_of(pol.admit, KEY.agent, now=now_ms()) == "unavailable"
+
+
+FAR = T + 10 * 365 * 24 * 3600 * 1000
+
+
+@pytest.mark.parametrize("own", ["revoke", "rotate"])
+@pytest.mark.parametrize("order", ["key_first", "authority_first"])
+def test_a_compromised_key_can_not_shelter_behind_a_future_dated_statement_of_its_own(store, own, order):
+    mine = (revoke(KEY, KEY.agent, reason="x", effective_at=FAR, now=T) if own == "revoke"
+            else rotate(KEY, NEXT.agent, reason="x", effective_at=FAR, now=T))
+    theirs = revoke(AUTH, KEY.agent, reason="compromised", now=T + 1)
+    steps = [(mine, ()), (theirs, [AUTH.agent])]
+    for env, auth in (steps if order == "key_first" else steps[::-1]):
+        store.accept(env.to_wire(), authorities=auth, now=T + 1)
+    assert store.is_revoked(KEY.agent, now=T + 2)
+    assert store.predecessor_of(NEXT.agent) is None or own == "revoke"

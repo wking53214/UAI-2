@@ -374,6 +374,8 @@ export class RevocationStore {
   accept(wire, { authorities = [], now = Date.now() } = {}) {
     const st = readStatement(wire, { authorities, now });
     const have = this.rows.get(st.subject);
+    // The earliest effective time any valid statement gave wins: a statement can bring a revocation forward, never push it back.
+    if (have) have.effectiveAt = Math.min(have.effectiveAt, st.effectiveAt);
     if (have && have.action === "rotate" && st.action === "revoke" && st.signer !== st.subject) {
       // An authority revoking a key that already named a successor: withdraw the successor too.
       this.rows.set(st.subject, { action: "revoke", successor: "", effectiveAt: have.effectiveAt, signer: st.signer });

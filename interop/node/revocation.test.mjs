@@ -174,3 +174,15 @@ test("boundedNodes refuses by length before walking, with the same count as the 
   assert.equal(code(() => U.openEnvelope(big, { maxNodes: 100 })), "profile");        // refused before the signature check
   assert.ok(U.openEnvelope(wire, { maxNodes: 100 }));
 });
+
+test("a compromised key can not shelter behind a future-dated statement of its own", () => {
+  const FAR = T + 10 * 365 * 24 * 3600 * 1000;
+  for (const own of ["revoke", "rotate"]) for (const keyFirst of [true, false]) {
+    const st = new U.RevocationStore();
+    const mine = stmt(KEY, KEY.agent, own, own === "rotate" ? NEXT.agent : "", FAR);
+    const theirs = stmt(AUTH, KEY.agent, "revoke", "", T + 1);
+    const steps = [[mine, []], [theirs, [AUTH.agent]]];
+    for (const [w, a] of (keyFirst ? steps : steps.reverse())) st.accept(w, { authorities: a, now: T + 1 });
+    assert.ok(st.isRevoked(KEY.agent, T + 2), `${own} keyFirst=${keyFirst}`);
+  }
+});

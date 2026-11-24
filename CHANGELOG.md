@@ -4,6 +4,9 @@ The wire format has its own version (`uai/1`) and does not change with the packa
 
 ## 0.1.0 (not yet tagged)
 
+Fixed
+- A compromised key could sign its own revoke or rotate dated far in the future before the authority's real revoke arrived, and the key stayed trusted until that date (Python and Node receivers). The earliest effective time any valid statement gives now wins, in either arrival order.
+
 Added
 - `uai.connect` and `uai.from_env`: one way in, six provider routes (GitHub Models, a seventh, was retired by GitHub on 2026-07-30).
 - `cns_interop.providers`: Groq and Cloudflare Workers AI clients beside Anthropic, Gemini, OpenAI and Copilot.
